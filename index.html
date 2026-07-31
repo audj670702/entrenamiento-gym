@@ -44,8 +44,8 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      display: flex;
-      align-items: center;
+      display: grid;
+      gap: 6px;
       min-height: 58px;
       padding: max(8px, env(safe-area-inset-top)) 16px 8px;
       background: rgba(255, 255, 255, 0.94);
@@ -53,11 +53,27 @@
       backdrop-filter: blur(12px);
     }
 
+    .topbar-row {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .topbar-meta {
+      justify-content: flex-end;
+    }
+
+    .topbar-actions {
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
     .brand {
       display: flex;
       align-items: center;
       min-width: 0;
       gap: 10px;
+      margin-right: auto;
     }
 
     .brand img {
@@ -76,27 +92,49 @@
       white-space: nowrap;
     }
 
-    .version {
-      margin-left: auto;
-      padding-left: 12px;
+    .version,
+    .cvc {
       color: var(--muted);
-      font-size: 0.7rem;
       white-space: nowrap;
     }
 
-    .session-button {
-      margin-left: auto;
-      padding: 8px 11px;
-      color: #ffffff;
+    .version {
+      font-size: 0.7rem;
+    }
+
+    .cvc {
+      margin-left: 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .topbar-action {
+      padding: 6px 9px;
       font: inherit;
-      font-size: 0.76rem;
+      font-size: 0.74rem;
       font-weight: 750;
       line-height: 1;
       white-space: nowrap;
       cursor: pointer;
+      border-radius: 7px;
+    }
+
+    .install-button {
+      color: var(--blue);
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    .install-button[data-installed="true"] {
+      color: #17603a;
+      cursor: default;
+    }
+
+    .session-button {
+      color: #ffffff;
       background: var(--blue);
       border: 1px solid var(--blue);
-      border-radius: 8px;
     }
 
     .session-button[data-session-active="true"] {
@@ -105,23 +143,9 @@
       border-color: var(--line);
     }
 
-    .session-button:focus-visible {
+    .topbar-action:focus-visible {
       outline: 3px solid rgba(23, 79, 130, 0.30);
       outline-offset: 2px;
-    }
-
-    .version {
-      margin-left: 10px;
-      padding-left: 0;
-    }
-
-    .cvc {
-      margin-left: 10px;
-      color: var(--muted);
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      white-space: nowrap;
     }
 
     main {
@@ -199,69 +223,6 @@
     }
 
 
-    .install-card {
-      margin-top: 16px;
-      padding: 18px 20px;
-      text-align: center;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-    }
-
-    .install-card[hidden] {
-      display: none;
-    }
-
-    .install-title {
-      margin: 0 0 6px;
-      color: var(--blue-dark);
-      font-size: 0.96rem;
-      font-weight: 800;
-    }
-
-    .install-description {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.4;
-    }
-
-    .install-action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      margin-top: 14px;
-      padding: 10px 16px;
-      color: #ffffff;
-      font: inherit;
-      font-size: 0.86rem;
-      font-weight: 750;
-      text-decoration: none;
-      cursor: pointer;
-      background: var(--blue);
-      border: 1px solid var(--blue);
-      border-radius: 9px;
-    }
-
-    .install-action:disabled {
-      cursor: default;
-      opacity: 0.65;
-    }
-
-    .install-action:focus-visible {
-      outline: 3px solid rgba(23, 79, 130, 0.30);
-      outline-offset: 2px;
-    }
-
-    .install-status {
-      margin: 10px 0 0;
-      color: #17603a;
-      font-size: 0.84rem;
-      font-weight: 750;
-    }
-
     @media (min-width: 640px) {
       main {
         padding-top: 38px;
@@ -281,20 +242,24 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">
-      <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
-      <span class="brand-name">Entrenamiento GYM</span>
+    <div class="topbar-row topbar-meta">
+      <div class="brand">
+        <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
+        <span class="brand-name">Entrenamiento GYM</span>
+      </div>
+      <span class="version" aria-label="Versión 0.1.10">v0.1.10</span>
+      <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
-    <button
-      id="sessionButton"
-      class="session-button"
-      type="button"
-      data-session-active="false"
-    >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.9">v0.1.9</span>
-    <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
+    <div class="topbar-row topbar-actions">
+      <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
+      <button
+        id="sessionButton"
+        class="topbar-action session-button"
+        type="button"
+        data-session-active="false"
+      >Iniciar sesión</button>
+    </div>
   </header>
-
   <main>
     <img
       class="hero-logo"
@@ -329,20 +294,6 @@
       <span class="arrow" aria-hidden="true">→</span>
     </a>
 
-    <section id="installCard" class="install-card" aria-labelledby="installTitle" hidden>
-      <h2 id="installTitle" class="install-title">Instala la app</h2>
-      <p id="installDescription" class="install-description"></p>
-      <button id="installAndroidButton" class="install-action" type="button" hidden>Instalar</button>
-      <a
-        id="installIosTutorial"
-        class="install-action"
-        href="./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4"
-        target="_blank"
-        rel="noopener"
-        hidden
-      >Ver tutorial de instalación</a>
-      <p id="installStatus" class="install-status" role="status" aria-live="polite" hidden></p>
-    </section>
 
   </main>
 
@@ -448,79 +399,63 @@
       return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
     }
 
-    function renderInstallOptions() {
-      const card = document.getElementById("installCard");
-      const description = document.getElementById("installDescription");
-      const androidButton = document.getElementById("installAndroidButton");
-      const iosTutorial = document.getElementById("installIosTutorial");
-      const status = document.getElementById("installStatus");
+    function renderInstallOption() {
+      const button = document.getElementById("installButton");
+      if (!button) return;
 
-      if (!card || !description || !androidButton || !iosTutorial || !status) {
-        return;
-      }
-
-      androidButton.hidden = true;
-      iosTutorial.hidden = true;
-      status.hidden = true;
-
-      if (isAppInstalled()) {
-        card.hidden = false;
-        description.textContent = "";
-        status.textContent = "App instalada";
-        status.hidden = false;
-        return;
-      }
-
-      if (isIosDevice()) {
-        card.hidden = false;
-        description.textContent = "Agrega Entrenamiento GYM a la pantalla de inicio de tu iPhone o iPad.";
-        iosTutorial.hidden = false;
-        return;
-      }
-
-      if (deferredInstallPrompt) {
-        card.hidden = false;
-        description.textContent = "Instala Entrenamiento GYM en este dispositivo.";
-        androidButton.hidden = false;
-        return;
-      }
-
-      card.hidden = true;
+      const installed = isAppInstalled();
+      button.textContent = installed ? "App instalada" : "Instalar app";
+      button.dataset.installed = installed ? "true" : "false";
+      button.disabled = installed;
+      button.setAttribute(
+        "aria-label",
+        installed ? "App instalada" : "Instalar app"
+      );
     }
 
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
       deferredInstallPrompt = event;
-      renderInstallOptions();
+      renderInstallOption();
     });
 
     window.addEventListener("appinstalled", () => {
       deferredInstallPrompt = null;
-      renderInstallOptions();
+      renderInstallOption();
     });
 
-    document.getElementById("installAndroidButton")?.addEventListener("click", async () => {
-      if (!deferredInstallPrompt) {
+    document.getElementById("installButton")?.addEventListener("click", async () => {
+      if (isAppInstalled()) return;
+
+      if (isIosDevice()) {
+        window.open(
+          "./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4",
+          "_blank",
+          "noopener"
+        );
         return;
       }
 
-      const button = document.getElementById("installAndroidButton");
+      if (!deferredInstallPrompt) {
+        window.alert(
+          "La instalación todavía no está disponible. Abre el menú del navegador y selecciona Instalar app o Instalar Entrenamiento GYM."
+        );
+        return;
+      }
+
+      const button = document.getElementById("installButton");
       button.disabled = true;
       button.textContent = "Instalando...";
 
       deferredInstallPrompt.prompt();
-      const choice = await deferredInstallPrompt.userChoice;
+      await deferredInstallPrompt.userChoice;
       deferredInstallPrompt = null;
 
       button.disabled = false;
-      button.textContent = "Instalar";
-
-      if (choice.outcome !== "accepted") {
-        renderInstallOptions();
-      }
+      renderInstallOption();
     });
 
-    renderInstallOptions();
+    renderInstallOption();
 
     async function loadGymContext() {
       const identity = resolveGymMember();
@@ -589,7 +524,7 @@
       goToGymAccess();
     });
 
-    renderInstallOptions();
+    renderInstallOption();
     renderSessionButton();
     renderTrainerPanelCard();
     loadGymContext();
