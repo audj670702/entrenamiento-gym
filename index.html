@@ -219,8 +219,8 @@
       type="button"
       data-session-active="false"
     >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.5">v0.1.5</span>
-    <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Em0Us0En0</span>
+    <span class="version" aria-label="Versión 0.1.6">v0.1.6</span>
+    <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
   </header>
 
   <main>
@@ -249,11 +249,9 @@
     const GYM_ACCESS_URL = "https://www.scad.mx/gym-acceso";
     const GYM_TRAINING_URL = "https://www.scad.mx/gym-mi-entrenamiento";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
-    const MEMBER_EMAIL_KEY = "GYM_MEMBER_EMAIL";
 
     let gymContext = {
       se: false,
-      em: false,
       us: false,
       en: false
     };
@@ -268,28 +266,18 @@
         getUrlParam("memberID") ||
         getUrlParam("wixMemberId");
 
-      const urlEmail =
-        getUrlParam("email") ||
-        getUrlParam("correo");
-
       if (urlMemberId) {
         localStorage.setItem(MEMBER_ID_KEY, urlMemberId);
       }
 
-      if (urlEmail) {
-        localStorage.setItem(MEMBER_EMAIL_KEY, urlEmail);
-      }
-
       return {
-        memberId: urlMemberId || localStorage.getItem(MEMBER_ID_KEY) || "",
-        email: urlEmail || localStorage.getItem(MEMBER_EMAIL_KEY) || ""
+        memberId: urlMemberId || localStorage.getItem(MEMBER_ID_KEY) || ""
       };
     }
 
     function renderCvc() {
       const value =
         `Se${gymContext.se ? 1 : 0}` +
-        `Em${gymContext.em ? 1 : 0}` +
         `Us${gymContext.us ? 1 : 0}` +
         `En${gymContext.en ? 1 : 0}`;
 
@@ -316,10 +304,8 @@
 
     function clearGymIdentity() {
       localStorage.removeItem(MEMBER_ID_KEY);
-      localStorage.removeItem(MEMBER_EMAIL_KEY);
       gymContext = {
         se: false,
-        em: false,
         us: false,
         en: false
       };
@@ -355,7 +341,6 @@
 
         gymContext = {
           se: data?.se === true,
-          em: data?.em === true,
           us: data?.us === true,
           en: data?.en === true
         };
