@@ -219,7 +219,7 @@
       type="button"
       data-session-active="false"
     >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.2">v0.1.2</span>
+    <span class="version" aria-label="Versión 0.1.2">v0.1.3</span>
     <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Em0Us0En0</span>
   </header>
 
@@ -396,9 +396,12 @@
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js").catch((error) => {
-          console.error("No fue posible registrar la PWA:", error);
-        });
+        navigator.serviceWorker
+          .register("./service-worker.js", { updateViaCache: "none" })
+          .then((registration) => registration.update())
+          .catch((error) => {
+            console.error("No fue posible registrar la PWA:", error);
+          });
       });
     }
   </script>
