@@ -154,6 +154,64 @@
       padding: 28px 16px calc(28px + env(safe-area-inset-bottom));
     }
 
+    .identity-card {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 20px;
+      padding: 14px 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 8px 22px rgba(15, 47, 85, 0.08);
+    }
+
+    .identity-card[hidden] { display: none; }
+
+    .identity-avatar {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 58px;
+      height: 58px;
+      overflow: hidden;
+      color: #ffffff;
+      background: var(--blue);
+      border-radius: 50%;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .identity-avatar img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .identity-name {
+      margin: 0 0 3px;
+      overflow: hidden;
+      color: var(--blue-dark);
+      font-size: 1rem;
+      font-weight: 800;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .identity-program {
+      margin: 0;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .hero-logo {
       display: block;
       width: min(58vw, 245px);
@@ -247,7 +305,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.10">v0.1.10</span>
+      <span class="version" aria-label="Versión 0.1.11">v0.1.11</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -261,6 +319,17 @@
     </div>
   </header>
   <main>
+    <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
+      <div class="identity-avatar" aria-hidden="true">
+        <span id="identityInitials">US</span>
+        <img id="identityPhoto" src="" alt="" hidden>
+      </div>
+      <div>
+        <p id="identityName" class="identity-name"></p>
+        <p id="identityProgram" class="identity-program"></p>
+      </div>
+    </section>
+
     <img
       class="hero-logo"
       src="./assets/entrenamiento-gym-logo-sentadilla.png"
@@ -307,7 +376,10 @@
     let gymContext = {
       se: false,
       us: false,
-      en: false
+      en: false,
+      nombre: "",
+      foto: "",
+      programa: ""
     };
 
     function getUrlParam(name) {
@@ -327,6 +399,85 @@
       return {
         memberId: urlMemberId || localStorage.getItem(MEMBER_ID_KEY) || ""
       };
+    }
+
+    function normalizeWixImageUrl(value) {
+      if (!value) return "";
+      if (typeof value === "object") {
+        return normalizeWixImageUrl(
+          value.src || value.url || value.fileUrl || value.imageUrl || ""
+        );
+      }
+
+      const raw = String(value).trim();
+      if (!raw) return "";
+      if (/^https?:\/\//i.test(raw) || /^data:/i.test(raw) || /^blob:/i.test(raw)) {
+        return raw;
+      }
+
+      const wixMatch = raw.match(/^wix:image:\/\/v1\/([^/]+)\//i);
+      return wixMatch?.[1]
+        ? `https://static.wixstatic.com/media/${wixMatch[1]}`
+        : raw;
+    }
+
+    function getInitials(name) {
+      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return "US";
+      return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : ""))
+        .toUpperCase();
+    }
+
+    function clearIdentityCard() {
+      const card = document.getElementById("identityCard");
+      const photo = document.getElementById("identityPhoto");
+      const initials = document.getElementById("identityInitials");
+      const name = document.getElementById("identityName");
+      const program = document.getElementById("identityProgram");
+
+      if (card) card.hidden = true;
+      if (photo) {
+        photo.hidden = true;
+        photo.removeAttribute("src");
+      }
+      if (initials) initials.textContent = "US";
+      if (name) name.textContent = "";
+      if (program) program.textContent = "";
+    }
+
+    function renderIdentityCard() {
+      const card = document.getElementById("identityCard");
+      const photo = document.getElementById("identityPhoto");
+      const initials = document.getElementById("identityInitials");
+      const name = document.getElementById("identityName");
+      const program = document.getElementById("identityProgram");
+      const visible = gymContext.se === true && gymContext.us === true;
+
+      if (!card || !photo || !initials || !name || !program || !visible) {
+        clearIdentityCard();
+        return;
+      }
+
+      const displayName = gymContext.nombre || "Usuario de entrenamiento";
+      const photoUrl = normalizeWixImageUrl(gymContext.foto);
+
+      name.textContent = displayName;
+      program.textContent = gymContext.programa || "Usuario de entrenamiento";
+      initials.textContent = getInitials(displayName);
+      card.hidden = false;
+
+      photo.onerror = () => {
+        photo.hidden = true;
+        photo.removeAttribute("src");
+      };
+
+      if (photoUrl) {
+        photo.src = photoUrl;
+        photo.hidden = false;
+      } else {
+        photo.hidden = true;
+        photo.removeAttribute("src");
+      }
     }
 
     function renderCvc() {
@@ -370,8 +521,12 @@
       gymContext = {
         se: false,
         us: false,
-        en: false
+        en: false,
+        nombre: "",
+        foto: "",
+        programa: ""
       };
+      clearIdentityCard();
     }
 
     function goToGymAccess(options = {}) {
@@ -461,9 +616,10 @@
       const identity = resolveGymMember();
 
       if (!identity.memberId) {
+        clearIdentityCard();
         renderCvc();
-    
-    renderSessionButton();
+        renderSessionButton();
+        renderTrainerPanelCard();
         return;
       }
 
@@ -479,7 +635,10 @@
         gymContext = {
           se: data?.se === true,
           us: data?.us === true,
-          en: data?.en === true
+          en: data?.en === true,
+          nombre: String(data?.nombre || "").trim(),
+          foto: data?.foto || "",
+          programa: String(data?.programa || "").trim()
         };
       } catch (error) {
         console.error("No fue posible cargar el contexto GYM:", error);
@@ -488,6 +647,7 @@
       renderCvc();
       renderSessionButton();
       renderTrainerPanelCard();
+      renderIdentityCard();
     }
 
     document.getElementById("sessionButton")?.addEventListener("click", () => {
@@ -495,6 +655,8 @@
         clearGymIdentity();
         renderCvc();
         renderSessionButton();
+        renderTrainerPanelCard();
+        renderIdentityCard();
         goToGymAccess({ logout: true });
         return;
       }
@@ -527,6 +689,7 @@
     renderInstallOption();
     renderSessionButton();
     renderTrainerPanelCard();
+    renderIdentityCard();
     loadGymContext();
 
     if ("serviceWorker" in navigator) {
