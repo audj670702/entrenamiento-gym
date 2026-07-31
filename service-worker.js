@@ -1,9 +1,11 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.8";
+const CACHE_NAME = "entrenamiento-gym-v0.1.9";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./assets/entrenamiento-gym-logo-sentadilla.png"
+  "./assets/entrenamiento-gym-logo-sentadilla.png",
+  "./assets/entrenamiento-gym-icon-192.png",
+  "./assets/entrenamiento-gym-icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
