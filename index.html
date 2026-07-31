@@ -362,6 +362,64 @@
       line-height: 1;
     }
 
+    .ios-tutorial-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+      background: rgba(7, 20, 36, 0.82);
+    }
+
+    .ios-tutorial-modal[hidden] {
+      display: none;
+    }
+
+    .ios-tutorial-dialog {
+      position: relative;
+      width: min(100%, 440px);
+      max-height: calc(100dvh - 32px);
+      padding: 44px 12px 12px;
+      overflow: auto;
+      background: #000000;
+      border-radius: 14px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
+    }
+
+    .ios-tutorial-close {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 50%;
+      font: inherit;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .ios-tutorial-close:focus-visible {
+      outline: 3px solid rgba(255, 255, 255, 0.55);
+      outline-offset: 2px;
+    }
+
+    .ios-tutorial-video {
+      display: block;
+      width: 100%;
+      max-height: calc(100dvh - 100px);
+      background: #000000;
+      border-radius: 8px;
+    }
+
 
     @media (min-width: 640px) {
       main {
@@ -387,7 +445,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.13">v0.1.13</span>
+      <span class="version" aria-label="Versión 0.1.14">v0.1.14</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -469,6 +527,23 @@
         <button id="profileSaveButton" class="profile-action profile-save" type="submit">Guardar</button>
       </div>
     </form>
+  </div>
+
+  <div id="iosTutorialModal" class="ios-tutorial-modal" role="dialog" aria-modal="true" aria-label="Tutorial de instalación en iPhone" hidden>
+    <div class="ios-tutorial-dialog">
+      <button id="iosTutorialClose" class="ios-tutorial-close" type="button" aria-label="Cerrar tutorial">×</button>
+      <video
+        id="iosTutorialVideo"
+        class="ios-tutorial-video"
+        controls
+        playsinline
+        webkit-playsinline
+        preload="metadata"
+      >
+        <source src="./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4" type="video/mp4">
+        Tu navegador no puede reproducir este tutorial.
+      </video>
+    </div>
   </div>
 
   <script>
@@ -661,6 +736,49 @@
       return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
     }
 
+    function openIosTutorial() {
+      const modal = document.getElementById("iosTutorialModal");
+      const video = document.getElementById("iosTutorialVideo");
+      if (!modal || !video) return;
+
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      document.getElementById("iosTutorialClose")?.focus();
+
+      const playback = video.play();
+      if (playback && typeof playback.catch === "function") {
+        playback.catch(() => {});
+      }
+    }
+
+    function closeIosTutorial() {
+      const modal = document.getElementById("iosTutorialModal");
+      const video = document.getElementById("iosTutorialVideo");
+      if (!modal || !video) return;
+
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (video.webkitDisplayingFullscreen && video.webkitExitFullscreen) {
+        video.webkitExitFullscreen();
+      }
+
+      video.pause();
+      video.currentTime = 0;
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      document.getElementById("installButton")?.focus();
+    }
+
+    document.getElementById("iosTutorialClose")?.addEventListener("click", closeIosTutorial);
+    document.getElementById("iosTutorialModal")?.addEventListener("click", (event) => {
+      if (event.target === event.currentTarget) closeIosTutorial();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !document.getElementById("iosTutorialModal")?.hidden) {
+        closeIosTutorial();
+      }
+    });
+
     function renderInstallOption() {
       const button = document.getElementById("installButton");
       if (!button) return;
@@ -690,11 +808,7 @@
       if (isAppInstalled()) return;
 
       if (isIosDevice()) {
-        window.open(
-          "./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4",
-          "_blank",
-          "noopener"
-        );
+        openIosTutorial();
         return;
       }
 
@@ -898,4 +1012,3 @@
   </script>
 </body>
 </html>
-
