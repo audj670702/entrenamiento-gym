@@ -76,32 +76,21 @@
       white-space: nowrap;
     }
 
-    .validation-status {
-      width: min(100%, 560px);
-      margin: 0 auto;
-      padding: 12px 16px 0;
-      color: #98a2b3;
-      text-align: right;
-    }
-
-    .validation-status-inner {
-      display: inline-block;
-      padding-left: 9px;
-      border-left: 1px solid #d0d5dd;
-      font-size: 0.62rem;
-      line-height: 1.35;
-      letter-spacing: 0.025em;
-    }
-
-    .validation-code,
-    .validation-version {
-      display: block;
+    .version {
+      margin-left: auto;
+      padding-left: 12px;
+      color: var(--muted);
+      font-size: 0.7rem;
       white-space: nowrap;
     }
 
-    .validation-version {
-      margin-top: 1px;
-      font-size: 0.58rem;
+    .cvc {
+      margin-left: 10px;
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
     }
 
     main {
@@ -193,14 +182,9 @@
       <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
       <span class="brand-name">Entrenamiento GYM</span>
     </div>
+    <span class="version" aria-label="Versión 0.1.1">v0.1.1</span>
+    <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Em0Us0En0</span>
   </header>
-
-  <aside class="validation-status" aria-label="Estado técnico de validaciones">
-    <div class="validation-status-inner">
-      <span class="validation-code" id="validationCode">Se0Em0Us0En0</span>
-      <span class="validation-version">v0.1.1</span>
-    </div>
-  </aside>
 
   <main>
     <img
@@ -210,6 +194,7 @@
     >
 
     <a
+      id="cardMiEntrenamiento"
       class="training-card"
       href="https://www.scad.mx/gym-mi-entrenamiento"
       aria-label="Abrir Mi Entrenamiento"
@@ -223,13 +208,53 @@
   </main>
 
   <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js").catch((error) => {
-          console.error("No fue posible registrar la PWA:", error);
-        });
-      });
+    const API_BASE = "https://www.scad.mx/_functions";
+    const GYM_ACCESS_URL = "https://www.scad.mx/gym-inicio-sesion";
+    const GYM_TRAINING_URL = "https://www.scad.mx/gym-mi-entrenamiento";
+    const MEMBER_ID_KEY = "GYM_MEMBER_ID";
+    const MEMBER_EMAIL_KEY = "GYM_MEMBER_EMAIL";
+
+    let gymContext = {
+      se: false,
+      em: false,
+      us: false,
+      en: false
+    };
+
+    function getUrlParam(name) {
+      return new URLSearchParams(window.location.search).get(name) || "";
     }
-  </script>
-</body>
-</html>
+
+    function resolveGymMember() {
+      const urlMemberId =
+        getUrlParam("memberId") ||
+        getUrlParam("memberID") ||
+        getUrlParam("wixMemberId");
+
+      const urlEmail =
+        getUrlParam("email") ||
+        getUrlParam("correo");
+
+      if (urlMemberId) {
+        localStorage.setItem(MEMBER_ID_KEY, urlMemberId);
+      }
+
+      if (urlEmail) {
+        localStorage.setItem(MEMBER_EMAIL_KEY, urlEmail);
+      }
+
+      return {
+        memberId: urlMemberId || localStorage.getItem(MEMBER_ID_KEY) || "",
+        email: urlEmail || localStorage.getItem(MEMBER_EMAIL_KEY) || ""
+      };
+    }
+
+    function renderCvc() {
+      const value =
+        `Se${gymContext.se ? 1 : 0}` +
+        `Em${gymContext.em ? 1 : 0}` +
+        `Us${gymContext.us ? 1 : 0}` +
+        `En${gymContext.en ? 1 : 0}`;
+
+      const element = document.getElementById("cvc");
+      if (element) {
