@@ -219,7 +219,7 @@
       type="button"
       data-session-active="false"
     >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.6">v0.1.6</span>
+    <span class="version" aria-label="Versión 0.1.7">v0.1.7</span>
     <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
   </header>
 
@@ -316,6 +316,8 @@
 
       if (options.logout === true) {
         url.searchParams.set("logout", "1");
+      } else {
+        url.searchParams.set("login", "1");
       }
 
       window.location.href = url.toString();
