@@ -435,12 +435,6 @@
       window.location.href = url.toString();
     }
 
-    async function loadGymContext() {
-      const identity = resolveGymMember();
-
-      if (!identity.memberId) {
-        renderCvc();
-    
     let deferredInstallPrompt = null;
 
     function isAppInstalled() {
@@ -528,6 +522,12 @@
 
     renderInstallOptions();
 
+    async function loadGymContext() {
+      const identity = resolveGymMember();
+
+      if (!identity.memberId) {
+        renderCvc();
+    
     renderSessionButton();
         return;
       }
@@ -589,6 +589,7 @@
       goToGymAccess();
     });
 
+    renderInstallOptions();
     renderSessionButton();
     renderTrainerPanelCard();
     loadGymContext();
