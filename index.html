@@ -156,15 +156,15 @@
 
     .identity-card {
       display: grid;
-      grid-template-columns: 58px minmax(0, 1fr);
+      grid-template-columns: 72px minmax(0, 1fr);
       align-items: center;
-      gap: 13px;
-      margin-bottom: 20px;
-      padding: 14px 16px;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding: 16px;
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: 0 8px 22px rgba(15, 47, 85, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 7px 20px rgba(15, 47, 85, 0.07);
     }
 
     .identity-card[hidden] { display: none; }
@@ -173,15 +173,19 @@
       position: relative;
       display: grid;
       place-items: center;
-      width: 58px;
-      height: 58px;
+      width: 72px;
+      height: 72px;
+      padding: 0;
       overflow: hidden;
       color: #ffffff;
       background: var(--blue);
+      border: 0;
       border-radius: 50%;
-      font-size: 1rem;
+      font: inherit;
+      font-size: 1.08rem;
       font-weight: 800;
       letter-spacing: 0.04em;
+      cursor: pointer;
     }
 
     .identity-avatar img {
@@ -192,8 +196,34 @@
       object-fit: cover;
     }
 
+    .identity-avatar::after {
+      content: "✎";
+      position: absolute;
+      right: 1px;
+      bottom: 1px;
+      display: grid;
+      place-items: center;
+      width: 21px;
+      height: 21px;
+      color: var(--blue-dark);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      font-size: 0.7rem;
+      line-height: 1;
+    }
+
+    .identity-copy { min-width: 0; }
+
+    .identity-name-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
     .identity-name {
-      margin: 0 0 3px;
+      margin: 0;
       overflow: hidden;
       color: var(--blue-dark);
       font-size: 1rem;
@@ -202,8 +232,19 @@
       white-space: nowrap;
     }
 
+    .identity-edit-name {
+      flex: 0 0 auto;
+      padding: 3px;
+      color: var(--blue);
+      background: transparent;
+      border: 0;
+      font-size: 0.9rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
     .identity-program {
-      margin: 0;
+      margin: 4px 0 0;
       overflow: hidden;
       color: var(--muted);
       font-size: 0.82rem;
@@ -211,6 +252,52 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    .profile-modal[hidden] { display: none; }
+
+    .profile-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(15, 47, 85, 0.48);
+    }
+
+    .profile-dialog {
+      width: min(100%, 390px);
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 22px 60px rgba(15, 47, 85, 0.24);
+    }
+
+    .profile-dialog h2 { margin: 0 0 14px; font-size: 1.1rem; }
+    .profile-field { display: grid; gap: 7px; margin-bottom: 14px; }
+    .profile-field label { color: var(--muted); font-size: 0.78rem; font-weight: 750; }
+    .profile-field input[type="text"] {
+      width: 100%;
+      padding: 10px 11px;
+      color: var(--text);
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+    }
+    .profile-help { margin: 5px 0 0; color: var(--muted); font-size: 0.72rem; line-height: 1.35; }
+    .profile-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px; }
+    .profile-action {
+      padding: 9px 13px;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .profile-cancel { color: var(--blue-dark); background: #ffffff; border: 1px solid var(--line); }
+    .profile-save { color: #ffffff; background: var(--blue); border: 1px solid var(--blue); }
+    .profile-save:disabled { opacity: 0.6; cursor: wait; }
 
     .hero-logo {
       display: block;
@@ -305,7 +392,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.11">v0.1.11</span>
+      <span class="version" aria-label="Versión 0.1.12">v0.1.12</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -320,12 +407,15 @@
   </header>
   <main>
     <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
-      <div class="identity-avatar" aria-hidden="true">
+      <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
         <span id="identityInitials">US</span>
         <img id="identityPhoto" src="" alt="" hidden>
-      </div>
-      <div>
-        <p id="identityName" class="identity-name"></p>
+      </button>
+      <div class="identity-copy">
+        <div class="identity-name-row">
+          <p id="identityName" class="identity-name"></p>
+          <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
+        </div>
         <p id="identityProgram" class="identity-program"></p>
       </div>
     </section>
@@ -366,6 +456,26 @@
 
   </main>
 
+  <div id="profileModal" class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden>
+    <form id="profileForm" class="profile-dialog">
+      <h2 id="profileModalTitle">Editar identidad</h2>
+      <div class="profile-field">
+        <label for="profileNameInput">Nombre en la app</label>
+        <input id="profileNameInput" type="text" maxlength="60" autocomplete="name">
+        <p class="profile-help">El nombre formal del registro no se modifica.</p>
+      </div>
+      <div class="profile-field">
+        <label for="profilePhotoInput">Fotografía</label>
+        <input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp">
+        <p class="profile-help">JPG, PNG o WebP. Máximo 5 MB.</p>
+      </div>
+      <div class="profile-actions">
+        <button id="profileCancelButton" class="profile-action profile-cancel" type="button">Cancelar</button>
+        <button id="profileSaveButton" class="profile-action profile-save" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+
   <script>
     const API_BASE = "https://www.scad.mx/_functions";
     const GYM_ACCESS_URL = "https://www.scad.mx/gym-acceso";
@@ -378,6 +488,7 @@
       us: false,
       en: false,
       nombre: "",
+      nombreApp: "",
       foto: "",
       programa: ""
     };
@@ -458,7 +569,7 @@
         return;
       }
 
-      const displayName = gymContext.nombre || "Usuario de entrenamiento";
+      const displayName = gymContext.nombreApp || gymContext.nombre || "Usuario de entrenamiento";
       const photoUrl = normalizeWixImageUrl(gymContext.foto);
 
       name.textContent = displayName;
@@ -523,6 +634,7 @@
         us: false,
         en: false,
         nombre: "",
+        nombreApp: "",
         foto: "",
         programa: ""
       };
@@ -637,6 +749,7 @@
           us: data?.us === true,
           en: data?.en === true,
           nombre: String(data?.nombre || "").trim(),
+          nombreApp: String(data?.nombreApp || "").trim(),
           foto: data?.foto || "",
           programa: String(data?.programa || "").trim()
         };
@@ -649,6 +762,91 @@
       renderTrainerPanelCard();
       renderIdentityCard();
     }
+
+    function openProfileEditor() {
+      if (!(gymContext.se && gymContext.us)) return;
+      const modal = document.getElementById("profileModal");
+      const input = document.getElementById("profileNameInput");
+      const photoInput = document.getElementById("profilePhotoInput");
+      if (input) input.value = gymContext.nombreApp || gymContext.nombre || "";
+      if (photoInput) photoInput.value = "";
+      if (modal) modal.hidden = false;
+      window.setTimeout(() => input?.focus(), 0);
+    }
+
+    function closeProfileEditor() {
+      const modal = document.getElementById("profileModal");
+      if (modal) modal.hidden = true;
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("No fue posible leer la fotografía."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById("identityPhotoButton")?.addEventListener("click", openProfileEditor);
+    document.getElementById("identityNameButton")?.addEventListener("click", openProfileEditor);
+    document.getElementById("profileCancelButton")?.addEventListener("click", closeProfileEditor);
+    document.getElementById("profileModal")?.addEventListener("click", (event) => {
+      if (event.target.id === "profileModal") closeProfileEditor();
+    });
+
+    document.getElementById("profileForm")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const identity = resolveGymMember();
+      const nameInput = document.getElementById("profileNameInput");
+      const photoInput = document.getElementById("profilePhotoInput");
+      const saveButton = document.getElementById("profileSaveButton");
+      const file = photoInput?.files?.[0] || null;
+
+      if (!identity.memberId) return;
+      if (file && file.size > 5 * 1024 * 1024) {
+        window.alert("La fotografía debe pesar máximo 5 MB.");
+        return;
+      }
+
+      const payload = {
+        memberId: identity.memberId,
+        nombreApp: String(nameInput?.value || "").trim()
+      };
+
+      try {
+        saveButton.disabled = true;
+        saveButton.textContent = "Guardando...";
+        if (file) {
+          payload.foto = {
+            base64: await fileToDataUrl(file),
+            mimeType: file.type,
+            fileName: file.name
+          };
+        }
+
+        const response = await fetch(`${API_BASE}/gymPwaProfile`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok || data?.ok !== true) {
+          throw new Error(data?.error || "No fue posible guardar la identidad.");
+        }
+
+        gymContext.nombre = String(data.nombre || gymContext.nombre || "").trim();
+        gymContext.nombreApp = String(data.nombreApp || "").trim();
+        gymContext.foto = data.foto || gymContext.foto || "";
+        renderIdentityCard();
+        closeProfileEditor();
+      } catch (error) {
+        window.alert(error.message || "No fue posible guardar la identidad.");
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Guardar";
+      }
+    });
 
     document.getElementById("sessionButton")?.addEventListener("click", () => {
       if (gymContext.se) {
