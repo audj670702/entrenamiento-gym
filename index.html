@@ -368,8 +368,8 @@
       z-index: 1000;
       display: grid;
       place-items: center;
-      padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
-      background: rgba(7, 20, 36, 0.82);
+      padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+      background: rgba(7, 20, 36, 0.62);
     }
 
     .ios-tutorial-modal[hidden] {
@@ -378,28 +378,41 @@
 
     .ios-tutorial-dialog {
       position: relative;
-      width: min(100%, 440px);
-      max-height: calc(100dvh - 32px);
-      padding: 44px 12px 12px;
-      overflow: auto;
-      background: #000000;
-      border-radius: 14px;
+      width: min(100%, 360px);
+      max-height: min(76dvh, 680px);
+      overflow: hidden;
+      background: #ffffff;
+      border-radius: 16px;
       box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
     }
 
+    .ios-tutorial-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 46px;
+      padding: 8px 8px 8px 16px;
+      color: var(--text);
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .ios-tutorial-title {
+      margin: 0;
+      font-size: 0.92rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
     .ios-tutorial-close {
-      position: absolute;
-      top: 7px;
-      right: 8px;
-      z-index: 2;
       display: grid;
       place-items: center;
       width: 34px;
       height: 34px;
       padding: 0;
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: var(--text);
+      background: var(--soft);
+      border: 1px solid var(--line);
       border-radius: 50%;
       font: inherit;
       font-size: 1.25rem;
@@ -408,16 +421,17 @@
     }
 
     .ios-tutorial-close:focus-visible {
-      outline: 3px solid rgba(255, 255, 255, 0.55);
+      outline: 3px solid rgba(37, 99, 235, 0.28);
       outline-offset: 2px;
     }
 
     .ios-tutorial-video {
       display: block;
       width: 100%;
-      max-height: calc(100dvh - 100px);
+      height: auto;
+      max-height: min(62dvh, 600px);
+      object-fit: contain;
       background: #000000;
-      border-radius: 8px;
     }
 
 
@@ -445,7 +459,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.14">v0.1.14</span>
+      <span class="version" aria-label="Versión 0.1.15">v0.1.15</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -531,7 +545,10 @@
 
   <div id="iosTutorialModal" class="ios-tutorial-modal" role="dialog" aria-modal="true" aria-label="Tutorial de instalación en iPhone" hidden>
     <div class="ios-tutorial-dialog">
-      <button id="iosTutorialClose" class="ios-tutorial-close" type="button" aria-label="Cerrar tutorial">×</button>
+      <div class="ios-tutorial-header">
+        <p class="ios-tutorial-title">Instalar app en iPhone</p>
+        <button id="iosTutorialClose" class="ios-tutorial-close" type="button" aria-label="Cerrar tutorial">×</button>
+      </div>
       <video
         id="iosTutorialVideo"
         class="ios-tutorial-video"
@@ -539,6 +556,7 @@
         playsinline
         webkit-playsinline
         preload="metadata"
+        disablepictureinpicture
       >
         <source src="./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4" type="video/mp4">
         Tu navegador no puede reproducir este tutorial.
@@ -745,10 +763,7 @@
       document.body.style.overflow = "hidden";
       document.getElementById("iosTutorialClose")?.focus();
 
-      const playback = video.play();
-      if (playback && typeof playback.catch === "function") {
-        playback.catch(() => {});
-      }
+      video.load();
     }
 
     function closeIosTutorial() {
