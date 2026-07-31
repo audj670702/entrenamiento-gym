@@ -156,15 +156,10 @@
 
     .identity-card {
       display: grid;
-      grid-template-columns: 72px minmax(0, 1fr);
+      grid-template-columns: 48px minmax(0, 1fr);
       align-items: center;
-      gap: 16px;
-      margin-bottom: 28px;
-      padding: 16px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: 0 7px 20px rgba(15, 47, 85, 0.07);
+      gap: 11px;
+      margin: 0 4px 20px;
     }
 
     .identity-card[hidden] { display: none; }
@@ -173,8 +168,8 @@
       position: relative;
       display: grid;
       place-items: center;
-      width: 72px;
-      height: 72px;
+      width: 48px;
+      height: 48px;
       padding: 0;
       overflow: hidden;
       color: #ffffff;
@@ -182,7 +177,7 @@
       border: 0;
       border-radius: 50%;
       font: inherit;
-      font-size: 1.08rem;
+      font-size: 0.82rem;
       font-weight: 800;
       letter-spacing: 0.04em;
       cursor: pointer;
@@ -203,13 +198,13 @@
       bottom: 1px;
       display: grid;
       place-items: center;
-      width: 21px;
-      height: 21px;
+      width: 16px;
+      height: 16px;
       color: var(--blue-dark);
       background: #ffffff;
       border: 1px solid var(--line);
       border-radius: 50%;
-      font-size: 0.7rem;
+      font-size: 0.56rem;
       line-height: 1;
     }
 
@@ -218,7 +213,7 @@
     .identity-name-row {
       display: flex;
       align-items: center;
-      gap: 7px;
+      gap: 4px;
       min-width: 0;
     }
 
@@ -226,7 +221,7 @@
       margin: 0;
       overflow: hidden;
       color: var(--blue-dark);
-      font-size: 1rem;
+      font-size: 0.86rem;
       font-weight: 800;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -234,20 +229,20 @@
 
     .identity-edit-name {
       flex: 0 0 auto;
-      padding: 3px;
+      padding: 2px;
       color: var(--blue);
       background: transparent;
       border: 0;
-      font-size: 0.9rem;
+      font-size: 0.72rem;
       line-height: 1;
       cursor: pointer;
     }
 
     .identity-program {
-      margin: 4px 0 0;
+      margin: 2px 0 0;
       overflow: hidden;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.7rem;
       line-height: 1.35;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -392,7 +387,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.12">v0.1.12</span>
+      <span class="version" aria-label="Versión 0.1.13">v0.1.13</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -406,6 +401,12 @@
     </div>
   </header>
   <main>
+    <img
+      class="hero-logo"
+      src="./assets/entrenamiento-gym-logo-sentadilla.png"
+      alt="Identidad de Entrenamiento GYM"
+    >
+
     <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
       <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
         <span id="identityInitials">US</span>
@@ -419,12 +420,6 @@
         <p id="identityProgram" class="identity-program"></p>
       </div>
     </section>
-
-    <img
-      class="hero-logo"
-      src="./assets/entrenamiento-gym-logo-sentadilla.png"
-      alt="Identidad de Entrenamiento GYM"
-    >
 
     <a
       id="cardMiEntrenamiento"
@@ -903,3 +898,4 @@
   </script>
 </body>
 </html>
+
