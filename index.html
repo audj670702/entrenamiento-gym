@@ -219,7 +219,7 @@
       type="button"
       data-session-active="false"
     >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.4">v0.1.4</span>
+    <span class="version" aria-label="Versión 0.1.5">v0.1.5</span>
     <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Em0Us0En0</span>
   </header>
 
@@ -348,7 +348,6 @@
         const url =
           `${API_BASE}/gymPwaContext` +
           `?memberId=${encodeURIComponent(identity.memberId)}` +
-          `&email=${encodeURIComponent(identity.email)}` +
           `&t=${Date.now()}`;
 
         const response = await fetch(url, { cache: "no-store" });
@@ -383,7 +382,7 @@
     document.getElementById("cardMiEntrenamiento")?.addEventListener("click", (event) => {
       event.preventDefault();
 
-      if (gymContext.se && gymContext.em && gymContext.us) {
+      if (gymContext.se && gymContext.us) {
         window.location.href = GYM_TRAINING_URL;
         return;
       }
