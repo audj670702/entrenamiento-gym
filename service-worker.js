@@ -3,9 +3,7 @@ const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./assets/entrenamiento-gym-logo-sentadilla.png",
-  "./assets/entrenamiento-gym-icon-192.png",
-  "./assets/entrenamiento-gym-icon-512.png"
+  "./assets/entrenamiento-gym-logo-sentadilla.png"
 ];
 
 self.addEventListener("install", (event) => {
