@@ -198,6 +198,70 @@
       line-height: 1;
     }
 
+
+    .install-card {
+      margin-top: 16px;
+      padding: 18px 20px;
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .install-card[hidden] {
+      display: none;
+    }
+
+    .install-title {
+      margin: 0 0 6px;
+      color: var(--blue-dark);
+      font-size: 0.96rem;
+      font-weight: 800;
+    }
+
+    .install-description {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .install-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      margin-top: 14px;
+      padding: 10px 16px;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.86rem;
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+      background: var(--blue);
+      border: 1px solid var(--blue);
+      border-radius: 9px;
+    }
+
+    .install-action:disabled {
+      cursor: default;
+      opacity: 0.65;
+    }
+
+    .install-action:focus-visible {
+      outline: 3px solid rgba(23, 79, 130, 0.30);
+      outline-offset: 2px;
+    }
+
+    .install-status {
+      margin: 10px 0 0;
+      color: #17603a;
+      font-size: 0.84rem;
+      font-weight: 750;
+    }
+
     @media (min-width: 640px) {
       main {
         padding-top: 38px;
@@ -227,7 +291,7 @@
       type="button"
       data-session-active="false"
     >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.8">v0.1.8</span>
+    <span class="version" aria-label="Versión 0.1.9">v0.1.9</span>
     <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
   </header>
 
@@ -264,6 +328,22 @@
       </div>
       <span class="arrow" aria-hidden="true">→</span>
     </a>
+
+    <section id="installCard" class="install-card" aria-labelledby="installTitle" hidden>
+      <h2 id="installTitle" class="install-title">Instala la app</h2>
+      <p id="installDescription" class="install-description"></p>
+      <button id="installAndroidButton" class="install-action" type="button" hidden>Instalar</button>
+      <a
+        id="installIosTutorial"
+        class="install-action"
+        href="./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4"
+        target="_blank"
+        rel="noopener"
+        hidden
+      >Ver tutorial de instalación</a>
+      <p id="installStatus" class="install-status" role="status" aria-live="polite" hidden></p>
+    </section>
+
   </main>
 
   <script>
@@ -360,7 +440,95 @@
 
       if (!identity.memberId) {
         renderCvc();
-        renderSessionButton();
+    
+    let deferredInstallPrompt = null;
+
+    function isAppInstalled() {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.navigator.standalone === true
+      );
+    }
+
+    function isIosDevice() {
+      return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    }
+
+    function renderInstallOptions() {
+      const card = document.getElementById("installCard");
+      const description = document.getElementById("installDescription");
+      const androidButton = document.getElementById("installAndroidButton");
+      const iosTutorial = document.getElementById("installIosTutorial");
+      const status = document.getElementById("installStatus");
+
+      if (!card || !description || !androidButton || !iosTutorial || !status) {
+        return;
+      }
+
+      androidButton.hidden = true;
+      iosTutorial.hidden = true;
+      status.hidden = true;
+
+      if (isAppInstalled()) {
+        card.hidden = false;
+        description.textContent = "";
+        status.textContent = "App instalada";
+        status.hidden = false;
+        return;
+      }
+
+      if (isIosDevice()) {
+        card.hidden = false;
+        description.textContent = "Agrega Entrenamiento GYM a la pantalla de inicio de tu iPhone o iPad.";
+        iosTutorial.hidden = false;
+        return;
+      }
+
+      if (deferredInstallPrompt) {
+        card.hidden = false;
+        description.textContent = "Instala Entrenamiento GYM en este dispositivo.";
+        androidButton.hidden = false;
+        return;
+      }
+
+      card.hidden = true;
+    }
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      renderInstallOptions();
+    });
+
+    window.addEventListener("appinstalled", () => {
+      deferredInstallPrompt = null;
+      renderInstallOptions();
+    });
+
+    document.getElementById("installAndroidButton")?.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) {
+        return;
+      }
+
+      const button = document.getElementById("installAndroidButton");
+      button.disabled = true;
+      button.textContent = "Instalando...";
+
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+
+      button.disabled = false;
+      button.textContent = "Instalar";
+
+      if (choice.outcome !== "accepted") {
+        renderInstallOptions();
+      }
+    });
+
+    renderInstallOptions();
+
+    renderSessionButton();
         return;
       }
 
