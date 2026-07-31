@@ -84,6 +84,37 @@
       white-space: nowrap;
     }
 
+    .session-button {
+      margin-left: auto;
+      padding: 8px 11px;
+      color: #ffffff;
+      font: inherit;
+      font-size: 0.76rem;
+      font-weight: 750;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+      background: var(--blue);
+      border: 1px solid var(--blue);
+      border-radius: 8px;
+    }
+
+    .session-button[data-session-active="true"] {
+      color: var(--blue-dark);
+      background: #ffffff;
+      border-color: var(--line);
+    }
+
+    .session-button:focus-visible {
+      outline: 3px solid rgba(23, 79, 130, 0.30);
+      outline-offset: 2px;
+    }
+
+    .version {
+      margin-left: 10px;
+      padding-left: 0;
+    }
+
     .cvc {
       margin-left: 10px;
       color: var(--muted);
@@ -182,7 +213,13 @@
       <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
       <span class="brand-name">Entrenamiento GYM</span>
     </div>
-    <span class="version" aria-label="Versión 0.1.1">v0.1.1</span>
+    <button
+      id="sessionButton"
+      class="session-button"
+      type="button"
+      data-session-active="false"
+    >Iniciar sesión</button>
+    <span class="version" aria-label="Versión 0.1.2">v0.1.2</span>
     <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Em0Us0En0</span>
   </header>
 
@@ -258,3 +295,112 @@
 
       const element = document.getElementById("cvc");
       if (element) {
+        element.textContent = value;
+      }
+    }
+
+    function renderSessionButton() {
+      const button = document.getElementById("sessionButton");
+      if (!button) {
+        return;
+      }
+
+      const sessionActive = gymContext.se === true;
+      button.textContent = sessionActive ? "Cerrar sesión" : "Iniciar sesión";
+      button.dataset.sessionActive = sessionActive ? "true" : "false";
+      button.setAttribute(
+        "aria-label",
+        sessionActive ? "Cerrar sesión" : "Iniciar sesión"
+      );
+    }
+
+    function clearGymIdentity() {
+      localStorage.removeItem(MEMBER_ID_KEY);
+      localStorage.removeItem(MEMBER_EMAIL_KEY);
+      gymContext = {
+        se: false,
+        em: false,
+        us: false,
+        en: false
+      };
+    }
+
+    function goToGymAccess(options = {}) {
+      const url = new URL(GYM_ACCESS_URL);
+
+      if (options.logout === true) {
+        url.searchParams.set("logout", "1");
+      }
+
+      window.location.href = url.toString();
+    }
+
+    async function loadGymContext() {
+      const identity = resolveGymMember();
+
+      if (!identity.memberId) {
+        renderCvc();
+        renderSessionButton();
+        return;
+      }
+
+      try {
+        const url =
+          `${API_BASE}/gymPwaContext` +
+          `?memberId=${encodeURIComponent(identity.memberId)}` +
+          `&email=${encodeURIComponent(identity.email)}` +
+          `&t=${Date.now()}`;
+
+        const response = await fetch(url, { cache: "no-store" });
+        const data = await response.json();
+
+        gymContext = {
+          se: data?.se === true,
+          em: data?.em === true,
+          us: data?.us === true,
+          en: data?.en === true
+        };
+      } catch (error) {
+        console.error("No fue posible cargar el contexto GYM:", error);
+      }
+
+      renderCvc();
+      renderSessionButton();
+    }
+
+    document.getElementById("sessionButton")?.addEventListener("click", () => {
+      if (gymContext.se) {
+        clearGymIdentity();
+        renderCvc();
+        renderSessionButton();
+        goToGymAccess({ logout: true });
+        return;
+      }
+
+      goToGymAccess();
+    });
+
+    document.getElementById("cardMiEntrenamiento")?.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      if (gymContext.se && gymContext.em && gymContext.us) {
+        window.location.href = GYM_TRAINING_URL;
+        return;
+      }
+
+      goToGymAccess();
+    });
+
+    renderSessionButton();
+    loadGymContext();
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+          console.error("No fue posible registrar la PWA:", error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
