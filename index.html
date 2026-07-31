@@ -456,6 +456,100 @@
       background: #000000;
     }
 
+    .privacy-footer {
+      display: flex;
+      justify-content: center;
+      padding: 18px 0 0;
+    }
+
+    .privacy-link {
+      padding: 4px;
+      color: #8b98a8;
+      background: transparent;
+      border: 0;
+      font: inherit;
+      font-size: 0.68rem;
+      line-height: 1.3;
+      text-decoration: underline;
+      text-decoration-color: rgba(139, 152, 168, 0.55);
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+
+    .privacy-link:hover { color: var(--muted); }
+    .privacy-link:focus-visible {
+      outline: 3px solid rgba(23, 79, 130, 0.24);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    .privacy-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1100;
+      display: grid;
+      place-items: center;
+      padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
+      background: rgba(7, 20, 36, 0.62);
+    }
+
+    .privacy-modal[hidden] { display: none; }
+
+    .privacy-dialog {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      width: min(100%, 620px);
+      max-height: min(88dvh, 780px);
+      overflow: hidden;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    .privacy-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 52px;
+      padding: 9px 9px 9px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .privacy-title {
+      margin: 0;
+      color: var(--blue-dark);
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .privacy-close {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      color: var(--text);
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      font: inherit;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .privacy-content {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 18px;
+      color: #334155;
+      font-size: 0.78rem;
+      line-height: 1.58;
+      white-space: pre-line;
+      -webkit-overflow-scrolling: touch;
+    }
 
     @media (min-width: 640px) {
       main {
@@ -481,7 +575,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.18">v0.1.18</span>
+      <span class="version" aria-label="Versión 0.1.19">v0.1.19</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -587,7 +681,22 @@
     </a>
 
 
+    <footer class="privacy-footer">
+      <button id="privacyLink" class="privacy-link" type="button">Política de privacidad</button>
+    </footer>
+
   </main>
+
+
+  <div id="privacyModal" class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle" hidden>
+    <section class="privacy-dialog">
+      <header class="privacy-header">
+        <h2 id="privacyModalTitle" class="privacy-title">Política de privacidad</h2>
+        <button id="privacyClose" class="privacy-close" type="button" aria-label="Cerrar política de privacidad">×</button>
+      </header>
+      <div id="privacyContent" class="privacy-content" tabindex="0"></div>
+    </section>
+  </div>
 
   <div id="profileModal" class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden>
     <form id="profileForm" class="profile-dialog">
@@ -636,6 +745,7 @@
     const GYM_TRAINING_URL = "https://www.scad.mx/gym-mi-entrenamiento";
     const GYM_TRAINER_PANEL_URL = "https://www.scad.mx/panel-de-entrenador";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
+    const PRIVACY_POLICY_TEXT = "POLÍTICA DE PRIVACIDAD\nÚltima actualización: 31 de julio de 2026\n\nEsta política explica cómo se obtienen, utilizan, comparten, protegen y conservan los datos personales de quienes usan la App GYM.\n\n1. Responsable y contacto\nJM OPERADORA INTEGRAL EN SERVICIOS Y SOLUCIONES, S.A. DE C.V. (en adelante, el \"Responsable\") es responsable del tratamiento de los datos personales recabados mediante la App GYM.\nPara asuntos de privacidad, ejercicio de derechos ARCO, revocación del consentimiento o limitación del uso de datos, el único canal de contacto es logcontrol@scad.mx.\n\n2. Alcance\nEsta política aplica a quienes acceden o utilizan la App GYM, incluidos usuarios y entrenadores autorizados, así como a sus módulos, formularios, paneles, contenidos, funciones instalables y comunicaciones relacionadas. No cubre sitios o servicios externos con políticas propias a los que la app pudiera enlazar.\n\n3. Datos personales tratados\nSegún las funciones utilizadas y el tipo de cuenta, la App GYM puede tratar datos de identificación y contacto; fotografía o avatar; datos de acceso; identificadores internos; tipo y estado de cuenta; entrenador asignado; autorizaciones y registros de actividad.\nTambién puede tratar objetivos, planes y sesiones de entrenamiento; ejercicios, cargas, repeticiones, tiempos, asistencia, observaciones, avances y métricas; edad o fecha de nacimiento, sexo cuando sea pertinente, estatura, peso, medidas y composición corporal; mensajes y solicitudes de soporte; así como datos técnicos necesarios para operar y proteger la app, entre ellos dirección IP, navegador, sistema operativo, identificadores de sesión o dispositivo, fecha y hora de acceso, preferencias y registros de errores.\n\n4. Datos personales sensibles\nLa App GYM puede tratar datos sobre salud y condición física, como lesiones, limitaciones, padecimientos, antecedentes relevantes, restricciones médicas, mediciones físicas, embarazo cuando sea pertinente y observaciones relacionadas con la aptitud para entrenar. Estos datos son sensibles y reciben protección reforzada.\nSu tratamiento se limita a personalizar y dar seguimiento al entrenamiento, prevenir riesgos razonablemente previsibles y documentar las indicaciones comunicadas por la persona usuaria. Cuando corresponda, se solicitará consentimiento expreso mediante un mecanismo electrónico que permita acreditarlo.\n\n5. Finalidades necesarias\nLos datos se utilizan para crear, autenticar, administrar y proteger la cuenta; validar el tipo de acceso; vincular al usuario con su entrenador autorizado; diseñar, registrar, programar, consultar y dar seguimiento a objetivos, planes y sesiones; registrar asistencia, avances, ejercicios, cargas, observaciones y métricas; permitir al entrenador asignado prestar el servicio; atender soporte e incidencias; mantener la seguridad y disponibilidad de la app; prevenir accesos no autorizados; y cumplir obligaciones legales o requerimientos de autoridad competente.\n\n6. Finalidades secundarias\nCon autorización, los datos de contacto y datos estadísticos no indispensables podrán utilizarse para novedades, encuestas, invitaciones, promociones o recomendaciones generales. Negarse o retirar el consentimiento para estas finalidades no afectará las funciones esenciales. Para solicitar la baja, escriba a logcontrol@scad.mx con el asunto \"Baja de comunicaciones\".\n\n7. Consentimiento\nAl proporcionar datos y utilizar la app, la persona usuaria reconoce haber tenido acceso a esta política. La app podrá mostrar controles separados para aceptar esta política, otorgar consentimiento expreso para datos sensibles y aceptar o rechazar finalidades secundarias. La aceptación general no sustituye el consentimiento expreso que resulte exigible para datos sensibles.\n\n8. Acceso de entrenadores\nEl entrenador asignado podrá acceder únicamente a la información necesaria para planificar, ejecutar y dar seguimiento al entrenamiento de las personas vinculadas a su cuenta. Deberá conservar la confidencialidad, utilizar los datos solo para el servicio autorizado y evitar copias, divulgaciones o accesos innecesarios o no permitidos.\n\n9. Proveedores y transferencias\nEl Responsable puede utilizar proveedores de autenticación, alojamiento, almacenamiento, bases de datos, publicación, distribución técnica, soporte, seguridad, mantenimiento y comunicaciones. La solución puede apoyarse en infraestructura tecnológica de Wix y en otros proveedores que actúen conforme a las instrucciones y medidas de seguridad aplicables.\nLos datos también podrán comunicarse cuando sea necesario para cumplir una obligación legal, atender una orden de autoridad competente, proteger derechos dentro de un procedimiento, responder a una emergencia o en otros casos permitidos por la ley. El Responsable no vende datos personales. Si una transferencia futura requiere consentimiento, se informarán previamente el receptor o su categoría, la finalidad y el mecanismo para aceptarla o rechazarla.\n\n10. Cookies y almacenamiento local\nLa app puede usar cookies, almacenamiento local o tecnologías equivalentes necesarias para mantener la sesión, recordar preferencias, habilitar la instalación, conservar temporalmente recursos, mejorar el rendimiento y proteger el servicio. Si se incorporan tecnologías analíticas, publicitarias o de seguimiento no esenciales, se informará su finalidad y se solicitará el consentimiento correspondiente.\n\n11. Conservación y eliminación\nLos datos se conservarán durante el tiempo necesario para prestar el servicio, mantener la continuidad e historial del entrenamiento, atender responsabilidades y cumplir plazos legales o contractuales. Al concluir la relación, serán bloqueados, eliminados o anonimizados conforme a las obligaciones aplicables. Las copias de respaldo podrán subsistir temporalmente hasta su rotación segura.\n\n12. Seguridad\nEl Responsable aplica medidas administrativas, técnicas y físicas razonables para proteger la confidencialidad, integridad y disponibilidad de los datos, incluidos controles de acceso por cuenta y rol, autenticación, registros de actividad, respaldo, mantenimiento y gestión de incidentes. Ningún sistema es completamente invulnerable; la persona usuaria debe proteger sus credenciales, cerrar sesión en equipos compartidos y reportar accesos sospechosos.\nCuando una vulneración afecte de forma significativa los derechos de una persona, se informará sin demora injustificada conforme a la legislación aplicable.\n\n13. Derechos ARCO, revocación y limitación\nLa persona titular puede solicitar Acceso, Rectificación, Cancelación u Oposición (derechos ARCO), revocar su consentimiento o limitar el uso o divulgación de sus datos mediante un correo a logcontrol@scad.mx.\nLa solicitud deberá incluir nombre y medio para recibir respuesta; documentos que acrediten identidad o representación; descripción clara de los datos y del derecho que desea ejercer; y cualquier elemento que facilite su localización. Para rectificación deberá indicar la corrección y acompañar el soporte correspondiente. Se acusará recibo y se responderá dentro de los plazos legales. Solo podrá solicitarse información adicional o negarse la petición en los supuestos permitidos por la ley, explicando la decisión.\n\n14. Menores de edad\nLa App GYM está dirigida principalmente a personas mayores de edad. El tratamiento de datos de menores solo deberá realizarse con intervención y consentimiento verificable de quien ejerza patria potestad o tutela, atendiendo al interés superior de la persona menor. Si se detectan datos obtenidos sin autorización válida, la cuenta podrá suspenderse y los datos eliminarse.\n\n15. Cálculos y recomendaciones\nLa app puede generar cálculos, recordatorios, indicadores o sugerencias basados en los registros de entrenamiento. Salvo aviso expreso, estas funciones no producen decisiones jurídicas ni efectos equivalentes y no sustituyen la valoración de un profesional de la salud.\n\n16. Salud y seguridad física\nLa App GYM es una herramienta de organización y seguimiento del entrenamiento; no presta servicios médicos ni sustituye diagnóstico, tratamiento o valoración profesional. La persona usuaria debe informar condiciones relevantes, detener la actividad ante síntomas adversos y buscar atención médica cuando sea necesario.\n\n17. Cambios y legislación aplicable\nEsta política puede actualizarse por cambios legales, técnicos, operativos o en las finalidades del tratamiento. La versión vigente estará disponible dentro de la app e indicará su fecha de actualización. Si un cambio requiere nuevo consentimiento, este se solicitará antes de aplicar el tratamiento correspondiente.\nLa política se interpreta conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, su Reglamento y demás disposiciones aplicables en México. La persona titular podrá acudir ante la autoridad federal competente en materia de protección de datos personales.\n\nCONSENTIMIENTO EXPRESO PARA DATOS SENSIBLES\nConsiento expresamente el tratamiento de mis datos personales sensibles relacionados con mi salud y condición física para personalizar, ejecutar y dar seguimiento a mi entrenamiento conforme a la Política de Privacidad.\n\nCanal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
     let gymContext = {
       se: false,
@@ -855,9 +965,40 @@
       if (event.target === event.currentTarget) closeIosTutorial();
     });
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && !document.getElementById("iosTutorialModal")?.hidden) {
+      if (event.key !== "Escape") return;
+      if (!document.getElementById("privacyModal")?.hidden) {
+        closePrivacyPolicy();
+        return;
+      }
+      if (!document.getElementById("iosTutorialModal")?.hidden) {
         closeIosTutorial();
       }
+    });
+
+
+    function openPrivacyPolicy() {
+      const modal = document.getElementById("privacyModal");
+      const content = document.getElementById("privacyContent");
+      if (!modal || !content) return;
+      content.textContent = PRIVACY_POLICY_TEXT;
+      content.scrollTop = 0;
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      document.getElementById("privacyClose")?.focus();
+    }
+
+    function closePrivacyPolicy() {
+      const modal = document.getElementById("privacyModal");
+      if (!modal) return;
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      document.getElementById("privacyLink")?.focus();
+    }
+
+    document.getElementById("privacyLink")?.addEventListener("click", openPrivacyPolicy);
+    document.getElementById("privacyClose")?.addEventListener("click", closePrivacyPolicy);
+    document.getElementById("privacyModal")?.addEventListener("click", (event) => {
+      if (event.target === event.currentTarget) closePrivacyPolicy();
     });
 
     function renderInstallOption() {
