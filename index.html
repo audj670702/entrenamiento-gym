@@ -154,6 +154,14 @@
       transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
     }
 
+    .training-card + .training-card {
+      margin-top: 16px;
+    }
+
+    .training-card[hidden] {
+      display: none;
+    }
+
     .training-card:active {
       transform: scale(0.985);
     }
@@ -219,7 +227,7 @@
       type="button"
       data-session-active="false"
     >Iniciar sesión</button>
-    <span class="version" aria-label="Versión 0.1.7">v0.1.7</span>
+    <span class="version" aria-label="Versión 0.1.8">v0.1.8</span>
     <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
   </header>
 
@@ -242,12 +250,27 @@
       </div>
       <span class="arrow" aria-hidden="true">→</span>
     </a>
+
+    <a
+      id="cardPanelEntrenador"
+      class="training-card"
+      href="https://www.scad.mx/panel-de-entrenador"
+      aria-label="Abrir Panel del Entrenador"
+      hidden
+    >
+      <div>
+        <h2 class="card-title">Panel del Entrenador</h2>
+        <p class="card-description">Gestiona los planes y sesiones de tus usuarios</p>
+      </div>
+      <span class="arrow" aria-hidden="true">→</span>
+    </a>
   </main>
 
   <script>
     const API_BASE = "https://www.scad.mx/_functions";
     const GYM_ACCESS_URL = "https://www.scad.mx/gym-acceso";
     const GYM_TRAINING_URL = "https://www.scad.mx/gym-mi-entrenamiento";
+    const GYM_TRAINER_PANEL_URL = "https://www.scad.mx/panel-de-entrenador";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
     let gymContext = {
@@ -285,6 +308,15 @@
       if (element) {
         element.textContent = value;
       }
+    }
+
+    function renderTrainerPanelCard() {
+      const card = document.getElementById("cardPanelEntrenador");
+      if (!card) {
+        return;
+      }
+
+      card.hidden = gymContext.en !== true;
     }
 
     function renderSessionButton() {
@@ -352,6 +384,7 @@
 
       renderCvc();
       renderSessionButton();
+      renderTrainerPanelCard();
     }
 
     document.getElementById("sessionButton")?.addEventListener("click", () => {
@@ -377,7 +410,19 @@
       goToGymAccess();
     });
 
+    document.getElementById("cardPanelEntrenador")?.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      if (gymContext.se && gymContext.en) {
+        window.location.href = GYM_TRAINER_PANEL_URL;
+        return;
+      }
+
+      goToGymAccess();
+    });
+
     renderSessionButton();
+    renderTrainerPanelCard();
     loadGymContext();
 
     if ("serviceWorker" in navigator) {
