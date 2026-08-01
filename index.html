@@ -181,6 +181,7 @@
     .message-instruction { margin: 0; padding: 10px 14px 7px; color: var(--muted); font-size: .76rem; }
     .conversation-item { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; width: 100%; padding: 11px; color: var(--text); text-align: left; background: #fff; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
     .conversation-avatar { display: grid; place-items: center; width: 42px; height: 42px; overflow: hidden; color: #fff; background: var(--blue); border-radius: 50%; font-size: .76rem; font-weight: 800; }
+    .conversation-avatar--institutional { background: linear-gradient(145deg, var(--blue), var(--blue-dark)); font-size: 1.15rem; }
     .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .conversation-copy { min-width: 0; }
     .conversation-name { margin: 0 0 4px; font-size: .86rem; font-weight: 800; }
@@ -633,7 +634,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.23">v0.1.23</span>
+      <span class="version" aria-label="Versión 0.1.24">v0.1.24</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -933,8 +934,15 @@
         button.className = "conversation-item";
         const avatar = document.createElement("span");
         avatar.className = "conversation-avatar";
-        const avatarUrl = normalizeWixImageUrl(item.avatar);
-        if (avatarUrl) {
+        const conversationKind = String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
+        const isAttention = conversationKind.includes("ATENCION");
+        const avatarUrl = isAttention ? "" : normalizeWixImageUrl(item.avatar);
+        if (isAttention) {
+          avatar.classList.add("conversation-avatar--institutional");
+          avatar.setAttribute("role", "img");
+          avatar.setAttribute("aria-label", "Atención al Usuario");
+          avatar.textContent = "🎧";
+        } else if (avatarUrl) {
           const image = document.createElement("img");
           image.src = avatarUrl;
           image.alt = "";
