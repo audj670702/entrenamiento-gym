@@ -184,8 +184,9 @@
     .conversation-avatar--institutional { background: linear-gradient(145deg, var(--blue), var(--blue-dark)); font-size: 1.15rem; }
     .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .conversation-copy { min-width: 0; }
-    .conversation-name { margin: 0 0 4px; font-size: .86rem; font-weight: 800; }
-    .conversation-preview { overflow: hidden; margin: 0; color: var(--muted); font-size: .74rem; text-overflow: ellipsis; white-space: nowrap; }
+    .conversation-name { margin: 0 0 3px; font-size: .86rem; font-weight: 850; }
+    .conversation-description { margin: 0 0 5px; color: var(--text); font-size: .72rem; line-height: 1.35; }
+    .conversation-preview { overflow: hidden; margin: 0; color: var(--muted); font-size: .69rem; text-overflow: ellipsis; white-space: nowrap; }
     .conversation-count { min-width: 22px; padding: 4px 6px; color: #fff; background: #dc2626; border-radius: 999px; font-size: .65rem; font-weight: 850; text-align: center; }
     .conversation-arrow { color: var(--blue); font-size: 1.35rem; line-height: 1; }
     .message-empty { padding: 36px 18px; color: var(--muted); text-align: center; font-size: .82rem; }
@@ -634,7 +635,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.24">v0.1.24</span>
+      <span class="version" aria-label="Versión 0.1.25">v0.1.25</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -765,7 +766,7 @@
     <section class="message-dialog">
       <header class="message-header">
         <button id="messageBack" class="message-back" type="button" aria-label="Volver a conversaciones" hidden>←</button>
-        <h2 id="messageModalTitle" class="message-title">Conversaciones</h2>
+        <h2 id="messageModalTitle" class="message-title">💬 Mensajes</h2>
         <button id="messageClose" class="message-close" type="button" aria-label="Cerrar mensajes">×</button>
       </header>
       <div class="message-body">
@@ -910,11 +911,36 @@
       return new Intl.DateTimeFormat("es-MX", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(date);
     }
 
+    function conversationKind(item = {}) {
+      return String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
+    }
+
     function conversationDisplayName(item = {}) {
-      const kind = String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
-      if (kind.includes("ATENCION")) return "Atención al Usuario";
-      if (kind.includes("ENTRENADOR") || kind === "ENT") return "Entrenador";
+      const kind = conversationKind(item);
+      if (kind.includes("ATENCION")) return "ATENCIÓN AL USUARIO";
+      if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "NOTIFICACIONES DEL SISTEMA";
+      if (kind.includes("ENTRENADOR") || kind === "ENT") return item.nombreVisible || "ENTRENADOR";
       return item.nombreVisible || "Conversación";
+    }
+
+    function conversationDescription(item = {}) {
+      const kind = conversationKind(item);
+      if (kind.includes("ATENCION")) {
+        return "Reporta fallas en la plataforma y solicita apoyo relacionado con tu cuenta.";
+      }
+      if (kind.includes("ENTRENADOR") || kind === "ENT") {
+        return "Contacta a tu entrenador para resolver dudas sobre tu plan, sesiones y seguimiento.";
+      }
+      if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) {
+        return "Avisos importantes sobre tu cuenta y el funcionamiento de la plataforma.";
+      }
+      return "";
+    }
+
+    function isVisibleConversation(item = {}) {
+      const kind = conversationKind(item);
+      const isSystem = kind.includes("SISTEMA") || kind.includes("NOTIFIC");
+      return !isSystem || Boolean(item.ultimoMensaje) || Number(item.noLeidos) > 0;
     }
 
     function renderInbox(items) {
@@ -928,19 +954,19 @@
         inbox.append(empty);
         return;
       }
-      items.forEach((item) => {
+      items.filter(isVisibleConversation).forEach((item) => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "conversation-item";
         const avatar = document.createElement("span");
         avatar.className = "conversation-avatar";
-        const conversationKind = String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
-        const isAttention = conversationKind.includes("ATENCION");
+        const kind = conversationKind(item);
+        const isAttention = kind.includes("ATENCION");
         const avatarUrl = isAttention ? "" : normalizeWixImageUrl(item.avatar);
         if (isAttention) {
           avatar.classList.add("conversation-avatar--institutional");
           avatar.setAttribute("role", "img");
-          avatar.setAttribute("aria-label", "Atención al Usuario");
+          avatar.setAttribute("aria-label", "ATENCIÓN AL USUARIO");
           avatar.textContent = "🎧";
         } else if (avatarUrl) {
           const image = document.createElement("img");
@@ -953,10 +979,15 @@
         const name = document.createElement("p");
         name.className = "conversation-name";
         name.textContent = conversationDisplayName(item);
+        const description = document.createElement("p");
+        description.className = "conversation-description";
+        description.textContent = conversationDescription(item);
         const preview = document.createElement("p");
         preview.className = "conversation-preview";
-        preview.textContent = item.ultimoMensaje || "Sin mensajes todavía";
-        copy.append(name, preview);
+        preview.textContent = item.ultimoMensaje
+          ? `Último mensaje: ${item.ultimoMensaje}`
+          : "Sin mensajes todavía";
+        copy.append(name, description, preview);
         button.append(avatar, copy);
         if (Number(item.noLeidos) > 0) {
           const count = document.createElement("span");
@@ -1002,7 +1033,7 @@
       document.getElementById("messageThread").hidden = true;
       document.getElementById("messageBack").hidden = true;
       document.getElementById("messageInstruction").hidden = false;
-      document.getElementById("messageModalTitle").textContent = "Conversaciones";
+      document.getElementById("messageModalTitle").textContent = "💬 Mensajes";
       loadMessageInbox();
     }
 
