@@ -143,6 +143,42 @@
       border-color: var(--line);
     }
 
+    .message-button { position: relative; display: none; min-width: 34px; padding-inline: 8px; color: var(--blue-dark); background: #fff; border: 1px solid var(--line); font-size: 1rem; }
+    .message-button[data-visible="true"] { display: inline-grid; place-items: center; }
+    .message-button[data-pulse="true"] { animation: message-pulse 1.25s ease-in-out infinite; }
+    .message-badge { position: absolute; top: -7px; right: -7px; display: grid; place-items: center; min-width: 19px; height: 19px; padding: 0 5px; color: #fff; background: #dc2626; border: 2px solid #fff; border-radius: 999px; font-size: .64rem; font-weight: 850; }
+    .message-badge[hidden] { display: none; }
+    @keyframes message-pulse { 50% { transform: scale(1.08); box-shadow: 0 0 0 6px rgba(220, 38, 38, .12); } }
+
+    .message-modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(15, 47, 85, .54); }
+    .message-modal[hidden] { display: none; }
+    .message-dialog { display: grid; grid-template-rows: auto minmax(0, 1fr); width: min(100%, 560px); height: min(82dvh, 700px); overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 24px 70px rgba(15, 47, 85, .28); }
+    .message-header { display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    .message-title { flex: 1; margin: 0; font-size: 1rem; }
+    .message-back, .message-close { width: 34px; height: 34px; padding: 0; color: var(--blue-dark); background: var(--soft); border: 1px solid var(--line); border-radius: 50%; font: inherit; font-size: 1.15rem; cursor: pointer; }
+    .message-back[hidden] { display: none; }
+    .message-body { min-height: 0; overflow: hidden; }
+    .message-inbox { height: 100%; overflow: auto; padding: 10px; }
+    .conversation-item { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 11px; color: var(--text); text-align: left; background: #fff; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+    .conversation-avatar { display: grid; place-items: center; width: 42px; height: 42px; overflow: hidden; color: #fff; background: var(--blue); border-radius: 50%; font-size: .76rem; font-weight: 800; }
+    .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .conversation-copy { min-width: 0; }
+    .conversation-name { margin: 0 0 4px; font-size: .86rem; font-weight: 800; }
+    .conversation-preview { overflow: hidden; margin: 0; color: var(--muted); font-size: .74rem; text-overflow: ellipsis; white-space: nowrap; }
+    .conversation-count { min-width: 22px; padding: 4px 6px; color: #fff; background: #dc2626; border-radius: 999px; font-size: .65rem; font-weight: 850; text-align: center; }
+    .message-empty { padding: 36px 18px; color: var(--muted); text-align: center; font-size: .82rem; }
+    .message-thread { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
+    .message-thread[hidden] { display: none; }
+    .message-list { display: flex; flex-direction: column; gap: 8px; overflow: auto; padding: 14px; }
+    .message-bubble { max-width: 82%; padding: 9px 11px; background: #eef3f8; border-radius: 13px 13px 13px 3px; font-size: .8rem; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .message-bubble[data-own="true"] { align-self: flex-end; color: #fff; background: var(--blue); border-radius: 13px 13px 3px 13px; }
+    .message-time { display: block; margin-top: 4px; opacity: .7; font-size: .62rem; }
+    .message-compose { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); background: #fff; }
+    .message-compose[hidden] { display: none; }
+    .message-input { flex: 1; min-width: 0; resize: none; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: .8rem; }
+    .message-send { padding: 0 14px; color: #fff; background: var(--blue); border: 0; border-radius: 10px; font: inherit; font-size: .76rem; font-weight: 800; cursor: pointer; }
+    .message-send:disabled { opacity: .55; cursor: wait; }
+
     .topbar-action:focus-visible {
       outline: 3px solid rgba(23, 79, 130, 0.30);
       outline-offset: 2px;
@@ -575,10 +611,14 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.19">v0.1.19</span>
+      <span class="version" aria-label="Versión 0.1.20">v0.1.20</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
+      <button id="messageButton" class="topbar-action message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+        <span aria-hidden="true">💬</span>
+        <span id="messageBadge" class="message-badge" hidden>0</span>
+      </button>
       <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
       <button
         id="sessionButton"
@@ -698,6 +738,26 @@
     </section>
   </div>
 
+  <div id="messageModal" class="message-modal" role="dialog" aria-modal="true" aria-labelledby="messageModalTitle" hidden>
+    <section class="message-dialog">
+      <header class="message-header">
+        <button id="messageBack" class="message-back" type="button" aria-label="Volver a conversaciones" hidden>←</button>
+        <h2 id="messageModalTitle" class="message-title">Mensajes</h2>
+        <button id="messageClose" class="message-close" type="button" aria-label="Cerrar mensajes">×</button>
+      </header>
+      <div class="message-body">
+        <div id="messageInbox" class="message-inbox"></div>
+        <section id="messageThread" class="message-thread" hidden>
+          <div id="messageList" class="message-list"></div>
+          <form id="messageCompose" class="message-compose">
+            <textarea id="messageInput" class="message-input" rows="2" maxlength="3000" placeholder="Escribe un mensaje" required></textarea>
+            <button id="messageSend" class="message-send" type="submit">Enviar</button>
+          </form>
+        </section>
+      </div>
+    </section>
+  </div>
+
   <div id="profileModal" class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden>
     <form id="profileForm" class="profile-dialog">
       <h2 id="profileModalTitle">Editar identidad</h2>
@@ -756,6 +816,224 @@
       foto: "",
       programa: ""
     };
+
+    let messageUnread = 0;
+    let messagePollTimer = null;
+    let activeConversation = null;
+
+    function canUseMessages() {
+      return gymContext.se && (gymContext.us || gymContext.en);
+    }
+
+    async function messageApi(path, options = {}) {
+      const response = await fetch(`${API_BASE}/${path}`, { cache: "no-store", ...options });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || data?.ok !== true) throw new Error(data?.error || "No fue posible cargar Mensajería.");
+      return data;
+    }
+
+    function renderMessageAccess() {
+      const button = document.getElementById("messageButton");
+      if (!button) return;
+      button.dataset.visible = canUseMessages() ? "true" : "false";
+      if (!canUseMessages()) updateMessageBadge(0, false);
+    }
+
+    function updateMessageBadge(total, announce = true) {
+      const button = document.getElementById("messageButton");
+      const badge = document.getElementById("messageBadge");
+      const next = Math.max(0, Number(total) || 0);
+      const increased = next > messageUnread;
+      messageUnread = next;
+      if (badge) {
+        badge.textContent = next > 99 ? "99+" : String(next);
+        badge.hidden = next === 0;
+      }
+      if (button) {
+        button.dataset.pulse = announce && increased ? "true" : "false";
+        button.setAttribute("aria-label", next ? `Abrir mensajes, ${next} pendientes` : "Abrir mensajes");
+        if (increased) window.setTimeout(() => { button.dataset.pulse = "false"; }, 5000);
+      }
+    }
+
+    async function refreshMessageCount(announce = true) {
+      if (!canUseMessages()) return;
+      const memberId = resolveGymMember().memberId;
+      if (!memberId) return;
+      try {
+        const data = await messageApi(`gymMensajeriaPendientes?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`);
+        updateMessageBadge(data.total, announce);
+      } catch (error) {
+        console.error("No fue posible consultar mensajes pendientes:", error);
+      }
+    }
+
+    function startMessagePolling() {
+      window.clearInterval(messagePollTimer);
+      if (!canUseMessages()) return;
+      refreshMessageCount(false);
+      messagePollTimer = window.setInterval(() => refreshMessageCount(true), 30000);
+    }
+
+    function messageInitials(name) {
+      return getInitials(name).slice(0, 2);
+    }
+
+    function formatMessageDate(value) {
+      if (!value) return "";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return new Intl.DateTimeFormat("es-MX", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(date);
+    }
+
+    function renderInbox(items) {
+      const inbox = document.getElementById("messageInbox");
+      if (!inbox) return;
+      inbox.replaceChildren();
+      if (!items.length) {
+        const empty = document.createElement("p");
+        empty.className = "message-empty";
+        empty.textContent = "No hay conversaciones disponibles.";
+        inbox.append(empty);
+        return;
+      }
+      items.forEach((item) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "conversation-item";
+        const avatar = document.createElement("span");
+        avatar.className = "conversation-avatar";
+        const avatarUrl = normalizeWixImageUrl(item.avatar);
+        if (avatarUrl) {
+          const image = document.createElement("img");
+          image.src = avatarUrl;
+          image.alt = "";
+          avatar.append(image);
+        } else avatar.textContent = messageInitials(item.nombreVisible);
+        const copy = document.createElement("span");
+        copy.className = "conversation-copy";
+        const name = document.createElement("p");
+        name.className = "conversation-name";
+        name.textContent = item.nombreVisible || "Conversación";
+        const preview = document.createElement("p");
+        preview.className = "conversation-preview";
+        preview.textContent = item.ultimoMensaje || "Sin mensajes todavía";
+        copy.append(name, preview);
+        button.append(avatar, copy);
+        if (Number(item.noLeidos) > 0) {
+          const count = document.createElement("span");
+          count.className = "conversation-count";
+          count.textContent = Number(item.noLeidos) > 99 ? "99+" : String(item.noLeidos);
+          button.append(count);
+        }
+        button.addEventListener("click", () => openConversation(item));
+        inbox.append(button);
+      });
+    }
+
+    function showMessageState(container, text) {
+      if (!container) return;
+      const state = document.createElement("p");
+      state.className = "message-empty";
+      state.textContent = text;
+      container.replaceChildren(state);
+    }
+
+    async function loadMessageInbox() {
+      const memberId = resolveGymMember().memberId;
+      const inbox = document.getElementById("messageInbox");
+      showMessageState(inbox, "Cargando conversaciones…");
+      try {
+        const data = await messageApi(`gymMensajeriaBandeja?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`);
+        renderInbox(Array.isArray(data.items) ? data.items : []);
+        updateMessageBadge(data.totalNoLeidos, false);
+      } catch (error) {
+        showMessageState(inbox, error.message);
+      }
+    }
+
+    function showMessageInbox() {
+      activeConversation = null;
+      document.getElementById("messageInbox").hidden = false;
+      document.getElementById("messageThread").hidden = true;
+      document.getElementById("messageBack").hidden = true;
+      document.getElementById("messageModalTitle").textContent = "Mensajes";
+      loadMessageInbox();
+    }
+
+    async function openConversation(item) {
+      activeConversation = item;
+      const memberId = resolveGymMember().memberId;
+      const list = document.getElementById("messageList");
+      document.getElementById("messageInbox").hidden = true;
+      document.getElementById("messageThread").hidden = false;
+      document.getElementById("messageBack").hidden = false;
+      document.getElementById("messageModalTitle").textContent = item.nombreVisible || "Conversación";
+      document.getElementById("messageCompose").hidden = item.permiteRespuesta === false;
+      showMessageState(list, "Cargando mensajes…");
+      try {
+        const query = `memberId=${encodeURIComponent(memberId)}&conversationId=${encodeURIComponent(item.conversationId)}&limit=200&t=${Date.now()}`;
+        const data = await messageApi(`gymMensajeriaMensajes?${query}`);
+        list.replaceChildren();
+        (data.items || []).forEach((message) => {
+          const bubble = document.createElement("div");
+          bubble.className = "message-bubble";
+          bubble.dataset.own = message.propio === true ? "true" : "false";
+          bubble.textContent = message.mensaje || "";
+          const time = document.createElement("span");
+          time.className = "message-time";
+          time.textContent = formatMessageDate(message.fecha);
+          bubble.append(time);
+          list.append(bubble);
+        });
+        if (!(data.items || []).length) showMessageState(list, "Aún no hay mensajes.");
+        document.getElementById("messageCompose").hidden = data.conversation?.permiteRespuesta === false;
+        list.scrollTop = list.scrollHeight;
+        await messageApi("gymMensajeriaMarcarLeida", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId, conversationId: item.conversationId }) });
+        await refreshMessageCount(false);
+      } catch (error) {
+        showMessageState(list, error.message);
+      }
+    }
+
+    function openMessageModal() {
+      if (!canUseMessages()) return;
+      const modal = document.getElementById("messageModal");
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      showMessageInbox();
+      document.getElementById("messageClose")?.focus();
+    }
+
+    function closeMessageModal() {
+      document.getElementById("messageModal").hidden = true;
+      document.body.style.overflow = "";
+      activeConversation = null;
+      document.getElementById("messageButton")?.focus();
+    }
+
+    document.getElementById("messageButton")?.addEventListener("click", openMessageModal);
+    document.getElementById("messageClose")?.addEventListener("click", closeMessageModal);
+    document.getElementById("messageBack")?.addEventListener("click", showMessageInbox);
+    document.getElementById("messageModal")?.addEventListener("click", (event) => { if (event.target === event.currentTarget) closeMessageModal(); });
+    document.getElementById("messageCompose")?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!activeConversation) return;
+      const input = document.getElementById("messageInput");
+      const send = document.getElementById("messageSend");
+      const mensaje = String(input.value || "").trim();
+      if (!mensaje) return;
+      try {
+        send.disabled = true;
+        await messageApi("gymMensajeriaEnviar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId: resolveGymMember().memberId, conversationId: activeConversation.conversationId, mensaje }) });
+        input.value = "";
+        await openConversation(activeConversation);
+      } catch (error) {
+        window.alert(error.message);
+      } finally {
+        send.disabled = false;
+      }
+    });
 
     function getUrlParam(name) {
       return new URLSearchParams(window.location.search).get(name) || "";
@@ -893,6 +1171,7 @@
 
     function clearGymIdentity() {
       localStorage.removeItem(MEMBER_ID_KEY);
+      window.clearInterval(messagePollTimer);
       gymContext = {
         se: false,
         us: false,
@@ -903,6 +1182,7 @@
         programa: ""
       };
       clearIdentityCard();
+      renderMessageAccess();
     }
 
     function goToGymAccess(options = {}) {
@@ -966,6 +1246,10 @@
     });
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
+      if (!document.getElementById("messageModal")?.hidden) {
+        closeMessageModal();
+        return;
+      }
       if (!document.getElementById("privacyModal")?.hidden) {
         closePrivacyPolicy();
         return;
@@ -1092,6 +1376,8 @@
       renderSessionButton();
       renderTrainerPanelCard();
       renderIdentityCard();
+      renderMessageAccess();
+      startMessagePolling();
     }
 
     function openProfileEditor() {
@@ -1219,6 +1505,7 @@
     renderSessionButton();
     renderTrainerPanelCard();
     renderIdentityCard();
+    renderMessageAccess();
     loadGymContext();
 
     if ("serviceWorker" in navigator) {
