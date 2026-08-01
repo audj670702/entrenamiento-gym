@@ -181,13 +181,13 @@
 
     .message-modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(15, 47, 85, .54); }
     .message-modal[hidden] { display: none; }
-    .message-dialog { display: grid; grid-template-rows: auto auto; width: min(100%, 520px); max-height: min(78dvh, 640px); overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 24px 70px rgba(15, 47, 85, .28); }
-    .message-dialog[data-view="thread"] { grid-template-rows: auto minmax(0, 1fr); height: min(78dvh, 640px); }
+    .message-dialog { display: grid; grid-template-rows: auto auto; width: min(100%, 520px); max-height: min(calc(100dvh - 32px), 640px); overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 24px 70px rgba(15, 47, 85, .28); }
+    .message-dialog[data-view="thread"] { grid-template-rows: auto minmax(0, 1fr); height: min(calc(100dvh - 32px), 640px); }
     .message-header { display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
     .message-title { flex: 1; margin: 0; font-size: 1rem; }
     .message-back, .message-close { width: 34px; height: 34px; padding: 0; color: var(--blue-dark); background: var(--soft); border: 1px solid var(--line); border-radius: 50%; font: inherit; font-size: 1.15rem; cursor: pointer; }
     .message-back[hidden] { display: none; }
-    .message-body { min-height: 0; overflow: hidden; }
+    .message-body { min-height: 0; overflow: hidden; }\n    .message-dialog[data-view="thread"] .message-body { display: grid; grid-template-rows: minmax(0, 1fr); height: 100%; }
     .message-inbox { max-height: min(58dvh, 460px); overflow: auto; padding: 4px 10px 10px; }
     .message-instruction { margin: 0; padding: 10px 14px 7px; color: var(--muted); font-size: .76rem; }
     .message-search { padding: 3px 14px 8px; }
@@ -212,14 +212,14 @@
     .conversation-arrow { color: var(--blue); font-size: 1.35rem; line-height: 1; }
     @keyframes conversation-pending { 50% { transform: scale(1.12); box-shadow: 0 0 0 5px rgba(220, 38, 38, .14); } }
     .message-empty { padding: 36px 18px; color: var(--muted); text-align: center; font-size: .82rem; }
-    .message-thread { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
+    .message-thread { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-height: 0; height: 100%; overflow: hidden; }
     .message-thread[hidden] { display: none; }
     .message-thread-reference { margin: 0; padding: 9px 14px; color: var(--muted); background: #f8fafc; border-bottom: 1px solid var(--line); font-size: .7rem; line-height: 1.35; }
     .message-list { display: flex; flex-direction: column; gap: 8px; overflow: auto; padding: 14px; }
     .message-bubble { max-width: 82%; padding: 9px 11px; background: #eef3f8; border-radius: 13px 13px 13px 3px; font-size: .8rem; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
     .message-bubble[data-own="true"] { align-self: flex-end; color: #fff; background: var(--blue); border-radius: 13px 13px 3px 13px; }
     .message-time { display: block; margin-top: 4px; opacity: .7; font-size: .62rem; }
-    .message-compose { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); background: #fff; }
+    .message-compose { display: flex; flex: 0 0 auto; gap: 8px; padding: 10px 10px max(10px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: #fff; }
     .message-compose[hidden] { display: none; }
     .message-input { flex: 1; min-width: 0; resize: none; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: .8rem; }
     .message-send { padding: 0 14px; color: #fff; background: var(--blue); border: 0; border-radius: 10px; font: inherit; font-size: .76rem; font-weight: 800; cursor: pointer; }
@@ -658,7 +658,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.31">v0.1.31</span>
+      <span class="version" aria-label="Versión 0.1.32">v0.1.32</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
