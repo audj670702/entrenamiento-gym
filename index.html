@@ -179,9 +179,14 @@
     .message-body { min-height: 0; overflow: hidden; }
     .message-inbox { max-height: min(58dvh, 460px); overflow: auto; padding: 4px 10px 10px; }
     .message-instruction { margin: 0; padding: 10px 14px 7px; color: var(--muted); font-size: .76rem; }
+    .message-search { padding: 3px 14px 8px; }
+    .message-search[hidden] { display: none; }
+    .message-search-input { width: 100%; min-height: 38px; padding: 8px 12px; color: var(--text); background: var(--soft); border: 1px solid var(--line); border-radius: 10px; font: inherit; font-size: .76rem; outline: none; }
+    .message-search-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(23, 79, 130, .10); }
     .conversation-item { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; width: 100%; padding: 11px; color: var(--text); text-align: left; background: #fff; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
     .conversation-avatar { display: grid; place-items: center; width: 42px; height: 42px; overflow: hidden; color: #fff; background: var(--blue); border-radius: 50%; font-size: .76rem; font-weight: 800; }
     .conversation-avatar--institutional { background: linear-gradient(145deg, var(--blue), var(--blue-dark)); font-size: 1.15rem; }
+    .conversation-avatar--simple { overflow: visible; color: var(--blue-dark); background: transparent; border-radius: 0; font-size: 1.65rem; }
     .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .conversation-copy { min-width: 0; }
     .conversation-name { margin: 0 0 3px; font-size: .86rem; font-weight: 850; }
@@ -635,7 +640,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.25">v0.1.25</span>
+      <span class="version" aria-label="Versión 0.1.26">v0.1.26</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -771,6 +776,9 @@
       </header>
       <div class="message-body">
         <p id="messageInstruction" class="message-instruction">Selecciona una conversación para abrirla.</p>
+        <div id="messageSearch" class="message-search" hidden>
+          <input id="messageSearchInput" class="message-search-input" type="search" autocomplete="off" placeholder="Buscar usuario vinculado…" aria-label="Buscar usuario vinculado">
+        </div>
         <div id="messageInbox" class="message-inbox"></div>
         <section id="messageThread" class="message-thread" hidden>
           <div id="messageList" class="message-list"></div>
@@ -845,6 +853,7 @@
     let messageUnread = 0;
     let messagePollTimer = null;
     let activeConversation = null;
+    let messageInboxItems = [];
 
     function canUseMessages() {
       return gymContext.se && (gymContext.us || gymContext.en);
@@ -915,11 +924,19 @@
       return String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
     }
 
+    function isTrainerConversation(item = {}) {
+      const kind = conversationKind(item);
+      return kind.includes("ENTRENADOR") || kind.includes("ENTRENAMIENTO") || kind === "ENT";
+    }
+
     function conversationDisplayName(item = {}) {
       const kind = conversationKind(item);
       if (kind.includes("ATENCION")) return "ATENCIÓN AL USUARIO";
-      if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "NOTIFICACIONES DEL SISTEMA";
-      if (kind.includes("ENTRENADOR") || kind === "ENT") return item.nombreVisible || "ENTRENADOR";
+      if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "NOTIFICACIONES";
+      if (isTrainerConversation(item)) {
+        const trainerName = String(item.nombreVisible || "").trim();
+        return trainerName ? `TU ENTRENADOR · ${trainerName}` : "TU ENTRENADOR";
+      }
       return item.nombreVisible || "Conversación";
     }
 
@@ -928,7 +945,7 @@
       if (kind.includes("ATENCION")) {
         return "Reporta fallas en la plataforma y solicita apoyo relacionado con tu cuenta.";
       }
-      if (kind.includes("ENTRENADOR") || kind === "ENT") {
+      if (isTrainerConversation(item)) {
         return "Contacta a tu entrenador para resolver dudas sobre tu plan, sesiones y seguimiento.";
       }
       if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) {
@@ -940,21 +957,45 @@
     function isVisibleConversation(item = {}) {
       const kind = conversationKind(item);
       const isSystem = kind.includes("SISTEMA") || kind.includes("NOTIFIC");
+      const isAttention = kind.includes("ATENCION");
+      const allowedForUser = isSystem || isAttention || isTrainerConversation(item);
+      if (gymContext.en !== true && !allowedForUser) return false;
       return !isSystem || Boolean(item.ultimoMensaje) || Number(item.noLeidos) > 0;
     }
 
-    function renderInbox(items) {
+    function normalizedMessageSearch(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    }
+
+    function renderInbox(items = messageInboxItems) {
       const inbox = document.getElementById("messageInbox");
       if (!inbox) return;
       inbox.replaceChildren();
-      if (!items.length) {
+      const searchInput = document.getElementById("messageSearchInput");
+      const query = gymContext.en === true ? normalizedMessageSearch(searchInput?.value) : "";
+      const visibleItems = items
+        .filter(isVisibleConversation)
+        .filter((item) => {
+          if (!query) return true;
+          return normalizedMessageSearch([
+            conversationDisplayName(item),
+            conversationDescription(item),
+            item.nombreVisible,
+            item.ultimoMensaje
+          ].join(" ")).includes(query);
+        });
+      if (!visibleItems.length) {
         const empty = document.createElement("p");
         empty.className = "message-empty";
-        empty.textContent = "No hay conversaciones disponibles.";
+        empty.textContent = query ? "No se encontraron usuarios vinculados." : "No hay conversaciones disponibles.";
         inbox.append(empty);
         return;
       }
-      items.filter(isVisibleConversation).forEach((item) => {
+      visibleItems.forEach((item) => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "conversation-item";
@@ -962,12 +1003,13 @@
         avatar.className = "conversation-avatar";
         const kind = conversationKind(item);
         const isAttention = kind.includes("ATENCION");
-        const avatarUrl = isAttention ? "" : normalizeWixImageUrl(item.avatar);
-        if (isAttention) {
-          avatar.classList.add("conversation-avatar--institutional");
+        const isSystem = kind.includes("SISTEMA") || kind.includes("NOTIFIC");
+        const avatarUrl = isAttention || isSystem ? "" : normalizeWixImageUrl(item.avatar);
+        if (isAttention || isSystem) {
+          avatar.classList.add("conversation-avatar--simple");
           avatar.setAttribute("role", "img");
-          avatar.setAttribute("aria-label", "ATENCIÓN AL USUARIO");
-          avatar.textContent = "🎧";
+          avatar.setAttribute("aria-label", isAttention ? "ATENCIÓN AL USUARIO" : "NOTIFICACIONES");
+          avatar.textContent = isAttention ? "💁🏻‍♂️" : "⚙️";
         } else if (avatarUrl) {
           const image = document.createElement("img");
           image.src = avatarUrl;
@@ -1019,7 +1061,8 @@
       showMessageState(inbox, "Cargando conversaciones…");
       try {
         const data = await messageApi(`gymMensajeriaBandeja?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`);
-        renderInbox(Array.isArray(data.items) ? data.items : []);
+        messageInboxItems = Array.isArray(data.items) ? data.items : [];
+        renderInbox();
         updateMessageBadge(data.totalNoLeidos, false);
       } catch (error) {
         showMessageState(inbox, error.message);
@@ -1033,6 +1076,10 @@
       document.getElementById("messageThread").hidden = true;
       document.getElementById("messageBack").hidden = true;
       document.getElementById("messageInstruction").hidden = false;
+      const search = document.getElementById("messageSearch");
+      const searchInput = document.getElementById("messageSearchInput");
+      if (search) search.hidden = gymContext.en !== true;
+      if (searchInput && gymContext.en !== true) searchInput.value = "";
       document.getElementById("messageModalTitle").textContent = "💬 Mensajes";
       loadMessageInbox();
     }
@@ -1046,6 +1093,7 @@
       document.getElementById("messageThread").hidden = false;
       document.getElementById("messageBack").hidden = false;
       document.getElementById("messageInstruction").hidden = true;
+      document.getElementById("messageSearch").hidden = true;
       document.getElementById("messageModalTitle").textContent = conversationDisplayName(item);
       document.getElementById("messageCompose").hidden = item.permiteRespuesta === false;
       showMessageState(list, "Cargando mensajes…");
@@ -1093,6 +1141,7 @@
     document.getElementById("messageButton")?.addEventListener("click", openMessageModal);
     document.getElementById("messageClose")?.addEventListener("click", closeMessageModal);
     document.getElementById("messageBack")?.addEventListener("click", showMessageInbox);
+    document.getElementById("messageSearchInput")?.addEventListener("input", () => renderInbox());
     document.getElementById("messageModal")?.addEventListener("click", (event) => { if (event.target === event.currentTarget) closeMessageModal(); });
     document.getElementById("messageCompose")?.addEventListener("submit", async (event) => {
       event.preventDefault();
