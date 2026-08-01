@@ -144,21 +144,19 @@
     }
 
     .message-button {
-      position: absolute;
-      top: 28px;
-      left: 16px;
-      z-index: 2;
+      position: relative;
       display: none;
       place-items: center;
-      width: 38px;
-      height: 38px;
+      flex: 0 0 auto;
+      width: 34px;
+      height: 34px;
       padding: 0;
       color: var(--blue-dark);
       background: transparent;
       border: 0;
       border-radius: 0;
       font: inherit;
-      font-size: 1.55rem;
+      font-size: 1.4rem;
       line-height: 1;
       cursor: pointer;
     }
@@ -189,6 +187,7 @@
     .conversation-avatar--simple { overflow: visible; color: var(--blue-dark); background: transparent; border-radius: 0; font-size: 1.65rem; }
     .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .conversation-copy { min-width: 0; }
+    .conversation-role { margin: 0 0 2px; color: var(--blue); font-size: .62rem; font-weight: 900; letter-spacing: .06em; line-height: 1.2; }
     .conversation-name { margin: 0 0 3px; font-size: .86rem; font-weight: 850; }
     .conversation-description { margin: 0 0 5px; color: var(--text); font-size: .72rem; line-height: 1.35; }
     .conversation-preview { overflow: hidden; margin: 0; color: var(--muted); font-size: .69rem; text-overflow: ellipsis; white-space: nowrap; }
@@ -640,7 +639,11 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.26">v0.1.26</span>
+      <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+        <span aria-hidden="true">💬</span>
+        <span id="messageBadge" class="message-badge" hidden>0</span>
+      </button>
+      <span class="version" aria-label="Versión 0.1.27">v0.1.27</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -654,10 +657,6 @@
     </div>
   </header>
   <main>
-    <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-      <span aria-hidden="true">💬</span>
-      <span id="messageBadge" class="message-badge" hidden>0</span>
-    </button>
     <img
       class="hero-logo"
       src="./assets/entrenamiento-gym-logo-sentadilla.png"
@@ -869,8 +868,10 @@
     function renderMessageAccess() {
       const button = document.getElementById("messageButton");
       if (!button) return;
-      button.dataset.visible = canUseMessages() ? "true" : "false";
-      if (!canUseMessages()) updateMessageBadge(0, false);
+      const enabled = canUseMessages();
+      button.dataset.visible = "true";
+      if (!enabled) updateMessageBadge(0, false);
+      button.setAttribute("aria-label", enabled ? "Abrir mensajes" : "Inicia sesión para abrir mensajes");
     }
 
     function updateMessageBadge(total, announce = true) {
@@ -926,17 +927,21 @@
 
     function isTrainerConversation(item = {}) {
       const kind = conversationKind(item);
-      return kind.includes("ENTRENADOR") || kind.includes("ENTRENAMIENTO") || kind === "ENT";
+      const visibleRole = String(item.rolVisible || "").toUpperCase();
+      return visibleRole === "ENT" || visibleRole.includes("ENTRENADOR") ||
+        (!visibleRole && (kind.includes("ENTRENADOR") || kind === "ENT"));
+    }
+
+    function isLinkedUserConversation(item = {}) {
+      const visibleRole = String(item.rolVisible || "").toUpperCase();
+      return conversationKind(item).includes("ENTRENAMIENTO") &&
+        (visibleRole === "USU" || visibleRole.includes("USUARIO"));
     }
 
     function conversationDisplayName(item = {}) {
       const kind = conversationKind(item);
       if (kind.includes("ATENCION")) return "ATENCIÓN AL USUARIO";
       if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "NOTIFICACIONES";
-      if (isTrainerConversation(item)) {
-        const trainerName = String(item.nombreVisible || "").trim();
-        return trainerName ? `TU ENTRENADOR · ${trainerName}` : "TU ENTRENADOR";
-      }
       return item.nombreVisible || "Conversación";
     }
 
@@ -947,6 +952,9 @@
       }
       if (isTrainerConversation(item)) {
         return "Contacta a tu entrenador para resolver dudas sobre tu plan, sesiones y seguimiento.";
+      }
+      if (isLinkedUserConversation(item)) {
+        return "Usuario vinculado a tu entrenamiento.";
       }
       if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) {
         return "Avisos importantes sobre tu cuenta y el funcionamiento de la plataforma.";
@@ -1018,6 +1026,12 @@
         } else avatar.textContent = messageInitials(conversationDisplayName(item));
         const copy = document.createElement("span");
         copy.className = "conversation-copy";
+        if (isTrainerConversation(item)) {
+          const role = document.createElement("p");
+          role.className = "conversation-role";
+          role.textContent = "TU ENTRENADOR";
+          copy.append(role);
+        }
         const name = document.createElement("p");
         name.className = "conversation-name";
         name.textContent = conversationDisplayName(item);
@@ -1138,7 +1152,13 @@
       document.getElementById("messageButton")?.focus();
     }
 
-    document.getElementById("messageButton")?.addEventListener("click", openMessageModal);
+    document.getElementById("messageButton")?.addEventListener("click", () => {
+      if (!canUseMessages()) {
+        goToGymAccess();
+        return;
+      }
+      openMessageModal();
+    });
     document.getElementById("messageClose")?.addEventListener("click", closeMessageModal);
     document.getElementById("messageBack")?.addEventListener("click", showMessageInbox);
     document.getElementById("messageSearchInput")?.addEventListener("input", () => renderInbox());
