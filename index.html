@@ -45,10 +45,10 @@
       top: 0;
       z-index: 10;
       display: grid;
-      gap: 6px;
+      gap: 5px;
       min-height: 58px;
-      padding: max(8px, env(safe-area-inset-top)) 16px 8px;
-      background: rgba(255, 255, 255, 0.94);
+      padding: max(7px, env(safe-area-inset-top)) 16px 7px;
+      background: rgba(255, 255, 255, 0.96);
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(12px);
     }
@@ -144,12 +144,10 @@
     }
 
     .message-button {
-      position: absolute;
-      top: 28px;
-      left: 16px;
-      z-index: 2;
+      position: relative;
       display: none;
       place-items: center;
+      flex: 0 0 auto;
       width: 38px;
       height: 38px;
       padding: 0;
@@ -206,15 +204,17 @@
       position: relative;
       width: min(100%, 560px);
       margin: 0 auto;
-      padding: 28px 16px calc(28px + env(safe-area-inset-bottom));
+      padding: 16px 16px calc(28px + env(safe-area-inset-bottom));
     }
 
     .identity-card {
       display: grid;
-      grid-template-columns: 48px minmax(0, 1fr);
+      grid-template-columns: 48px minmax(0, 1fr) 38px;
       align-items: center;
       gap: 11px;
-      margin: 0 4px 20px;
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
     }
 
     .identity-card[hidden] { display: none; }
@@ -351,9 +351,21 @@
 
     .hero-logo {
       display: block;
-      width: min(38vw, 150px);
+      width: min(30vw, 118px);
       height: auto;
-      margin: 0 auto 12px;
+      margin: 0 auto 8px;
+    }
+
+    body[data-identity-visible="true"] .topbar-meta {
+      justify-content: stretch;
+    }
+
+    body[data-identity-visible="true"] .brand {
+      display: none;
+    }
+
+    body[data-identity-visible="true"] .hero-logo {
+      display: none;
     }
 
     .training-card {
@@ -608,11 +620,11 @@
 
     @media (min-width: 640px) {
       main {
-        padding-top: 38px;
+        padding-top: 22px;
       }
 
       .hero-logo {
-        margin-bottom: 20px;
+        margin-bottom: 14px;
       }
     }
 
@@ -630,7 +642,24 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.21">v0.1.21</span>
+      <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
+        <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
+          <span id="identityInitials">US</span>
+          <img id="identityPhoto" src="" alt="" hidden>
+        </button>
+        <div class="identity-copy">
+          <div class="identity-name-row">
+            <p id="identityName" class="identity-name"></p>
+            <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
+          </div>
+          <p id="identityProgram" class="identity-program"></p>
+        </div>
+        <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+          <span aria-hidden="true">💬</span>
+          <span id="messageBadge" class="message-badge" hidden>0</span>
+        </button>
+      </section>
+      <span class="version" aria-label="Versión 0.1.22">v0.1.22</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -644,29 +673,11 @@
     </div>
   </header>
   <main>
-    <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-      <span aria-hidden="true">💬</span>
-      <span id="messageBadge" class="message-badge" hidden>0</span>
-    </button>
     <img
       class="hero-logo"
       src="./assets/entrenamiento-gym-logo-sentadilla.png"
       alt="Identidad de Entrenamiento GYM"
     >
-
-    <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
-      <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
-        <span id="identityInitials">US</span>
-        <img id="identityPhoto" src="" alt="" hidden>
-      </button>
-      <div class="identity-copy">
-        <div class="identity-name-row">
-          <p id="identityName" class="identity-name"></p>
-          <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
-        </div>
-        <p id="identityProgram" class="identity-program"></p>
-      </div>
-    </section>
 
     <a
       id="cardMiEntrenamiento"
@@ -1108,6 +1119,7 @@
       const program = document.getElementById("identityProgram");
 
       if (card) card.hidden = true;
+      document.body.dataset.identityVisible = "false";
       if (photo) {
         photo.hidden = true;
         photo.removeAttribute("src");
@@ -1137,6 +1149,7 @@
       program.textContent = gymContext.programa || "Usuario de entrenamiento";
       initials.textContent = getInitials(displayName);
       card.hidden = false;
+      document.body.dataset.identityVisible = "true";
 
       photo.onerror = () => {
         photo.hidden = true;
