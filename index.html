@@ -189,13 +189,13 @@
     .conversation-copy { min-width: 0; }
     .conversation-role { margin: 0 0 2px; color: var(--blue); font-size: .62rem; font-weight: 900; letter-spacing: .06em; line-height: 1.2; }
     .conversation-name { margin: 0 0 3px; font-size: .86rem; font-weight: 850; }
-    .conversation-description { margin: 0 0 5px; color: var(--text); font-size: .72rem; line-height: 1.35; }
-    .conversation-preview { overflow: hidden; margin: 0; color: var(--muted); font-size: .69rem; text-overflow: ellipsis; white-space: nowrap; }
-    .conversation-count { min-width: 22px; padding: 4px 6px; color: #fff; background: #dc2626; border-radius: 999px; font-size: .65rem; font-weight: 850; text-align: center; }
+    .conversation-count { min-width: 22px; padding: 4px 6px; color: #fff; background: #dc2626; border-radius: 999px; font-size: .65rem; font-weight: 850; text-align: center; animation: conversation-pending 1.15s ease-in-out infinite; }
     .conversation-arrow { color: var(--blue); font-size: 1.35rem; line-height: 1; }
+    @keyframes conversation-pending { 50% { transform: scale(1.12); box-shadow: 0 0 0 5px rgba(220, 38, 38, .14); } }
     .message-empty { padding: 36px 18px; color: var(--muted); text-align: center; font-size: .82rem; }
-    .message-thread { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
+    .message-thread { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
     .message-thread[hidden] { display: none; }
+    .message-thread-reference { margin: 0; padding: 9px 14px; color: var(--muted); background: #f8fafc; border-bottom: 1px solid var(--line); font-size: .7rem; line-height: 1.35; }
     .message-list { display: flex; flex-direction: column; gap: 8px; overflow: auto; padding: 14px; }
     .message-bubble { max-width: 82%; padding: 9px 11px; background: #eef3f8; border-radius: 13px 13px 13px 3px; font-size: .8rem; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
     .message-bubble[data-own="true"] { align-self: flex-end; color: #fff; background: var(--blue); border-radius: 13px 13px 3px 13px; }
@@ -638,12 +638,12 @@
       <div class="brand">
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
+        <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+          <span aria-hidden="true">💬</span>
+          <span id="messageBadge" class="message-badge" hidden>0</span>
+        </button>
       </div>
-      <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-        <span aria-hidden="true">💬</span>
-        <span id="messageBadge" class="message-badge" hidden>0</span>
-      </button>
-      <span class="version" aria-label="Versión 0.1.27">v0.1.27</span>
+      <span class="version" aria-label="Versión 0.1.28">v0.1.28</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -780,6 +780,7 @@
         </div>
         <div id="messageInbox" class="message-inbox"></div>
         <section id="messageThread" class="message-thread" hidden>
+          <p id="messageThreadReference" class="message-thread-reference"></p>
           <div id="messageList" class="message-list"></div>
           <form id="messageCompose" class="message-compose">
             <textarea id="messageInput" class="message-input" rows="2" maxlength="3000" placeholder="Escribe un mensaje…" required></textarea>
@@ -989,12 +990,23 @@
         .filter(isVisibleConversation)
         .filter((item) => {
           if (!query) return true;
+          if (!isLinkedUserConversation(item)) return true;
           return normalizedMessageSearch([
             conversationDisplayName(item),
             conversationDescription(item),
             item.nombreVisible,
             item.ultimoMensaje
           ].join(" ")).includes(query);
+        })
+        .sort((a, b) => {
+          const priority = (item) => {
+            const kind = conversationKind(item);
+            if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return 0;
+            if (kind.includes("ATENCION")) return 1;
+            if (isTrainerConversation(item)) return 2;
+            return 3;
+          };
+          return priority(a) - priority(b);
         });
       if (!visibleItems.length) {
         const empty = document.createElement("p");
@@ -1035,15 +1047,7 @@
         const name = document.createElement("p");
         name.className = "conversation-name";
         name.textContent = conversationDisplayName(item);
-        const description = document.createElement("p");
-        description.className = "conversation-description";
-        description.textContent = conversationDescription(item);
-        const preview = document.createElement("p");
-        preview.className = "conversation-preview";
-        preview.textContent = item.ultimoMensaje
-          ? `Último mensaje: ${item.ultimoMensaje}`
-          : "Sin mensajes todavía";
-        copy.append(name, description, preview);
+        copy.append(name);
         button.append(avatar, copy);
         if (Number(item.noLeidos) > 0) {
           const count = document.createElement("span");
@@ -1109,6 +1113,7 @@
       document.getElementById("messageInstruction").hidden = true;
       document.getElementById("messageSearch").hidden = true;
       document.getElementById("messageModalTitle").textContent = conversationDisplayName(item);
+      document.getElementById("messageThreadReference").textContent = conversationDescription(item);
       document.getElementById("messageCompose").hidden = item.permiteRespuesta === false;
       showMessageState(list, "Cargando mensajes…");
       try {
