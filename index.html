@@ -45,10 +45,10 @@
       top: 0;
       z-index: 10;
       display: grid;
-      gap: 5px;
+      gap: 6px;
       min-height: 58px;
-      padding: max(7px, env(safe-area-inset-top)) 16px 7px;
-      background: rgba(255, 255, 255, 0.96);
+      padding: max(8px, env(safe-area-inset-top)) 16px 8px;
+      background: rgba(255, 255, 255, 0.94);
       border-bottom: 1px solid var(--line);
       backdrop-filter: blur(12px);
     }
@@ -144,10 +144,12 @@
     }
 
     .message-button {
-      position: relative;
+      position: absolute;
+      top: 28px;
+      left: 16px;
+      z-index: 2;
       display: none;
       place-items: center;
-      flex: 0 0 auto;
       width: 38px;
       height: 38px;
       padding: 0;
@@ -168,20 +170,23 @@
 
     .message-modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 16px; background: rgba(15, 47, 85, .54); }
     .message-modal[hidden] { display: none; }
-    .message-dialog { display: grid; grid-template-rows: auto minmax(0, 1fr); width: min(100%, 560px); height: min(82dvh, 700px); overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 24px 70px rgba(15, 47, 85, .28); }
+    .message-dialog { display: grid; grid-template-rows: auto auto; width: min(100%, 520px); max-height: min(78dvh, 640px); overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 24px 70px rgba(15, 47, 85, .28); }
+    .message-dialog[data-view="thread"] { grid-template-rows: auto minmax(0, 1fr); height: min(78dvh, 640px); }
     .message-header { display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
     .message-title { flex: 1; margin: 0; font-size: 1rem; }
     .message-back, .message-close { width: 34px; height: 34px; padding: 0; color: var(--blue-dark); background: var(--soft); border: 1px solid var(--line); border-radius: 50%; font: inherit; font-size: 1.15rem; cursor: pointer; }
     .message-back[hidden] { display: none; }
     .message-body { min-height: 0; overflow: hidden; }
-    .message-inbox { height: 100%; overflow: auto; padding: 10px; }
-    .conversation-item { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 11px; color: var(--text); text-align: left; background: #fff; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
+    .message-inbox { max-height: min(58dvh, 460px); overflow: auto; padding: 4px 10px 10px; }
+    .message-instruction { margin: 0; padding: 10px 14px 7px; color: var(--muted); font-size: .76rem; }
+    .conversation-item { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; width: 100%; padding: 11px; color: var(--text); text-align: left; background: #fff; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; }
     .conversation-avatar { display: grid; place-items: center; width: 42px; height: 42px; overflow: hidden; color: #fff; background: var(--blue); border-radius: 50%; font-size: .76rem; font-weight: 800; }
     .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
     .conversation-copy { min-width: 0; }
     .conversation-name { margin: 0 0 4px; font-size: .86rem; font-weight: 800; }
     .conversation-preview { overflow: hidden; margin: 0; color: var(--muted); font-size: .74rem; text-overflow: ellipsis; white-space: nowrap; }
     .conversation-count { min-width: 22px; padding: 4px 6px; color: #fff; background: #dc2626; border-radius: 999px; font-size: .65rem; font-weight: 850; text-align: center; }
+    .conversation-arrow { color: var(--blue); font-size: 1.35rem; line-height: 1; }
     .message-empty { padding: 36px 18px; color: var(--muted); text-align: center; font-size: .82rem; }
     .message-thread { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
     .message-thread[hidden] { display: none; }
@@ -204,17 +209,15 @@
       position: relative;
       width: min(100%, 560px);
       margin: 0 auto;
-      padding: 16px 16px calc(28px + env(safe-area-inset-bottom));
+      padding: 28px 16px calc(28px + env(safe-area-inset-bottom));
     }
 
     .identity-card {
       display: grid;
-      grid-template-columns: 48px minmax(0, 1fr) 38px;
+      grid-template-columns: 48px minmax(0, 1fr);
       align-items: center;
       gap: 11px;
-      flex: 1 1 auto;
-      min-width: 0;
-      margin: 0;
+      margin: 0 4px 20px;
     }
 
     .identity-card[hidden] { display: none; }
@@ -351,21 +354,9 @@
 
     .hero-logo {
       display: block;
-      width: min(30vw, 118px);
+      width: min(38vw, 150px);
       height: auto;
-      margin: 0 auto 8px;
-    }
-
-    body[data-identity-visible="true"] .topbar-meta {
-      justify-content: stretch;
-    }
-
-    body[data-identity-visible="true"] .brand {
-      display: none;
-    }
-
-    body[data-identity-visible="true"] .hero-logo {
-      display: none;
+      margin: 0 auto 12px;
     }
 
     .training-card {
@@ -620,11 +611,11 @@
 
     @media (min-width: 640px) {
       main {
-        padding-top: 22px;
+        padding-top: 38px;
       }
 
       .hero-logo {
-        margin-bottom: 14px;
+        margin-bottom: 20px;
       }
     }
 
@@ -642,24 +633,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
-        <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
-          <span id="identityInitials">US</span>
-          <img id="identityPhoto" src="" alt="" hidden>
-        </button>
-        <div class="identity-copy">
-          <div class="identity-name-row">
-            <p id="identityName" class="identity-name"></p>
-            <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
-          </div>
-          <p id="identityProgram" class="identity-program"></p>
-        </div>
-        <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-          <span aria-hidden="true">💬</span>
-          <span id="messageBadge" class="message-badge" hidden>0</span>
-        </button>
-      </section>
-      <span class="version" aria-label="Versión 0.1.22">v0.1.22</span>
+      <span class="version" aria-label="Versión 0.1.23">v0.1.23</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -673,11 +647,29 @@
     </div>
   </header>
   <main>
+    <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+      <span aria-hidden="true">💬</span>
+      <span id="messageBadge" class="message-badge" hidden>0</span>
+    </button>
     <img
       class="hero-logo"
       src="./assets/entrenamiento-gym-logo-sentadilla.png"
       alt="Identidad de Entrenamiento GYM"
     >
+
+    <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
+      <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
+        <span id="identityInitials">US</span>
+        <img id="identityPhoto" src="" alt="" hidden>
+      </button>
+      <div class="identity-copy">
+        <div class="identity-name-row">
+          <p id="identityName" class="identity-name"></p>
+          <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
+        </div>
+        <p id="identityProgram" class="identity-program"></p>
+      </div>
+    </section>
 
     <a
       id="cardMiEntrenamiento"
@@ -772,15 +764,16 @@
     <section class="message-dialog">
       <header class="message-header">
         <button id="messageBack" class="message-back" type="button" aria-label="Volver a conversaciones" hidden>←</button>
-        <h2 id="messageModalTitle" class="message-title">Mensajes</h2>
+        <h2 id="messageModalTitle" class="message-title">Conversaciones</h2>
         <button id="messageClose" class="message-close" type="button" aria-label="Cerrar mensajes">×</button>
       </header>
       <div class="message-body">
+        <p id="messageInstruction" class="message-instruction">Selecciona una conversación para abrirla.</p>
         <div id="messageInbox" class="message-inbox"></div>
         <section id="messageThread" class="message-thread" hidden>
           <div id="messageList" class="message-list"></div>
           <form id="messageCompose" class="message-compose">
-            <textarea id="messageInput" class="message-input" rows="2" maxlength="3000" placeholder="Escribe un mensaje" required></textarea>
+            <textarea id="messageInput" class="message-input" rows="2" maxlength="3000" placeholder="Escribe un mensaje…" required></textarea>
             <button id="messageSend" class="message-send" type="submit">Enviar</button>
           </form>
         </section>
@@ -916,6 +909,13 @@
       return new Intl.DateTimeFormat("es-MX", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(date);
     }
 
+    function conversationDisplayName(item = {}) {
+      const kind = String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
+      if (kind.includes("ATENCION")) return "Atención al Usuario";
+      if (kind.includes("ENTRENADOR") || kind === "ENT") return "Entrenador";
+      return item.nombreVisible || "Conversación";
+    }
+
     function renderInbox(items) {
       const inbox = document.getElementById("messageInbox");
       if (!inbox) return;
@@ -939,12 +939,12 @@
           image.src = avatarUrl;
           image.alt = "";
           avatar.append(image);
-        } else avatar.textContent = messageInitials(item.nombreVisible);
+        } else avatar.textContent = messageInitials(conversationDisplayName(item));
         const copy = document.createElement("span");
         copy.className = "conversation-copy";
         const name = document.createElement("p");
         name.className = "conversation-name";
-        name.textContent = item.nombreVisible || "Conversación";
+        name.textContent = conversationDisplayName(item);
         const preview = document.createElement("p");
         preview.className = "conversation-preview";
         preview.textContent = item.ultimoMensaje || "Sin mensajes todavía";
@@ -956,6 +956,11 @@
           count.textContent = Number(item.noLeidos) > 99 ? "99+" : String(item.noLeidos);
           button.append(count);
         }
+        const arrow = document.createElement("span");
+        arrow.className = "conversation-arrow";
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "›";
+        button.append(arrow);
         button.addEventListener("click", () => openConversation(item));
         inbox.append(button);
       });
@@ -984,10 +989,12 @@
 
     function showMessageInbox() {
       activeConversation = null;
+      document.querySelector(".message-dialog").dataset.view = "inbox";
       document.getElementById("messageInbox").hidden = false;
       document.getElementById("messageThread").hidden = true;
       document.getElementById("messageBack").hidden = true;
-      document.getElementById("messageModalTitle").textContent = "Mensajes";
+      document.getElementById("messageInstruction").hidden = false;
+      document.getElementById("messageModalTitle").textContent = "Conversaciones";
       loadMessageInbox();
     }
 
@@ -995,10 +1002,12 @@
       activeConversation = item;
       const memberId = resolveGymMember().memberId;
       const list = document.getElementById("messageList");
+      document.querySelector(".message-dialog").dataset.view = "thread";
       document.getElementById("messageInbox").hidden = true;
       document.getElementById("messageThread").hidden = false;
       document.getElementById("messageBack").hidden = false;
-      document.getElementById("messageModalTitle").textContent = item.nombreVisible || "Conversación";
+      document.getElementById("messageInstruction").hidden = true;
+      document.getElementById("messageModalTitle").textContent = conversationDisplayName(item);
       document.getElementById("messageCompose").hidden = item.permiteRespuesta === false;
       showMessageState(list, "Cargando mensajes…");
       try {
@@ -1119,7 +1128,6 @@
       const program = document.getElementById("identityProgram");
 
       if (card) card.hidden = true;
-      document.body.dataset.identityVisible = "false";
       if (photo) {
         photo.hidden = true;
         photo.removeAttribute("src");
@@ -1149,7 +1157,6 @@
       program.textContent = gymContext.programa || "Usuario de entrenamiento";
       initials.textContent = getInitials(displayName);
       card.hidden = false;
-      document.body.dataset.identityVisible = "true";
 
       photo.onerror = () => {
         photo.hidden = true;
