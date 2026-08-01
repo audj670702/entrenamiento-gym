@@ -143,8 +143,26 @@
       border-color: var(--line);
     }
 
-    .message-button { position: relative; display: none; min-width: 34px; padding-inline: 8px; color: var(--blue-dark); background: #fff; border: 1px solid var(--line); font-size: 1rem; }
-    .message-button[data-visible="true"] { display: inline-grid; place-items: center; }
+    .message-button {
+      position: absolute;
+      top: 28px;
+      left: 16px;
+      z-index: 2;
+      display: none;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      color: var(--blue-dark);
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      font: inherit;
+      font-size: 1.55rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .message-button[data-visible="true"] { display: grid; }
     .message-button[data-pulse="true"] { animation: message-pulse 1.25s ease-in-out infinite; }
     .message-badge { position: absolute; top: -7px; right: -7px; display: grid; place-items: center; min-width: 19px; height: 19px; padding: 0 5px; color: #fff; background: #dc2626; border: 2px solid #fff; border-radius: 999px; font-size: .64rem; font-weight: 850; }
     .message-badge[hidden] { display: none; }
@@ -185,6 +203,7 @@
     }
 
     main {
+      position: relative;
       width: min(100%, 560px);
       margin: 0 auto;
       padding: 28px 16px calc(28px + env(safe-area-inset-bottom));
@@ -611,14 +630,10 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.20">v0.1.20</span>
+      <span class="version" aria-label="Versión 0.1.21">v0.1.21</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
-      <button id="messageButton" class="topbar-action message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-        <span aria-hidden="true">💬</span>
-        <span id="messageBadge" class="message-badge" hidden>0</span>
-      </button>
       <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
       <button
         id="sessionButton"
@@ -629,6 +644,10 @@
     </div>
   </header>
   <main>
+    <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+      <span aria-hidden="true">💬</span>
+      <span id="messageBadge" class="message-badge" hidden>0</span>
+    </button>
     <img
       class="hero-logo"
       src="./assets/entrenamiento-gym-logo-sentadilla.png"
