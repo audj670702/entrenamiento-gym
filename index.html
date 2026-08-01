@@ -652,7 +652,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.29">v0.1.29</span>
+      <span class="version" aria-label="Versión 0.1.30">v0.1.30</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -1004,7 +1004,7 @@
       const isFixedConversation = (item) => {
         const kind = conversationKind(item);
         return kind.includes("SISTEMA") || kind.includes("NOTIFIC") ||
-          kind.includes("ATENCION") || isTrainerConversation(item);
+          kind.includes("ATENCION");
       };
       const visibleItems = items
         .filter(isVisibleConversation)
