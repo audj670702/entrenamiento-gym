@@ -189,6 +189,7 @@
     .message-back, .message-close { width: 34px; height: 34px; padding: 0; color: var(--blue-dark); background: var(--soft); border: 1px solid var(--line); border-radius: 50%; font: inherit; font-size: 1.15rem; cursor: pointer; }
     .message-back[hidden] { display: none; }
     .message-body { min-height: 0; overflow: hidden; }
+    .message-body > [hidden] { display: none !important; }
     .message-dialog[data-view="inbox"] .message-body { display: block; height: auto; }
     .message-dialog[data-view="thread"] .message-body { display: grid; grid-template-rows: minmax(0, 1fr); height: 100%; }
     .message-inbox { max-height: min(58dvh, 460px); overflow: auto; padding: 4px 10px 10px; }
@@ -661,7 +662,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.33">v0.1.33</span>
+      <span class="version" aria-label="Versión 0.1.34">v0.1.34</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
