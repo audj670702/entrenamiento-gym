@@ -732,7 +732,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.39">v0.1.39</span>
+      <span class="version" aria-label="Versión 0.1.40">v0.1.40</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -1196,7 +1196,21 @@
       if (!container) return;
       container.replaceChildren();
       const shortcuts = items.filter(isVisibleConversation).filter(isShortcutConversation);
-      const ordered = shortcuts.sort((a, b) => {
+      const uniqueShortcuts = new Map();
+      shortcuts.forEach((item) => {
+        const key = isSystemConversation(item)
+          ? "system"
+          : isAttentionConversation(item)
+            ? "attention"
+            : "trainer";
+        const current = uniqueShortcuts.get(key);
+        const itemDate = messageDate(item.ultimoMensajeFecha || item.fechaUltimoMensaje || item.fecha)?.getTime() || 0;
+        const currentDate = messageDate(current?.ultimoMensajeFecha || current?.fechaUltimoMensaje || current?.fecha)?.getTime() || 0;
+        if (!current || itemDate > currentDate || Number(item.noLeidos) > Number(current.noLeidos)) {
+          uniqueShortcuts.set(key, item);
+        }
+      });
+      const ordered = [...uniqueShortcuts.values()].sort((a, b) => {
         const priority = (item) => isSystemConversation(item) ? 0 : isAttentionConversation(item) ? 1 : 2;
         return priority(a) - priority(b);
       });
