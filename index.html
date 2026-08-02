@@ -732,7 +732,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.38">v0.1.38</span>
+      <span class="version" aria-label="Versión 0.1.39">v0.1.39</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -935,6 +935,66 @@
     const GYM_TRAINER_PANEL_URL = "https://www.scad.mx/panel-de-entrenador";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
+    const APP_SOUNDS = {
+      click: new Audio("./assets/clic.mp3"),
+      error: new Audio("./assets/error.mp3"),
+      success: new Audio("./assets/exito.mp3"),
+      messageSent: new Audio("./assets/mensaje-enviado.mp3"),
+      messagePending: new Audio("./assets/mensaje-pendiente.mp3")
+    };
+
+    Object.values(APP_SOUNDS).forEach((audio) => {
+      audio.preload = "auto";
+    });
+
+    let pendingMessageAnnouncement = false;
+    let messageAnnouncementPlayed = false;
+
+    async function playAppSound(name) {
+      const audio = APP_SOUNDS[name];
+      if (!audio) return false;
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        await audio.play();
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    async function announcePendingMessages() {
+      if (!pendingMessageAnnouncement || messageAnnouncementPlayed || messageUnread < 1) return false;
+      const played = await playAppSound("messagePending");
+      if (played) {
+        pendingMessageAnnouncement = false;
+        messageAnnouncementPlayed = true;
+      }
+      return played;
+    }
+
+    function isClickSoundAction(target) {
+      if (!(target instanceof Element)) return false;
+      const action = target.closest("button:not(:disabled), a[href]");
+      if (!action) return false;
+      if (action.closest("#messageModal")) return false;
+      return ![
+        "messageButton",
+        "privacyClose",
+        "profileCancelButton",
+        "profileSaveButton",
+        "iosTutorialClose"
+      ].includes(action.id);
+    }
+
+    document.addEventListener("click", (event) => {
+      if (pendingMessageAnnouncement && messageUnread > 0) {
+        announcePendingMessages();
+        return;
+      }
+      if (isClickSoundAction(event.target)) playAppSound("click");
+    }, true);
+
     const splashStartedAt = performance.now();
 
     function closeSplashScreen() {
@@ -991,8 +1051,16 @@
       const button = document.getElementById("messageButton");
       const badge = document.getElementById("messageBadge");
       const next = Math.max(0, Number(total) || 0);
-      const increased = next > messageUnread;
+      const previous = messageUnread;
+      const increased = next > previous;
       messageUnread = next;
+      if (next === 0) {
+        pendingMessageAnnouncement = false;
+        messageAnnouncementPlayed = false;
+      } else if (previous === 0 || (!messageAnnouncementPlayed && !pendingMessageAnnouncement)) {
+        pendingMessageAnnouncement = true;
+        announcePendingMessages();
+      }
       if (badge) {
         badge.textContent = next > 99 ? "99+" : String(next);
         badge.hidden = next === 0;
@@ -1359,7 +1427,9 @@
         await messageApi("gymMensajeriaEnviar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId: resolveGymMember().memberId, conversationId: activeConversation.conversationId, mensaje }) });
         input.value = "";
         await openConversation(activeConversation);
+        playAppSound("messageSent");
       } catch (error) {
+        playAppSound("error");
         window.alert(error.message);
       } finally {
         send.disabled = false;
@@ -1753,6 +1823,7 @@
 
       if (!identity.memberId) return;
       if (file && file.size > 5 * 1024 * 1024) {
+        playAppSound("error");
         window.alert("La fotografía debe pesar máximo 5 MB.");
         return;
       }
@@ -1788,7 +1859,9 @@
         gymContext.foto = data.foto || gymContext.foto || "";
         renderIdentityCard();
         closeProfileEditor();
+        playAppSound("success");
       } catch (error) {
+        playAppSound("error");
         window.alert(error.message || "No fue posible guardar la identidad.");
       } finally {
         saveButton.disabled = false;
