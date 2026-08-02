@@ -1792,6 +1792,10 @@
       renderIdentityCard();
       renderMessageAccess();
       startMessagePolling();
+
+      if (getUrlParam("view").toLowerCase() === "mensajes" && canUseMessages()) {
+        window.setTimeout(openMessageModal, 0);
+      }
     }
 
     function openProfileEditor() {
