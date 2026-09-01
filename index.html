@@ -711,6 +711,15 @@
         transform: scale(1);
       }
     }
+    /* iOS: prevent automatic focus zoom on form controls */
+    @supports (-webkit-touch-callout: none) {
+      input:not([type="checkbox"]):not([type="radio"]),
+      textarea,
+      select {
+        font-size: 16px !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -732,7 +741,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.42">v0.1.42</span>
+      <span class="version" aria-label="Versión 0.1.43">v0.1.43</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
