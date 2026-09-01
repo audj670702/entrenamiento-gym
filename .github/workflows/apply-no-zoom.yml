@@ -1,0 +1,65 @@
+name: Apply no-zoom fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-no-zoom.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch MiEntrenamiento
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          index_path = Path('index.html')
+          source = index_path.read_text(encoding='utf-8')
+
+          marker = '/* iOS: prevent automatic focus zoom on form controls */'
+          block = '''
+    /* iOS: prevent automatic focus zoom on form controls */
+    @supports (-webkit-touch-callout: none) {
+      input:not([type="checkbox"]):not([type="radio"]),
+      textarea,
+      select {
+        font-size: 16px !important;
+      }
+    }
+'''
+
+          if marker not in source:
+              if '  </style>' not in source:
+                  raise SystemExit('No se encontró </style> en index.html')
+              source = source.replace('  </style>', block + '\n  </style>', 1)
+
+          source = source.replace('Versión 0.1.42', 'Versión 0.1.43')
+          source = source.replace('v0.1.42', 'v0.1.43')
+          index_path.write_text(source, encoding='utf-8')
+
+          sw_path = Path('service-worker.js')
+          sw = sw_path.read_text(encoding='utf-8')
+          sw = sw.replace('entrenamiento-gym-v0.1.42', 'entrenamiento-gym-v0.1.43')
+          sw_path.write_text(sw, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          git config user.name "SCaD Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html service-worker.js
+          if git diff --cached --quiet; then
+            echo "No changes required"
+            exit 0
+          fi
+          git commit -m "fix: prevent iOS focus zoom in MiEntrenamiento"
+          git push
