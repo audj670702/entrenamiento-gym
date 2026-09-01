@@ -25,16 +25,17 @@ jobs:
           source = index_path.read_text(encoding='utf-8')
 
           marker = '/* iOS: prevent automatic focus zoom on form controls */'
-          block = '''
-    /* iOS: prevent automatic focus zoom on form controls */
-    @supports (-webkit-touch-callout: none) {
-      input:not([type="checkbox"]):not([type="radio"]),
-      textarea,
-      select {
-        font-size: 16px !important;
-      }
-    }
-'''
+          block = '\n'.join([
+              '    /* iOS: prevent automatic focus zoom on form controls */',
+              '    @supports (-webkit-touch-callout: none) {',
+              '      input:not([type="checkbox"]):not([type="radio"]),',
+              '      textarea,',
+              '      select {',
+              '        font-size: 16px !important;',
+              '      }',
+              '    }',
+              ''
+          ])
 
           if marker not in source:
               if '  </style>' not in source:
