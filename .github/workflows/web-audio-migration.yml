@@ -1,0 +1,27 @@
+name: Web Audio Migration
+
+on:
+  push:
+    paths:
+      - 'scripts/migrate_web_audio.py'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply migration
+        run: python scripts/migrate_web_audio.py
+      - name: Commit migration
+        run: |
+          git config user.name "SCaD"
+          git config user.email "gestor.isp@gmail.com"
+          git add index.html
+          git diff --cached --check
+          git commit -m "Migrate app sound effects to Web Audio"
+          git push
