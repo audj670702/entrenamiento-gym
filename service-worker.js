@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.43";
+const CACHE_NAME = "entrenamiento-gym-v0.1.44";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -11,6 +11,22 @@ const APP_SHELL = [
   "./assets/mensaje-enviado.mp3",
   "./assets/mensaje-pendiente.mp3"
 ];
+
+const NAVIGATION_TIMEOUT_MS = 3500;
+
+async function fetchWithTimeout(request, options = {}, timeoutMs = NAVIGATION_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(request, {
+      ...options,
+      signal: controller.signal
+    });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -43,7 +59,7 @@ self.addEventListener("fetch", (event) => {
 
   if (isNavigation) {
     event.respondWith(
-      fetch(event.request, { cache: "no-store" })
+      fetchWithTimeout(event.request, { cache: "no-store" })
         .then((response) => {
           if (response && response.status === 200) {
             const copy = response.clone();
