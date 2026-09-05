@@ -53,123 +53,25 @@
       backdrop-filter: blur(12px);
     }
 
-    .topbar-row {
-      display: flex;
-      align-items: center;
-      min-width: 0;
-    }
+    .topbar-row { display: flex; align-items: center; min-width: 0; }
+    .topbar-meta { justify-content: flex-end; }
+    .topbar-actions { justify-content: flex-end; gap: 8px; }
+    .brand { display: flex; align-items: center; min-width: 0; gap: 10px; margin-right: auto; }
+    .brand img { width: 38px; height: 38px; object-fit: contain; flex: 0 0 auto; }
+    .brand-name { overflow: hidden; font-size: 1rem; font-weight: 750; letter-spacing: 0.01em; text-overflow: ellipsis; white-space: nowrap; }
+    .version, .cvc { color: var(--muted); white-space: nowrap; }
+    .version { font-size: 0.7rem; }
+    .cvc { margin-left: 10px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.02em; }
 
-    .topbar-meta {
-      justify-content: flex-end;
-    }
+    .topbar-action { padding: 6px 9px; font: inherit; font-size: 0.74rem; font-weight: 750; line-height: 1; white-space: nowrap; cursor: pointer; border-radius: 7px; }
+    .install-button { color: var(--blue); background: transparent; border: 1px solid transparent; }
+    .install-button[data-installed="true"] { color: #17603a; cursor: default; }
+    .session-button { color: #ffffff; background: var(--blue); border: 1px solid var(--blue); }
+    .session-button[data-session-active="true"] { color: var(--blue-dark); background: #ffffff; border-color: var(--line); }
 
-    .topbar-actions {
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      min-width: 0;
-      gap: 10px;
-      margin-right: auto;
-    }
-
-    .brand img {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-      flex: 0 0 auto;
-    }
-
-    .brand-name {
-      overflow: hidden;
-      font-size: 1rem;
-      font-weight: 750;
-      letter-spacing: 0.01em;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .version,
-    .cvc {
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .version {
-      font-size: 0.7rem;
-    }
-
-    .cvc {
-      margin-left: 10px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    .topbar-action {
-      padding: 6px 9px;
-      font: inherit;
-      font-size: 0.74rem;
-      font-weight: 750;
-      line-height: 1;
-      white-space: nowrap;
-      cursor: pointer;
-      border-radius: 7px;
-    }
-
-    .install-button {
-      color: var(--blue);
-      background: transparent;
-      border: 1px solid transparent;
-    }
-
-    .install-button[data-installed="true"] {
-      color: #17603a;
-      cursor: default;
-    }
-
-    .session-button {
-      color: #ffffff;
-      background: var(--blue);
-      border: 1px solid var(--blue);
-    }
-
-    .session-button[data-session-active="true"] {
-      color: var(--blue-dark);
-      background: #ffffff;
-      border-color: var(--line);
-    }
-
-    .message-button {
-      position: relative;
-      display: none;
-      place-items: center;
-      flex: 0 0 auto;
-      width: 34px;
-      height: 34px;
-      padding: 0;
-      color: var(--blue-dark);
-      background: transparent;
-      border: 0;
-      border-radius: 0;
-      font: inherit;
-      font-size: 1.4rem;
-      line-height: 1;
-      cursor: pointer;
-    }
-    .hero-zone {
-      position: relative;
-    }
-    .hero-zone .message-button {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      z-index: 2;
-      transform: translateY(-50%);
-    }
+    .message-button { position: relative; display: none; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; padding: 0; color: var(--blue-dark); background: transparent; border: 0; border-radius: 0; font: inherit; font-size: 1.4rem; line-height: 1; cursor: pointer; }
+    .hero-zone { position: relative; }
+    .hero-zone .message-button { position: absolute; top: 50%; left: 0; z-index: 2; transform: translateY(-50%); }
     .hero-zone .message-button[data-pulse="true"] { animation: hero-message-pulse 1.25s ease-in-out infinite; }
     .message-button[data-visible="true"] { display: grid; }
     .message-button[data-pulse="true"] { animation: message-pulse 1.25s ease-in-out infinite; }
@@ -230,713 +132,95 @@
     .message-send { padding: 0 14px; color: #fff; background: var(--blue); border: 0; border-radius: 10px; font: inherit; font-size: .76rem; font-weight: 800; cursor: pointer; }
     .message-send:disabled { opacity: .55; cursor: wait; }
 
-    .topbar-action:focus-visible {
-      outline: 3px solid rgba(23, 79, 130, 0.30);
-      outline-offset: 2px;
-    }
-
-    main {
-      position: relative;
-      width: min(100%, 560px);
-      margin: 0 auto;
-      padding: 28px 16px calc(28px + env(safe-area-inset-bottom));
-    }
-
-    .identity-card {
-      display: grid;
-      grid-template-columns: 48px minmax(0, 1fr);
-      align-items: center;
-      gap: 11px;
-      margin: 0 4px 20px;
-    }
-
+    .topbar-action:focus-visible { outline: 3px solid rgba(23, 79, 130, 0.30); outline-offset: 2px; }
+    main { position: relative; width: min(100%, 560px); margin: 0 auto; padding: 28px 16px calc(28px + env(safe-area-inset-bottom)); }
+    .identity-card { display: grid; grid-template-columns: 48px minmax(0, 1fr); align-items: center; gap: 11px; margin: 0 4px 20px; }
     .identity-card[hidden] { display: none; }
-
-    .identity-avatar {
-      position: relative;
-      display: grid;
-      place-items: center;
-      width: 48px;
-      height: 48px;
-      padding: 0;
-      overflow: hidden;
-      color: #ffffff;
-      background: var(--blue);
-      border: 0;
-      border-radius: 50%;
-      font: inherit;
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-    }
-
-    .identity-avatar img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .identity-avatar::after {
-      content: "✎";
-      position: absolute;
-      right: 1px;
-      bottom: 1px;
-      display: grid;
-      place-items: center;
-      width: 16px;
-      height: 16px;
-      color: var(--blue-dark);
-      background: #ffffff;
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      font-size: 0.56rem;
-      line-height: 1;
-    }
-
+    .identity-avatar { position: relative; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; overflow: hidden; color: #ffffff; background: var(--blue); border: 0; border-radius: 50%; font: inherit; font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em; cursor: pointer; }
+    .identity-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .identity-avatar::after { content: "✎"; position: absolute; right: 1px; bottom: 1px; display: grid; place-items: center; width: 16px; height: 16px; color: var(--blue-dark); background: #ffffff; border: 1px solid var(--line); border-radius: 50%; font-size: 0.56rem; line-height: 1; }
     .identity-copy { min-width: 0; }
-
-    .identity-name-row {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      min-width: 0;
-    }
-
-    .identity-name {
-      margin: 0;
-      overflow: hidden;
-      color: var(--blue-dark);
-      font-size: 0.86rem;
-      font-weight: 800;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .identity-edit-name {
-      flex: 0 0 auto;
-      padding: 2px;
-      color: var(--blue);
-      background: transparent;
-      border: 0;
-      font-size: 0.72rem;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    .identity-program {
-      margin: 2px 0 0;
-      overflow: hidden;
-      color: var(--muted);
-      font-size: 0.7rem;
-      line-height: 1.35;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
+    .identity-name-row { display: flex; align-items: center; gap: 4px; min-width: 0; }
+    .identity-name { margin: 0; overflow: hidden; color: var(--blue-dark); font-size: 0.86rem; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+    .identity-edit-name { flex: 0 0 auto; padding: 2px; color: var(--blue); background: transparent; border: 0; font-size: 0.72rem; line-height: 1; cursor: pointer; }
+    .identity-program { margin: 2px 0 0; overflow: hidden; color: var(--muted); font-size: 0.7rem; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
     .profile-modal[hidden] { display: none; }
-
-    .profile-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 30;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: rgba(15, 47, 85, 0.48);
-    }
-
-    .profile-dialog {
-      width: min(100%, 390px);
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 22px 60px rgba(15, 47, 85, 0.24);
-    }
-
+    .profile-modal { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; background: rgba(15, 47, 85, 0.48); }
+    .profile-dialog { width: min(100%, 390px); padding: 20px; background: #ffffff; border-radius: 16px; box-shadow: 0 22px 60px rgba(15, 47, 85, 0.24); }
     .profile-dialog h2 { margin: 0 0 14px; font-size: 1.1rem; }
     .profile-field { display: grid; gap: 7px; margin-bottom: 14px; }
     .profile-field label { color: var(--muted); font-size: 0.78rem; font-weight: 750; }
-    .profile-field input[type="text"] {
-      width: 100%;
-      padding: 10px 11px;
-      color: var(--text);
-      background: #ffffff;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      font: inherit;
-    }
+    .profile-field input[type="text"] { width: 100%; padding: 10px 11px; color: var(--text); background: #ffffff; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
     .profile-help { margin: 5px 0 0; color: var(--muted); font-size: 0.72rem; line-height: 1.35; }
     .profile-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 18px; }
-    .profile-action {
-      padding: 9px 13px;
-      border-radius: 8px;
-      font: inherit;
-      font-size: 0.82rem;
-      font-weight: 750;
-      cursor: pointer;
-    }
+    .profile-action { padding: 9px 13px; border-radius: 8px; font: inherit; font-size: 0.82rem; font-weight: 750; cursor: pointer; }
     .profile-cancel { color: var(--blue-dark); background: #ffffff; border: 1px solid var(--line); }
     .profile-save { color: #ffffff; background: var(--blue); border: 1px solid var(--blue); }
     .profile-save:disabled { opacity: 0.6; cursor: wait; }
-
-    .hero-logo {
-      display: block;
-      width: min(38vw, 150px);
-      height: auto;
-      margin: 0 auto 6px;
-    }
-
-    .training-card {
-      display: grid;
-      position: relative;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 11px;
-      overflow: hidden;
-      width: 100%;
-      min-height: 66px;
-      padding: 10px 14px 10px 17px;
-      color: inherit;
-      text-decoration: none;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
-    }
-
-     .training-card + .training-card {
-      margin-top: 11px;
-    }
-
-    .training-card[hidden] {
-      display: none;
-    }
-
-    .training-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 5px;
-      background: var(--card-accent, var(--blue));
-    }
-
+    .hero-logo { display: block; width: min(38vw, 150px); height: auto; margin: 0 auto 6px; }
+    .training-card { display: grid; position: relative; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 11px; overflow: hidden; width: 100%; min-height: 66px; padding: 10px 14px 10px 17px; color: inherit; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease; }
+    .training-card + .training-card { margin-top: 11px; }
+    .training-card[hidden] { display: none; }
+    .training-card::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 5px; background: var(--card-accent, var(--blue)); }
     .training-card--training { --card-accent: #174f82; }
     .training-card--practices { --card-accent: #1f8a70; }
     .training-card--instructions { --card-accent: #7656a8; }
     .training-card--objectives { --card-accent: #c2416c; }
     .training-card--trainer { --card-accent: #b06b24; }
-
-    .card-icon {
-      color: var(--card-accent, var(--blue));
-      font-size: 1.35rem;
-      line-height: 1;
-    }
-
-    .training-card:active {
-      transform: scale(0.985);
-    }
-
-    .training-card:focus-visible {
-      outline: 3px solid rgba(23, 79, 130, 0.30);
-      outline-offset: 3px;
-    }
-
-    .training-card:hover {
-      border-color: rgba(23, 79, 130, 0.42);
-      box-shadow: 0 14px 34px rgba(15, 47, 85, 0.14);
-    }
-
-    .card-title {
-      margin: 0 0 2px;
-      color: var(--blue-dark);
-      font-size: 0.86rem;
-      font-weight: 800;
-      letter-spacing: 0.035em;
-      text-transform: uppercase;
-    }
-
-    .card-description {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.72rem;
-      line-height: 1.25;
-    }
-
-    .arrow {
-      color: var(--blue);
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-
-    .ios-tutorial-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: grid;
-      place-items: center;
-      padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
-      background: rgba(7, 20, 36, 0.62);
-    }
-
-    .ios-tutorial-modal[hidden] {
-      display: none;
-    }
-
-    .ios-tutorial-dialog {
-      position: relative;
-      width: min(100%, 360px);
-      max-height: min(76dvh, 680px);
-      overflow: hidden;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38);
-    }
-
-    .ios-tutorial-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 46px;
-      padding: 8px 8px 8px 16px;
-      color: var(--text);
-      background: #ffffff;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .ios-tutorial-title {
-      margin: 0;
-      font-size: 0.92rem;
-      font-weight: 700;
-      line-height: 1.25;
-    }
-
-    .ios-tutorial-close {
-      display: grid;
-      place-items: center;
-      width: 34px;
-      height: 34px;
-      padding: 0;
-      color: var(--text);
-      background: var(--soft);
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      font: inherit;
-      font-size: 1.25rem;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    .ios-tutorial-close:focus-visible {
-      outline: 3px solid rgba(37, 99, 235, 0.28);
-      outline-offset: 2px;
-    }
-
-    .ios-tutorial-video {
-      display: block;
-      width: 100%;
-      height: auto;
-      max-height: min(62dvh, 600px);
-      object-fit: contain;
-      background: #000000;
-    }
-
-    .privacy-footer {
-      display: flex;
-      justify-content: center;
-      padding: 18px 0 0;
-    }
-
-    .privacy-link {
-      padding: 4px;
-      color: #8b98a8;
-      background: transparent;
-      border: 0;
-      font: inherit;
-      font-size: 0.68rem;
-      line-height: 1.3;
-      text-decoration: underline;
-      text-decoration-color: rgba(139, 152, 168, 0.55);
-      text-underline-offset: 2px;
-      cursor: pointer;
-    }
-
+    .card-icon { color: var(--card-accent, var(--blue)); font-size: 1.35rem; line-height: 1; }
+    .training-card:active { transform: scale(0.985); }
+    .training-card:focus-visible { outline: 3px solid rgba(23, 79, 130, 0.30); outline-offset: 3px; }
+    .training-card:hover { border-color: rgba(23, 79, 130, 0.42); box-shadow: 0 14px 34px rgba(15, 47, 85, 0.14); }
+    .card-title { margin: 0 0 2px; color: var(--blue-dark); font-size: 0.86rem; font-weight: 800; letter-spacing: 0.035em; text-transform: uppercase; }
+    .card-description { margin: 0; color: var(--muted); font-size: 0.72rem; line-height: 1.25; }
+    .arrow { color: var(--blue); font-size: 1.5rem; line-height: 1; }
+    .ios-tutorial-modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom)); background: rgba(7, 20, 36, 0.62); }
+    .ios-tutorial-modal[hidden] { display: none; }
+    .ios-tutorial-dialog { position: relative; width: min(100%, 360px); max-height: min(76dvh, 680px); overflow: hidden; background: #ffffff; border-radius: 16px; box-shadow: 0 22px 60px rgba(0, 0, 0, 0.38); }
+    .ios-tutorial-header { display: flex; align-items: center; justify-content: space-between; min-height: 46px; padding: 8px 8px 8px 16px; color: var(--text); background: #ffffff; border-bottom: 1px solid var(--line); }
+    .ios-tutorial-title { margin: 0; font-size: 0.92rem; font-weight: 700; line-height: 1.25; }
+    .ios-tutorial-close { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; color: var(--text); background: var(--soft); border: 1px solid var(--line); border-radius: 50%; font: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer; }
+    .ios-tutorial-close:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.28); outline-offset: 2px; }
+    .ios-tutorial-video { display: block; width: 100%; height: auto; max-height: min(62dvh, 600px); object-fit: contain; background: #000000; }
+    .privacy-footer { display: flex; justify-content: center; padding: 18px 0 0; }
+    .privacy-link { padding: 4px; color: #8b98a8; background: transparent; border: 0; font: inherit; font-size: 0.68rem; line-height: 1.3; text-decoration: underline; text-decoration-color: rgba(139, 152, 168, 0.55); text-underline-offset: 2px; cursor: pointer; }
     .privacy-link:hover { color: var(--muted); }
-    .privacy-link:focus-visible {
-      outline: 3px solid rgba(23, 79, 130, 0.24);
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-
-    .privacy-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1100;
-      display: grid;
-      place-items: center;
-      padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom));
-      background: rgba(7, 20, 36, 0.62);
-    }
-
+    .privacy-link:focus-visible { outline: 3px solid rgba(23, 79, 130, 0.24); outline-offset: 2px; border-radius: 4px; }
+    .privacy-modal { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: max(18px, env(safe-area-inset-top)) 14px max(18px, env(safe-area-inset-bottom)); background: rgba(7, 20, 36, 0.62); }
     .privacy-modal[hidden] { display: none; }
-
-    .privacy-dialog {
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      width: min(100%, 620px);
-      max-height: min(88dvh, 780px);
-      overflow: hidden;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
-    }
-
-    .privacy-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      min-height: 52px;
-      padding: 9px 9px 9px 18px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .privacy-title {
-      margin: 0;
-      color: var(--blue-dark);
-      font-size: 1rem;
-      line-height: 1.25;
-    }
-
-    .privacy-close {
-      display: grid;
-      place-items: center;
-      flex: 0 0 auto;
-      width: 34px;
-      height: 34px;
-      padding: 0;
-      color: var(--text);
-      background: #f8fafc;
-      border: 1px solid var(--line);
-      border-radius: 50%;
-      font: inherit;
-      font-size: 1.25rem;
-      line-height: 1;
-      cursor: pointer;
-    }
-
-    .privacy-content {
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      padding: 18px;
-      color: #334155;
-      font-size: 0.78rem;
-      line-height: 1.58;
-      white-space: pre-line;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    @media (min-width: 640px) {
-      main {
-        padding-top: 38px;
-      }
-
-      .hero-logo {
-        margin-bottom: 8px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .training-card {
-        transition: none;
-      }
-    }
-
-    /* Pantalla de apertura */
-    .app-splash {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: grid;
-      place-items: center;
-      min-height: 100dvh;
-      background: #ffffff;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 520ms ease, visibility 520ms ease;
-    }
-
-    .app-splash.is-hiding {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .app-splash-logo {
-      display: block;
-      width: min(58vw, 280px);
-      height: auto;
-      opacity: 0;
-      transform: scale(0.985);
-      animation: splash-logo-in 700ms ease-out 100ms forwards;
-    }
-
-    .app-splash-powered {
-      position: absolute;
-      right: max(14px, env(safe-area-inset-right));
-      bottom: max(12px, env(safe-area-inset-bottom));
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #94a3b8;
-      font-size: 0.62rem;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      white-space: nowrap;
-    }
-
-    .app-splash-powered img {
-      display: block;
-      width: 62px;
-      height: 24px;
-      object-fit: contain;
-    }
-
-    @keyframes splash-logo-in {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    /* iOS: prevent automatic focus zoom on form controls */
-    @supports (-webkit-touch-callout: none) {
-      input:not([type="checkbox"]):not([type="radio"]),
-      textarea,
-      select {
-        font-size: 16px !important;
-      }
-    }
-
+    .privacy-dialog { display: grid; grid-template-rows: auto minmax(0, 1fr); width: min(100%, 620px); max-height: min(88dvh, 780px); overflow: hidden; background: #ffffff; border-radius: 16px; box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34); }
+    .privacy-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 9px 9px 9px 18px; border-bottom: 1px solid var(--line); }
+    .privacy-title { margin: 0; color: var(--blue-dark); font-size: 1rem; line-height: 1.25; }
+    .privacy-close { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; padding: 0; color: var(--text); background: #f8fafc; border: 1px solid var(--line); border-radius: 50%; font: inherit; font-size: 1.25rem; line-height: 1; cursor: pointer; }
+    .privacy-content { overflow-y: auto; overscroll-behavior: contain; padding: 18px; color: #334155; font-size: 0.78rem; line-height: 1.58; white-space: pre-line; -webkit-overflow-scrolling: touch; }
+    @media (min-width: 640px) { main { padding-top: 38px; } .hero-logo { margin-bottom: 8px; } }
+    @media (prefers-reduced-motion: reduce) { .training-card { transition: none; } }
+    .app-splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-items: center; min-height: 100dvh; background: #ffffff; opacity: 1; visibility: visible; transition: opacity 520ms ease, visibility 520ms ease; }
+    .app-splash.is-hiding { opacity: 0; visibility: hidden; pointer-events: none; }
+    .app-splash-logo { display: block; width: min(58vw, 280px); height: auto; opacity: 0; transform: scale(0.985); animation: splash-logo-in 700ms ease-out 100ms forwards; }
+    .app-splash-powered { position: absolute; right: max(14px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 6px; color: #94a3b8; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.01em; white-space: nowrap; }
+    .app-splash-powered img { display: block; width: 62px; height: 24px; object-fit: contain; }
+    @keyframes splash-logo-in { to { opacity: 1; transform: scale(1); } }
+    @supports (-webkit-touch-callout: none) { input:not([type="checkbox"]):not([type="radio"]), textarea, select { font-size: 16px !important; } }
   </style>
 </head>
 <body>
-  <div id="appSplash" class="app-splash" role="status" aria-label="Cargando Entrenamiento GYM">
-    <img
-      class="app-splash-logo"
-      src="./assets/entrenamiento-gym-logo-sentadilla.png"
-      alt="Entrenamiento GYM"
-    >
-    <div class="app-splash-powered" aria-label="Powered by SCaD">
-      <span>Powered by</span>
-      <img src="./assets/scad-powered-logo.png" alt="SCaD">
-    </div>
-  </div>
-
-  <header class="topbar">
-    <div class="topbar-row topbar-meta">
-      <div class="brand">
-        <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
-        <span class="brand-name">Entrenamiento GYM</span>
-      </div>
-      <span class="version" aria-label="Versión 0.1.43">v0.1.43</span>
-      <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
-    </div>
-    <div class="topbar-row topbar-actions">
-      <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
-      <button
-        id="sessionButton"
-        class="topbar-action session-button"
-        type="button"
-        data-session-active="false"
-      >Iniciar sesión</button>
-    </div>
-  </header>
+  <div id="appSplash" class="app-splash" role="status" aria-label="Cargando Entrenamiento GYM"><img class="app-splash-logo" src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="Entrenamiento GYM"><div class="app-splash-powered" aria-label="Powered by SCaD"><span>Powered by</span><img src="./assets/scad-powered-logo.png" alt="SCaD"></div></div>
+  <header class="topbar"><div class="topbar-row topbar-meta"><div class="brand"><img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt=""><span class="brand-name">Entrenamiento GYM</span></div><span class="version" aria-label="Versión 0.1.43">v0.1.43</span><span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span></div><div class="topbar-row topbar-actions"><button id="installButton" class="topbar-action install-button" type="button">Instalar app</button><button id="sessionButton" class="topbar-action session-button" type="button" data-session-active="false">Iniciar sesión</button></div></header>
   <main>
-    <div class="hero-zone">
-      <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-        <span aria-hidden="true">💬</span>
-        <span id="messageBadge" class="message-badge" hidden>0</span>
-      </button>
-      <img
-        class="hero-logo"
-        src="./assets/entrenamiento-gym-logo-sentadilla.png"
-        alt="Identidad de Entrenamiento GYM"
-      >
-    </div>
-
-    <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
-      <button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía">
-        <span id="identityInitials">US</span>
-        <img id="identityPhoto" src="" alt="" hidden>
-      </button>
-      <div class="identity-copy">
-        <div class="identity-name-row">
-          <p id="identityName" class="identity-name"></p>
-          <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
-        </div>
-        <p id="identityProgram" class="identity-program"></p>
-      </div>
-    </section>
-
-    <a
-      id="cardMiEntrenamiento"
-      class="training-card training-card--training"
-      href="https://www.scad.mx/gym-inicio-sesion"
-      aria-label="Abrir Mi Entrenamiento"
-    >
-      <span class="card-icon" aria-hidden="true">🏋</span>
-      <div>
-        <h1 class="card-title">Mi Entrenamiento</h1>
-        <p class="card-description">Consulta tu plan y sesiones</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardBuenasPracticas"
-      class="training-card training-card--practices"
-      href="https://www.scad.mx/gym-buenas-practicas"
-      aria-label="Abrir Buenas Prácticas"
-    >
-      <span class="card-icon" aria-hidden="true">✓</span>
-      <div>
-        <h2 class="card-title">Buenas Prácticas</h2>
-        <p class="card-description">Consulta recomendaciones para entrenar de forma segura</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardInstruccionesEjercicios"
-      class="training-card training-card--instructions"
-      href="https://www.scad.mx/gym-instrucciones-ejercicios"
-      aria-label="Abrir Instrucciones para Ejercitarse"
-    >
-      <span class="card-icon" aria-hidden="true">◎</span>
-      <div>
-        <h2 class="card-title">Instrucciones para Ejercitarse</h2>
-        <p class="card-description">Aprende a ejecutar tus ejercicios con técnica, esfuerzo y control</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardObjetivosEntrenamiento"
-      class="training-card training-card--objectives"
-      href="https://www.scad.mx/gym-objetivos-entrenamiento"
-      aria-label="Abrir Objetivos del Entrenamiento"
-    >
-      <span class="card-icon" aria-hidden="true">🎯</span>
-      <div>
-        <h2 class="card-title">Objetivos del Entrenamiento</h2>
-        <p class="card-description">Identifica el objetivo que orienta tu entrenamiento</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardPanelEntrenador"
-      class="training-card training-card--trainer"
-      href="https://www.scad.mx/panel-de-entrenador"
-      aria-label="Abrir Panel del Entrenador"
-      hidden
-    >
-      <span class="card-icon" aria-hidden="true">▣</span>
-      <div>
-        <h2 class="card-title">Panel del Entrenador</h2>
-        <p class="card-description">Gestiona los planes y sesiones de tus usuarios</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-
-    <footer class="privacy-footer">
-      <button id="privacyLink" class="privacy-link" type="button">Política de privacidad</button>
-    </footer>
-
+    <div class="hero-zone"><button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes"><span aria-hidden="true">💬</span><span id="messageBadge" class="message-badge" hidden>0</span></button><img class="hero-logo" src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="Identidad de Entrenamiento GYM"></div>
+    <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden><button id="identityPhotoButton" class="identity-avatar" type="button" aria-label="Editar fotografía"><span id="identityInitials">US</span><img id="identityPhoto" src="" alt="" hidden></button><div class="identity-copy"><div class="identity-name-row"><p id="identityName" class="identity-name"></p><button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button></div><p id="identityProgram" class="identity-program"></p></div></section>
+    <a id="cardMiEntrenamiento" class="training-card training-card--training" href="https://www.scad.mx/gym-inicio-sesion" aria-label="Abrir Mi Entrenamiento"><span class="card-icon" aria-hidden="true">🏋</span><div><h1 class="card-title">Mi Entrenamiento</h1><p class="card-description">Consulta tu plan y sesiones</p></div><span class="arrow" aria-hidden="true">→</span></a>
+    <a id="cardBuenasPracticas" class="training-card training-card--practices" href="https://www.scad.mx/gym-buenas-practicas" aria-label="Abrir Buenas Prácticas"><span class="card-icon" aria-hidden="true">✓</span><div><h2 class="card-title">Buenas Prácticas</h2><p class="card-description">Consulta recomendaciones para entrenar de forma segura</p></div><span class="arrow" aria-hidden="true">→</span></a>
+    <a id="cardInstruccionesEjercicios" class="training-card training-card--instructions" href="https://www.scad.mx/gym-instrucciones-ejercicios" aria-label="Abrir Instrucciones para Ejercitarse"><span class="card-icon" aria-hidden="true">◎</span><div><h2 class="card-title">Instrucciones para Ejercitarse</h2><p class="card-description">Aprende a ejecutar tus ejercicios con técnica, esfuerzo y control</p></div><span class="arrow" aria-hidden="true">→</span></a>
+    <a id="cardObjetivosEntrenamiento" class="training-card training-card--objectives" href="https://www.scad.mx/gym-objetivos-entrenamiento" aria-label="Abrir Objetivos del Entrenamiento"><span class="card-icon" aria-hidden="true">🎯</span><div><h2 class="card-title">Objetivos del Entrenamiento</h2><p class="card-description">Identifica el objetivo que orienta tu entrenamiento</p></div><span class="arrow" aria-hidden="true">→</span></a>
+    <a id="cardPanelEntrenador" class="training-card training-card--trainer" href="https://www.scad.mx/panel-de-entrenador" aria-label="Abrir Panel del Entrenador" hidden><span class="card-icon" aria-hidden="true">▣</span><div><h2 class="card-title">Panel del Entrenador</h2><p class="card-description">Gestiona los planes y sesiones de tus usuarios</p></div><span class="arrow" aria-hidden="true">→</span></a>
+    <footer class="privacy-footer"><button id="privacyLink" class="privacy-link" type="button">Política de privacidad</button></footer>
   </main>
-
-
-  <div id="privacyModal" class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle" hidden>
-    <section class="privacy-dialog">
-      <header class="privacy-header">
-        <h2 id="privacyModalTitle" class="privacy-title">Política de privacidad</h2>
-        <button id="privacyClose" class="privacy-close" type="button" aria-label="Cerrar política de privacidad">×</button>
-      </header>
-      <div id="privacyContent" class="privacy-content" tabindex="0"></div>
-    </section>
-  </div>
-
-  <div id="messageModal" class="message-modal" role="dialog" aria-modal="true" aria-labelledby="messageModalTitle" hidden>
-    <section class="message-dialog">
-      <header class="message-header">
-        <button id="messageBack" class="message-back" type="button" aria-label="Volver a conversaciones" hidden>←</button>
-        <h2 id="messageModalTitle" class="message-title">💬 Mensajes</h2>
-        <button id="messageClose" class="message-close" type="button" aria-label="Cerrar mensajes">×</button>
-      </header>
-      <div class="message-body">
-        <p id="messageInstruction" class="message-instruction">Selecciona una conversación para abrirla.</p>
-        <div id="messageSearch" class="message-search" hidden>
-          <input id="messageSearchInput" class="message-search-input" type="search" autocomplete="off" placeholder="Buscar usuario vinculado…" aria-label="Buscar usuario vinculado">
-        </div>
-        <div id="messageShortcuts" class="message-shortcuts" aria-label="Conversaciones principales" hidden></div>
-        <div id="messageInbox" class="message-inbox"></div>
-        <section id="messageThread" class="message-thread" hidden>
-          <p id="messageThreadReference" class="message-thread-reference"></p>
-          <div id="messageList" class="message-list"></div>
-          <form id="messageCompose" class="message-compose">
-            <textarea id="messageInput" class="message-input" rows="2" maxlength="3000" placeholder="Escribe un mensaje…" required></textarea>
-            <button id="messageSend" class="message-send" type="submit">Enviar</button>
-          </form>
-        </section>
-      </div>
-    </section>
-  </div>
-
-  <div id="profileModal" class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden>
-    <form id="profileForm" class="profile-dialog">
-      <h2 id="profileModalTitle">Editar identidad</h2>
-      <div class="profile-field">
-        <label for="profileNameInput">Nombre en la app</label>
-        <input id="profileNameInput" type="text" maxlength="60" autocomplete="name">
-        <p class="profile-help">El nombre formal del registro no se modifica.</p>
-      </div>
-      <div class="profile-field">
-        <label for="profilePhotoInput">Fotografía</label>
-        <input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp">
-        <p class="profile-help">JPG, PNG o WebP. Máximo 5 MB.</p>
-      </div>
-      <div class="profile-actions">
-        <button id="profileCancelButton" class="profile-action profile-cancel" type="button">Cancelar</button>
-        <button id="profileSaveButton" class="profile-action profile-save" type="submit">Guardar</button>
-      </div>
-    </form>
-  </div>
-
-  <div id="iosTutorialModal" class="ios-tutorial-modal" role="dialog" aria-modal="true" aria-label="Tutorial de instalación en iPhone" hidden>
-    <div class="ios-tutorial-dialog">
-      <div class="ios-tutorial-header">
-        <p class="ios-tutorial-title">Instalar app en iPhone</p>
-        <button id="iosTutorialClose" class="ios-tutorial-close" type="button" aria-label="Cerrar tutorial">×</button>
-      </div>
-      <video
-        id="iosTutorialVideo"
-        class="ios-tutorial-video"
-        controls
-        playsinline
-        webkit-playsinline
-        preload="metadata"
-        disablepictureinpicture
-      >
-        <source src="./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4" type="video/mp4">
-        Tu navegador no puede reproducir este tutorial.
-      </video>
-    </div>
-  </div>
-
+  <div id="privacyModal" class="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacyModalTitle" hidden><section class="privacy-dialog"><header class="privacy-header"><h2 id="privacyModalTitle" class="privacy-title">Política de privacidad</h2><button id="privacyClose" class="privacy-close" type="button" aria-label="Cerrar política de privacidad">×</button></header><div id="privacyContent" class="privacy-content" tabindex="0"></div></section></div>
+  <div id="messageModal" class="message-modal" role="dialog" aria-modal="true" aria-labelledby="messageModalTitle" hidden><section class="message-dialog"><header class="message-header"><button id="messageBack" class="message-back" type="button" aria-label="Volver a conversaciones" hidden>←</button><h2 id="messageModalTitle" class="message-title">💬 Mensajes</h2><button id="messageClose" class="message-close" type="button" aria-label="Cerrar mensajes">×</button></header><div class="message-body"><p id="messageInstruction" class="message-instruction">Selecciona una conversación para abrirla.</p><div id="messageSearch" class="message-search" hidden><input id="messageSearchInput" class="message-search-input" type="search" autocomplete="off" placeholder="Buscar usuario vinculado…" aria-label="Buscar usuario vinculado"></div><div id="messageShortcuts" class="message-shortcuts" aria-label="Conversaciones principales" hidden></div><div id="messageInbox" class="message-inbox"></div><section id="messageThread" class="message-thread" hidden><p id="messageThreadReference" class="message-thread-reference"></p><div id="messageList" class="message-list"></div><form id="messageCompose" class="message-compose"><textarea id="messageInput" class="message-input" rows="2" maxlength="3000" placeholder="Escribe un mensaje…" required></textarea><button id="messageSend" class="message-send" type="submit">Enviar</button></form></section></div></section></div>
+  <div id="profileModal" class="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden><form id="profileForm" class="profile-dialog"><h2 id="profileModalTitle">Editar identidad</h2><div class="profile-field"><label for="profileNameInput">Nombre en la app</label><input id="profileNameInput" type="text" maxlength="60" autocomplete="name"><p class="profile-help">El nombre formal del registro no se modifica.</p></div><div class="profile-field"><label for="profilePhotoInput">Fotografía</label><input id="profilePhotoInput" type="file" accept="image/jpeg,image/png,image/webp"><p class="profile-help">JPG, PNG o WebP. Máximo 5 MB.</p></div><div class="profile-actions"><button id="profileCancelButton" class="profile-action profile-cancel" type="button">Cancelar</button><button id="profileSaveButton" class="profile-action profile-save" type="submit">Guardar</button></div></form></div>
+  <div id="iosTutorialModal" class="ios-tutorial-modal" role="dialog" aria-modal="true" aria-label="Tutorial de instalación en iPhone" hidden><div class="ios-tutorial-dialog"><div class="ios-tutorial-header"><p class="ios-tutorial-title">Instalar app en iPhone</p><button id="iosTutorialClose" class="ios-tutorial-close" type="button" aria-label="Cerrar tutorial">×</button></div><video id="iosTutorialVideo" class="ios-tutorial-video" controls playsinline webkit-playsinline preload="metadata" disablepictureinpicture><source src="./tutoriales-ios/instalar-entrenamiento-gym-ios.mp4" type="video/mp4">Tu navegador no puede reproducir este tutorial.</video></div></div>
   <script>
     const API_BASE = "https://www.scad.mx/_functions";
     const GYM_ACCESS_URL = "https://www.scad.mx/gym-acceso";
@@ -945,27 +229,69 @@
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
     const APP_SOUNDS = {
-      click: new Audio("./assets/clic.mp3"),
-      error: new Audio("./assets/error.mp3"),
-      success: new Audio("./assets/exito.mp3"),
-      messageSent: new Audio("./assets/mensaje-enviado.mp3"),
-      messagePending: new Audio("./assets/mensaje-pendiente.mp3")
+      click: "./assets/clic.mp3",
+      error: "./assets/error.mp3",
+      success: "./assets/exito.mp3",
+      messageSent: "./assets/mensaje-enviado.mp3",
+      messagePending: "./assets/mensaje-pendiente.mp3"
     };
 
-    Object.values(APP_SOUNDS).forEach((audio) => {
-      audio.preload = "auto";
-    });
+    let appAudioContext = null;
+    const appSoundBuffers = new Map();
+    const appSoundBufferPromises = new Map();
+
+    function getAppAudioContext() {
+      if (appAudioContext) return appAudioContext;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+      try {
+        appAudioContext = new AudioContextClass();
+        return appAudioContext;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function loadAppSoundBuffer(name) {
+      if (appSoundBuffers.has(name)) return appSoundBuffers.get(name);
+      if (appSoundBufferPromises.has(name)) return appSoundBufferPromises.get(name);
+      const url = APP_SOUNDS[name];
+      const context = getAppAudioContext();
+      if (!url || !context) return null;
+      const promise = fetch(url, { cache: "force-cache" })
+        .then((response) => {
+          if (!response.ok) throw new Error("No fue posible cargar el audio.");
+          return response.arrayBuffer();
+        })
+        .then((arrayBuffer) => context.decodeAudioData(arrayBuffer.slice(0)))
+        .then((buffer) => {
+          appSoundBuffers.set(name, buffer);
+          appSoundBufferPromises.delete(name);
+          return buffer;
+        })
+        .catch(() => {
+          appSoundBufferPromises.delete(name);
+          return null;
+        });
+      appSoundBufferPromises.set(name, promise);
+      return promise;
+    }
 
     let pendingMessageAnnouncement = false;
     let messageAnnouncementPlayed = false;
 
     async function playAppSound(name) {
-      const audio = APP_SOUNDS[name];
-      if (!audio) return false;
+      if (!APP_SOUNDS[name]) return false;
       try {
-        audio.pause();
-        audio.currentTime = 0;
-        await audio.play();
+        const context = getAppAudioContext();
+        if (!context) return false;
+        if (context.state === "suspended") await context.resume();
+        const buffer = await loadAppSoundBuffer(name);
+        if (!buffer) return false;
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0);
         return true;
       } catch (error) {
         return false;
@@ -975,10 +301,7 @@
     async function announcePendingMessages() {
       if (!pendingMessageAnnouncement || messageAnnouncementPlayed || messageUnread < 1) return false;
       const played = await playAppSound("messagePending");
-      if (played) {
-        pendingMessageAnnouncement = false;
-        messageAnnouncementPlayed = true;
-      }
+      if (played) { pendingMessageAnnouncement = false; messageAnnouncementPlayed = true; }
       return played;
     }
 
@@ -987,36 +310,16 @@
       const action = target.closest("button:not(:disabled), a[href]");
       if (!action) return false;
       if (action.closest("#messageModal")) return false;
-      return ![
-        "privacyClose",
-        "profileCancelButton",
-        "profileSaveButton",
-        "iosTutorialClose"
-      ].includes(action.id);
+      return !["privacyClose","profileCancelButton","profileSaveButton","iosTutorialClose"].includes(action.id);
     }
 
     document.addEventListener("click", (event) => {
-      if (pendingMessageAnnouncement && messageUnread > 0) {
-        announcePendingMessages();
-        return;
-      }
+      if (pendingMessageAnnouncement && messageUnread > 0) { announcePendingMessages(); return; }
       if (isClickSoundAction(event.target)) playAppSound("click");
     }, true);
 
     const splashStartedAt = performance.now();
-
-    function closeSplashScreen() {
-      const splash = document.getElementById("appSplash");
-      if (!splash) return;
-
-      const minimumVisibleTime = 1800;
-      const remainingTime = Math.max(0, minimumVisibleTime - (performance.now() - splashStartedAt));
-
-      window.setTimeout(() => {
-        splash.classList.add("is-hiding");
-        window.setTimeout(() => splash.remove(), 560);
-      }, remainingTime);
-    }
+    function closeSplashScreen() { const splash = document.getElementById("appSplash"); if (!splash) return; const minimumVisibleTime = 1800; const remainingTime = Math.max(0, minimumVisibleTime - (performance.now() - splashStartedAt)); window.setTimeout(() => { splash.classList.add("is-hiding"); window.setTimeout(() => splash.remove(), 560); }, remainingTime); }
 
     const PRIVACY_POLICY_TEXT = "POLÍTICA DE PRIVACIDAD\
 Última actualización: 31 de julio de 2026\
@@ -1086,928 +389,78 @@ Consiento expresamente el tratamiento de mis datos personales sensibles relacion
 \
 Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
-    let gymContext = {
-      se: false,
-      us: false,
-      en: false,
-      nombre: "",
-      nombreApp: "",
-      foto: "",
-      programa: ""
-    };
-
-    let messageUnread = 0;
-    let messagePollTimer = null;
-    let activeConversation = null;
-    let messageInboxItems = [];
-
-    function canUseMessages() {
-      return gymContext.se && (gymContext.us || gymContext.en);
-    }
-
-    async function messageApi(path, options = {}) {
-      const response = await fetch(`${API_BASE}/${path}`, { cache: "no-store", ...options });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok || data?.ok !== true) throw new Error(data?.error || "No fue posible cargar Mensajería.");
-      return data;
-    }
-
-    function renderMessageAccess() {
-      const button = document.getElementById("messageButton");
-      if (!button) return;
-      const enabled = canUseMessages();
-      button.dataset.visible = "true";
-      if (!enabled) updateMessageBadge(0, false);
-      button.setAttribute("aria-label", enabled ? "Abrir mensajes" : "Inicia sesión para abrir mensajes");
-    }
-
-    function updateMessageBadge(total, announce = true) {
-      const button = document.getElementById("messageButton");
-      const badge = document.getElementById("messageBadge");
-      const next = Math.max(0, Number(total) || 0);
-      const previous = messageUnread;
-      const increased = next > previous;
-      messageUnread = next;
-      if (next === 0) {
-        pendingMessageAnnouncement = false;
-        messageAnnouncementPlayed = false;
-      } else if (previous === 0 || (!messageAnnouncementPlayed && !pendingMessageAnnouncement)) {
-        pendingMessageAnnouncement = true;
-        announcePendingMessages();
-      }
-      if (badge) {
-        badge.textContent = next > 99 ? "99+" : String(next);
-        badge.hidden = next === 0;
-      }
-      if (button) {
-        button.dataset.pulse = announce && increased ? "true" : "false";
-        button.setAttribute("aria-label", next ? `Abrir mensajes, ${next} pendientes` : "Abrir mensajes");
-        if (increased) window.setTimeout(() => { button.dataset.pulse = "false"; }, 5000);
-      }
-    }
-
-    async function refreshMessageCount(announce = true) {
-      if (!canUseMessages()) return;
-      const memberId = resolveGymMember().memberId;
-      if (!memberId) return;
-      try {
-        const data = await messageApi(`gymMensajeriaPendientes?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`);
-        updateMessageBadge(data.total, announce);
-      } catch (error) {
-        console.error("No fue posible consultar mensajes pendientes:", error);
-      }
-    }
-
-    function startMessagePolling() {
-      window.clearInterval(messagePollTimer);
-      if (!canUseMessages()) return;
-      refreshMessageCount(false);
-      messagePollTimer = window.setInterval(() => refreshMessageCount(true), 30000);
-    }
-
-    function messageInitials(name) {
-      return getInitials(name).slice(0, 2);
-    }
-
-    function messageDate(value) {
-      if (!value) return null;
-      const date = new Date(value);
-      return Number.isNaN(date.getTime()) ? null : date;
-    }
-
-    function messageDayKey(value) {
-      const date = messageDate(value);
-      if (!date) return "";
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    }
-
-    function formatMessageDay(value) {
-      const date = messageDate(value);
-      if (!date) return "";
-      const today = new Date();
-      if (messageDayKey(date) === messageDayKey(today)) return "Hoy";
-      return new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "long", year: "numeric" }).format(date);
-    }
-
-    function formatMessageTime(value) {
-      const date = messageDate(value);
-      if (!date) return "";
-      return new Intl.DateTimeFormat("es-MX", { hour: "numeric", minute: "2-digit" }).format(date);
-    }
-
-    function conversationKind(item = {}) {
-      return String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase();
-    }
-
-    function isTrainerConversation(item = {}) {
-      const kind = conversationKind(item);
-      const visibleRole = String(item.rolVisible || "").toUpperCase();
-      return visibleRole === "ENT" || visibleRole.includes("ENTRENADOR") ||
-        (!visibleRole && (kind.includes("ENTRENADOR") || kind === "ENT"));
-    }
-
-    function isLinkedUserConversation(item = {}) {
-      const visibleRole = String(item.rolVisible || "").toUpperCase();
-      return conversationKind(item).includes("ENTRENAMIENTO") &&
-        (visibleRole === "USU" || visibleRole.includes("USUARIO"));
-    }
-
-    function conversationDisplayName(item = {}) {
-      const kind = conversationKind(item);
-      if (kind.includes("ATENCION")) return "ATENCIÓN AL USUARIO";
-      if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "NOTIFICACIONES";
-      return item.nombreVisible || "Conversación";
-    }
-
-    function conversationDescription(item = {}) {
-      const kind = conversationKind(item);
-      if (kind.includes("ATENCION")) {
-        return "Reporta fallas en la plataforma y solicita apoyo relacionado con tu cuenta.";
-      }
-      if (isTrainerConversation(item)) {
-        return "Contacta a tu entrenador para resolver dudas sobre tu plan, sesiones y seguimiento.";
-      }
-      if (isLinkedUserConversation(item)) {
-        return "Usuario vinculado a tu entrenamiento.";
-      }
-      if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) {
-        return "Avisos importantes sobre tu cuenta y el funcionamiento de la plataforma.";
-      }
-      return "";
-    }
-
-    function isVisibleConversation(item = {}) {
-      const kind = conversationKind(item);
-      const isSystem = kind.includes("SISTEMA") || kind.includes("NOTIFIC");
-      const isAttention = kind.includes("ATENCION");
-      const allowedForUser = isSystem || isAttention || isTrainerConversation(item);
-      if (gymContext.en !== true && !allowedForUser) return false;
-      return !isSystem || Boolean(item.ultimoMensaje) || Number(item.noLeidos) > 0;
-    }
-
-    function normalizedMessageSearch(value) {
-      return String(value || "")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .trim();
-    }
-
-    function isSystemConversation(item = {}) {
-      const kind = conversationKind(item);
-      return kind.includes("SISTEMA") || kind.includes("NOTIFIC");
-    }
-
-    function isAttentionConversation(item = {}) {
-      return conversationKind(item).includes("ATENCION");
-    }
-
-    function isShortcutConversation(item = {}) {
-      return isSystemConversation(item) || isAttentionConversation(item) || isTrainerConversation(item);
-    }
-
-    function renderMessageShortcuts(items = messageInboxItems) {
-      const container = document.getElementById("messageShortcuts");
-      if (!container) return;
-      container.replaceChildren();
-      const shortcuts = items.filter(isVisibleConversation).filter(isShortcutConversation);
-      const uniqueShortcuts = new Map();
-      shortcuts.forEach((item) => {
-        const key = isSystemConversation(item)
-          ? "system"
-          : isAttentionConversation(item)
-            ? "attention"
-            : "trainer";
-        const current = uniqueShortcuts.get(key);
-        const itemDate = messageDate(item.ultimoMensajeFecha || item.fechaUltimoMensaje || item.fecha)?.getTime() || 0;
-        const currentDate = messageDate(current?.ultimoMensajeFecha || current?.fechaUltimoMensaje || current?.fecha)?.getTime() || 0;
-        if (!current || itemDate > currentDate || Number(item.noLeidos) > Number(current.noLeidos)) {
-          uniqueShortcuts.set(key, item);
-        }
-      });
-      const ordered = [...uniqueShortcuts.values()].sort((a, b) => {
-        const priority = (item) => isSystemConversation(item) ? 0 : isAttentionConversation(item) ? 1 : 2;
-        return priority(a) - priority(b);
-      });
-      ordered.forEach((item) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "message-shortcut";
-        const icon = document.createElement("span");
-        icon.className = "message-shortcut-icon";
-        icon.setAttribute("aria-hidden", "true");
-        icon.textContent = isSystemConversation(item) ? "⚙️" : isAttentionConversation(item) ? "💁🏻‍♂️" : "🏋️";
-        const label = document.createElement("span");
-        label.className = "message-shortcut-label";
-        label.textContent = isSystemConversation(item) ? "SISTEMA" : isAttentionConversation(item) ? "ATENCIÓN" : "MI ENTRENADOR";
-        button.append(icon, label);
-        if (Number(item.noLeidos) > 0) {
-          const count = document.createElement("span");
-          count.className = "message-shortcut-count";
-          count.textContent = Number(item.noLeidos) > 99 ? "99+" : String(item.noLeidos);
-          button.append(count);
-        }
-        button.addEventListener("click", () => openConversation(item));
-        container.append(button);
-      });
-      container.hidden = container.childElementCount === 0;
-    }
-
-    function renderInbox(items = messageInboxItems) {
-      const inbox = document.getElementById("messageInbox");
-      if (!inbox) return;
-      inbox.replaceChildren();
-      const searchInput = document.getElementById("messageSearchInput");
-      const query = gymContext.en === true ? normalizedMessageSearch(searchInput?.value) : "";
-      renderMessageShortcuts(items);
-      const visibleItems = items
-        .filter(isVisibleConversation)
-        .filter((item) => !isShortcutConversation(item))
-        .filter((item) => {
-          if (!query) return true;
-          return normalizedMessageSearch([
-            conversationDisplayName(item),
-            item.nombreVisible
-          ].join(" ")).includes(query);
-        })
-        .sort((a, b) => conversationDisplayName(a).localeCompare(conversationDisplayName(b), "es"));
-      if (!visibleItems.length) {
-        if (gymContext.en !== true && document.getElementById("messageShortcuts")?.childElementCount) return;
-        const empty = document.createElement("p");
-        empty.className = "message-empty";
-        empty.textContent = query ? "No se encontraron usuarios vinculados." : "No hay conversaciones disponibles.";
-        inbox.append(empty);
-        return;
-      }
-      visibleItems.forEach((item) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "conversation-item";
-        const avatar = document.createElement("span");
-        avatar.className = "conversation-avatar";
-        const kind = conversationKind(item);
-        const isAttention = kind.includes("ATENCION");
-        const isSystem = kind.includes("SISTEMA") || kind.includes("NOTIFIC");
-        const avatarUrl = isAttention || isSystem ? "" : normalizeWixImageUrl(item.avatar);
-        if (isAttention || isSystem) {
-          avatar.classList.add("conversation-avatar--simple");
-          avatar.setAttribute("role", "img");
-          avatar.setAttribute("aria-label", isAttention ? "ATENCIÓN AL USUARIO" : "NOTIFICACIONES");
-          avatar.textContent = isAttention ? "💁🏻‍♂️" : "⚙️";
-        } else if (avatarUrl) {
-          const image = document.createElement("img");
-          image.src = avatarUrl;
-          image.alt = "";
-          avatar.append(image);
-        } else avatar.textContent = messageInitials(conversationDisplayName(item));
-        const copy = document.createElement("span");
-        copy.className = "conversation-copy";
-        if (isTrainerConversation(item)) {
-          const role = document.createElement("p");
-          role.className = "conversation-role";
-          role.textContent = "TU ENTRENADOR";
-          copy.append(role);
-        }
-        const name = document.createElement("p");
-        name.className = "conversation-name";
-        name.textContent = conversationDisplayName(item);
-        copy.append(name);
-        button.append(avatar, copy);
-        if (Number(item.noLeidos) > 0) {
-          const count = document.createElement("span");
-          count.className = "conversation-count";
-          count.textContent = Number(item.noLeidos) > 99 ? "99+" : String(item.noLeidos);
-          button.append(count);
-        }
-        const arrow = document.createElement("span");
-        arrow.className = "conversation-arrow";
-        arrow.setAttribute("aria-hidden", "true");
-        arrow.textContent = "›";
-        button.append(arrow);
-        button.addEventListener("click", () => openConversation(item));
-        inbox.append(button);
-      });
-    }
-
-    function showMessageState(container, text) {
-      if (!container) return;
-      const state = document.createElement("p");
-      state.className = "message-empty";
-      state.textContent = text;
-      container.replaceChildren(state);
-    }
-
-    async function loadMessageInbox() {
-      const memberId = resolveGymMember().memberId;
-      const inbox = document.getElementById("messageInbox");
-      showMessageState(inbox, "Cargando conversaciones…");
-      try {
-        const data = await messageApi(`gymMensajeriaBandeja?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`);
-        messageInboxItems = Array.isArray(data.items) ? data.items : [];
-        renderInbox();
-        updateMessageBadge(data.totalNoLeidos, false);
-      } catch (error) {
-        showMessageState(inbox, error.message);
-      }
-    }
-
-    function showMessageInbox() {
-      activeConversation = null;
-      document.querySelector(".message-dialog").dataset.view = "inbox";
-      document.getElementById("messageInbox").hidden = false;
-      document.getElementById("messageThread").hidden = true;
-      document.getElementById("messageBack").hidden = true;
-      document.getElementById("messageInstruction").hidden = false;
-      const search = document.getElementById("messageSearch");
-      const searchInput = document.getElementById("messageSearchInput");
-      if (search) search.hidden = gymContext.en !== true;
-      if (searchInput && gymContext.en !== true) searchInput.value = "";
-      document.getElementById("messageModalTitle").textContent = "💬 Mensajes";
-      loadMessageInbox();
-    }
-
-    async function openConversation(item) {
-      activeConversation = item;
-      const memberId = resolveGymMember().memberId;
-      const list = document.getElementById("messageList");
-      document.querySelector(".message-dialog").dataset.view = "thread";
-      document.getElementById("messageInbox").hidden = true;
-      document.getElementById("messageThread").hidden = false;
-      document.getElementById("messageBack").hidden = false;
-      document.getElementById("messageInstruction").hidden = true;
-      document.getElementById("messageSearch").hidden = true;
-      document.getElementById("messageModalTitle").textContent = conversationDisplayName(item);
-      document.getElementById("messageThreadReference").textContent = conversationDescription(item);
-      document.getElementById("messageCompose").hidden = item.permiteRespuesta === false;
-      showMessageState(list, "Cargando mensajes…");
-      try {
-        const query = `memberId=${encodeURIComponent(memberId)}&conversationId=${encodeURIComponent(item.conversationId)}&limit=200&t=${Date.now()}`;
-        const data = await messageApi(`gymMensajeriaMensajes?${query}`);
-        list.replaceChildren();
-        let renderedDay = "";
-        (data.items || []).forEach((message) => {
-          const dayKey = messageDayKey(message.fecha);
-          if (dayKey && dayKey !== renderedDay) {
-            const divider = document.createElement("div");
-            divider.className = "message-date-divider";
-            const dividerLabel = document.createElement("span");
-            dividerLabel.textContent = formatMessageDay(message.fecha);
-            divider.append(dividerLabel);
-            list.append(divider);
-            renderedDay = dayKey;
-          }
-          const bubble = document.createElement("div");
-          bubble.className = "message-bubble";
-          bubble.dataset.own = message.propio === true ? "true" : "false";
-          bubble.textContent = message.mensaje || "";
-          const time = document.createElement("span");
-          time.className = "message-time";
-          time.textContent = formatMessageTime(message.fecha);
-          bubble.append(time);
-          list.append(bubble);
-        });
-        if (!(data.items || []).length) showMessageState(list, "Aún no hay mensajes.");
-        document.getElementById("messageCompose").hidden = data.conversation?.permiteRespuesta === false;
-        list.scrollTop = list.scrollHeight;
-        await messageApi("gymMensajeriaMarcarLeida", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId, conversationId: item.conversationId }) });
-        await refreshMessageCount(false);
-      } catch (error) {
-        showMessageState(list, error.message);
-      }
-    }
-
-    function openMessageModal() {
-      if (!canUseMessages()) return;
-      const modal = document.getElementById("messageModal");
-      modal.hidden = false;
-      document.body.style.overflow = "hidden";
-      showMessageInbox();
-      document.getElementById("messageClose")?.focus();
-    }
-
-    function closeMessageModal() {
-      document.getElementById("messageModal").hidden = true;
-      document.body.style.overflow = "";
-      activeConversation = null;
-      document.getElementById("messageButton")?.focus();
-    }
-
-    document.getElementById("messageButton")?.addEventListener("click", () => {
-      if (!canUseMessages()) {
-        goToGymAccess();
-        return;
-      }
-      openMessageModal();
-    });
-    document.getElementById("messageClose")?.addEventListener("click", closeMessageModal);
-    document.getElementById("messageBack")?.addEventListener("click", showMessageInbox);
-    document.getElementById("messageSearchInput")?.addEventListener("input", () => renderInbox());
-    document.getElementById("messageModal")?.addEventListener("click", (event) => { if (event.target === event.currentTarget) closeMessageModal(); });
-    document.getElementById("messageCompose")?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      if (!activeConversation) return;
-      const input = document.getElementById("messageInput");
-      const send = document.getElementById("messageSend");
-      const mensaje = String(input.value || "").trim();
-      if (!mensaje) return;
-      try {
-        send.disabled = true;
-        await messageApi("gymMensajeriaEnviar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ memberId: resolveGymMember().memberId, conversationId: activeConversation.conversationId, mensaje }) });
-        input.value = "";
-        await openConversation(activeConversation);
-        playAppSound("messageSent");
-      } catch (error) {
-        playAppSound("error");
-        window.alert(error.message);
-      } finally {
-        send.disabled = false;
-      }
-    });
-
-    function getUrlParam(name) {
-      return new URLSearchParams(window.location.search).get(name) || "";
-    }
-
-    function resolveGymMember() {
-      const urlMemberId =
-        getUrlParam("memberId") ||
-        getUrlParam("memberID") ||
-        getUrlParam("wixMemberId");
-
-      if (urlMemberId) {
-        localStorage.setItem(MEMBER_ID_KEY, urlMemberId);
-      }
-
-      return {
-        memberId: urlMemberId || localStorage.getItem(MEMBER_ID_KEY) || ""
-      };
-    }
-
-    function normalizeWixImageUrl(value) {
-      if (!value) return "";
-      if (typeof value === "object") {
-        return normalizeWixImageUrl(
-          value.src || value.url || value.fileUrl || value.imageUrl || ""
-        );
-      }
-
-      const raw = String(value).trim();
-      if (!raw) return "";
-      if (/^https?:\/\//i.test(raw) || /^data:/i.test(raw) || /^blob:/i.test(raw)) {
-        return raw;
-      }
-
-      const wixMatch = raw.match(/^wix:image:\/\/v1\/([^/]+)\//i);
-      return wixMatch?.[1]
-        ? `https://static.wixstatic.com/media/${wixMatch[1]}`
-        : raw;
-    }
-
-    function getInitials(name) {
-      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-      if (!parts.length) return "US";
-      return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : ""))
-        .toUpperCase();
-    }
-
-    function clearIdentityCard() {
-      const card = document.getElementById("identityCard");
-      const photo = document.getElementById("identityPhoto");
-      const initials = document.getElementById("identityInitials");
-      const name = document.getElementById("identityName");
-      const program = document.getElementById("identityProgram");
-
-      if (card) card.hidden = true;
-      if (photo) {
-        photo.hidden = true;
-        photo.removeAttribute("src");
-      }
-      if (initials) initials.textContent = "US";
-      if (name) name.textContent = "";
-      if (program) program.textContent = "";
-    }
-
-    function renderIdentityCard() {
-      const card = document.getElementById("identityCard");
-      const photo = document.getElementById("identityPhoto");
-      const initials = document.getElementById("identityInitials");
-      const name = document.getElementById("identityName");
-      const program = document.getElementById("identityProgram");
-      const visible = gymContext.se === true && gymContext.us === true;
-
-      if (!card || !photo || !initials || !name || !program || !visible) {
-        clearIdentityCard();
-        return;
-      }
-
-      const displayName = gymContext.nombreApp || gymContext.nombre || "Usuario de entrenamiento";
-      const photoUrl = normalizeWixImageUrl(gymContext.foto);
-
-      name.textContent = displayName;
-      program.textContent = gymContext.programa || "Usuario de entrenamiento";
-      initials.textContent = getInitials(displayName);
-      card.hidden = false;
-
-      photo.onerror = () => {
-        photo.hidden = true;
-        photo.removeAttribute("src");
-      };
-
-      if (photoUrl) {
-        photo.src = photoUrl;
-        photo.hidden = false;
-      } else {
-        photo.hidden = true;
-        photo.removeAttribute("src");
-      }
-    }
-
-    function renderCvc() {
-      const value =
-        `Se${gymContext.se ? 1 : 0}` +
-        `Us${gymContext.us ? 1 : 0}` +
-        `En${gymContext.en ? 1 : 0}`;
-
-      const element = document.getElementById("cvc");
-      if (element) {
-        element.textContent = value;
-      }
-    }
-
-    function renderTrainerPanelCard() {
-      const card = document.getElementById("cardPanelEntrenador");
-      if (!card) {
-        return;
-      }
-
-      card.hidden = gymContext.en !== true;
-    }
-
-    function renderSessionButton() {
-      const button = document.getElementById("sessionButton");
-      if (!button) {
-        return;
-      }
-
-      const sessionActive = gymContext.se === true;
-      button.textContent = sessionActive ? "Cerrar sesión" : "Iniciar sesión";
-      button.dataset.sessionActive = sessionActive ? "true" : "false";
-      button.setAttribute(
-        "aria-label",
-        sessionActive ? "Cerrar sesión" : "Iniciar sesión"
-      );
-    }
-
-    function clearGymIdentity() {
-      localStorage.removeItem(MEMBER_ID_KEY);
-      window.clearInterval(messagePollTimer);
-      gymContext = {
-        se: false,
-        us: false,
-        en: false,
-        nombre: "",
-        nombreApp: "",
-        foto: "",
-        programa: ""
-      };
-      clearIdentityCard();
-      renderMessageAccess();
-    }
-
-    function goToGymAccess(options = {}) {
-      const url = new URL(GYM_ACCESS_URL);
-
-      if (options.logout === true) {
-        url.searchParams.set("logout", "1");
-      } else {
-        url.searchParams.set("login", "1");
-      }
-
-      window.location.href = url.toString();
-    }
-
-    let deferredInstallPrompt = null;
-
-    function isAppInstalled() {
-      return (
-        window.matchMedia("(display-mode: standalone)").matches ||
-        window.navigator.standalone === true
-      );
-    }
-
-    function isIosDevice() {
-      return /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    }
-
-    function openIosTutorial() {
-      const modal = document.getElementById("iosTutorialModal");
-      const video = document.getElementById("iosTutorialVideo");
-      if (!modal || !video) return;
-
-      modal.hidden = false;
-      document.body.style.overflow = "hidden";
-      document.getElementById("iosTutorialClose")?.focus();
-
-      video.load();
-    }
-
-    function closeIosTutorial() {
-      const modal = document.getElementById("iosTutorialModal");
-      const video = document.getElementById("iosTutorialVideo");
-      if (!modal || !video) return;
-
-      if (document.fullscreenElement && document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      } else if (video.webkitDisplayingFullscreen && video.webkitExitFullscreen) {
-        video.webkitExitFullscreen();
-      }
-
-      video.pause();
-      video.currentTime = 0;
-      modal.hidden = true;
-      document.body.style.overflow = "";
-      document.getElementById("installButton")?.focus();
-    }
-
-    document.getElementById("iosTutorialClose")?.addEventListener("click", closeIosTutorial);
-    document.getElementById("iosTutorialModal")?.addEventListener("click", (event) => {
-      if (event.target === event.currentTarget) closeIosTutorial();
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape") return;
-      if (!document.getElementById("messageModal")?.hidden) {
-        closeMessageModal();
-        return;
-      }
-      if (!document.getElementById("privacyModal")?.hidden) {
-        closePrivacyPolicy();
-        return;
-      }
-      if (!document.getElementById("iosTutorialModal")?.hidden) {
-        closeIosTutorial();
-      }
-    });
-
-
-    function openPrivacyPolicy() {
-      const modal = document.getElementById("privacyModal");
-      const content = document.getElementById("privacyContent");
-      if (!modal || !content) return;
-      content.textContent = PRIVACY_POLICY_TEXT;
-      content.scrollTop = 0;
-      modal.hidden = false;
-      document.body.style.overflow = "hidden";
-      document.getElementById("privacyClose")?.focus();
-    }
-
-    function closePrivacyPolicy() {
-      const modal = document.getElementById("privacyModal");
-      if (!modal) return;
-      modal.hidden = true;
-      document.body.style.overflow = "";
-      document.getElementById("privacyLink")?.focus();
-    }
-
-    document.getElementById("privacyLink")?.addEventListener("click", openPrivacyPolicy);
-    document.getElementById("privacyClose")?.addEventListener("click", closePrivacyPolicy);
-    document.getElementById("privacyModal")?.addEventListener("click", (event) => {
-      if (event.target === event.currentTarget) closePrivacyPolicy();
-    });
-
-    function renderInstallOption() {
-      const button = document.getElementById("installButton");
-      if (!button) return;
-
-      const installed = isAppInstalled();
-      button.textContent = installed ? "App instalada" : "Instalar app";
-      button.dataset.installed = installed ? "true" : "false";
-      button.disabled = installed;
-      button.setAttribute(
-        "aria-label",
-        installed ? "App instalada" : "Instalar app"
-      );
-    }
-
-    window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
-      deferredInstallPrompt = event;
-      renderInstallOption();
-    });
-
-    window.addEventListener("appinstalled", () => {
-      deferredInstallPrompt = null;
-      renderInstallOption();
-    });
-
-    document.getElementById("installButton")?.addEventListener("click", async () => {
-      if (isAppInstalled()) return;
-
-      if (isIosDevice()) {
-        openIosTutorial();
-        return;
-      }
-
-      if (!deferredInstallPrompt) {
-        window.alert(
-          "La instalación todavía no está disponible. Abre el menú del navegador y selecciona Instalar app o Instalar Entrenamiento GYM."
-        );
-        return;
-      }
-
-      const button = document.getElementById("installButton");
-      button.disabled = true;
-      button.textContent = "Instalando...";
-
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-
-      button.disabled = false;
-      renderInstallOption();
-    });
-
+    let gymContext = { se: false, us: false, en: false, nombre: "", nombreApp: "", foto: "", programa: "" };
+    let messageUnread = 0; let messagePollTimer = null; let activeConversation = null; let messageInboxItems = [];
+    function canUseMessages() { return gymContext.se && (gymContext.us || gymContext.en); }
+    async function messageApi(path, options = {}) { const response = await fetch(`${API_BASE}/${path}`, { cache: "no-store", ...options }); const data = await response.json().catch(() => ({})); if (!response.ok || data?.ok !== true) throw new Error(data?.error || "No fue posible cargar Mensajería."); return data; }
+    function renderMessageAccess() { const button = document.getElementById("messageButton"); if (!button) return; const enabled = canUseMessages(); button.dataset.visible = "true"; if (!enabled) updateMessageBadge(0, false); button.setAttribute("aria-label", enabled ? "Abrir mensajes" : "Inicia sesión para abrir mensajes"); }
+    function updateMessageBadge(total, announce = true) { const button = document.getElementById("messageButton"); const badge = document.getElementById("messageBadge"); const next = Math.max(0, Number(total) || 0); const previous = messageUnread; const increased = next > previous; messageUnread = next; if (next === 0) { pendingMessageAnnouncement = false; messageAnnouncementPlayed = false; } else if (previous === 0 || (!messageAnnouncementPlayed && !pendingMessageAnnouncement)) { pendingMessageAnnouncement = true; announcePendingMessages(); } if (badge) { badge.textContent = next > 99 ? "99+" : String(next); badge.hidden = next === 0; } if (button) { button.dataset.pulse = announce && increased ? "true" : "false"; button.setAttribute("aria-label", next ? `Abrir mensajes, ${next} pendientes` : "Abrir mensajes"); if (increased) window.setTimeout(() => { button.dataset.pulse = "false"; }, 5000); } }
+    async function refreshMessageCount(announce = true) { if (!canUseMessages()) return; const memberId = resolveGymMember().memberId; if (!memberId) return; try { const data = await messageApi(`gymMensajeriaPendientes?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`); updateMessageBadge(data.total, announce); } catch (error) { console.error("No fue posible consultar mensajes pendientes:", error); } }
+    function startMessagePolling() { window.clearInterval(messagePollTimer); if (!canUseMessages()) return; refreshMessageCount(false); messagePollTimer = window.setInterval(() => refreshMessageCount(true), 30000); }
+    function messageInitials(name) { return getInitials(name).slice(0, 2); }
+    function messageDate(value) { if (!value) return null; const date = new Date(value); return Number.isNaN(date.getTime()) ? null : date; }
+    function messageDayKey(value) { const date = messageDate(value); if (!date) return ""; return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`; }
+    function formatMessageDay(value) { const date = messageDate(value); if (!date) return ""; const today = new Date(); if (messageDayKey(date) === messageDayKey(today)) return "Hoy"; return new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "long", year: "numeric" }).format(date); }
+    function formatMessageTime(value) { const date = messageDate(value); if (!date) return ""; return new Intl.DateTimeFormat("es-MX", { hour: "numeric", minute: "2-digit" }).format(date); }
+    function conversationKind(item = {}) { return String(item.tipo || item.tipoConversacion || item.destinoTipo || item.rolDestino || "").toUpperCase(); }
+    function isTrainerConversation(item = {}) { const kind = conversationKind(item); const visibleRole = String(item.rolVisible || "").toUpperCase(); return visibleRole === "ENT" || visibleRole.includes("ENTRENADOR") || (!visibleRole && (kind.includes("ENTRENADOR") || kind === "ENT")); }
+    function isLinkedUserConversation(item = {}) { const visibleRole = String(item.rolVisible || "").toUpperCase(); return conversationKind(item).includes("ENTRENAMIENTO") && (visibleRole === "USU" || visibleRole.includes("USUARIO")); }
+    function conversationDisplayName(item = {}) { const kind = conversationKind(item); if (kind.includes("ATENCION")) return "ATENCIÓN AL USUARIO"; if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "NOTIFICACIONES"; return item.nombreVisible || "Conversación"; }
+    function conversationDescription(item = {}) { const kind = conversationKind(item); if (kind.includes("ATENCION")) return "Reporta fallas en la plataforma y solicita apoyo relacionado con tu cuenta."; if (isTrainerConversation(item)) return "Contacta a tu entrenador para resolver dudas sobre tu plan, sesiones y seguimiento."; if (isLinkedUserConversation(item)) return "Usuario vinculado a tu entrenamiento."; if (kind.includes("SISTEMA") || kind.includes("NOTIFIC")) return "Avisos importantes sobre tu cuenta y el funcionamiento de la plataforma."; return ""; }
+    function isVisibleConversation(item = {}) { const kind = conversationKind(item); const isSystem = kind.includes("SISTEMA") || kind.includes("NOTIFIC"); const isAttention = kind.includes("ATENCION"); const allowedForUser = isSystem || isAttention || isTrainerConversation(item); if (gymContext.en !== true && !allowedForUser) return false; return !isSystem || Boolean(item.ultimoMensaje) || Number(item.noLeidos) > 0; }
+    function normalizedMessageSearch(value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
+    function isSystemConversation(item = {}) { const kind = conversationKind(item); return kind.includes("SISTEMA") || kind.includes("NOTIFIC"); }
+    function isAttentionConversation(item = {}) { return conversationKind(item).includes("ATENCION"); }
+    function isShortcutConversation(item = {}) { return isSystemConversation(item) || isAttentionConversation(item) || isTrainerConversation(item); }
+    function renderMessageShortcuts(items = messageInboxItems) { const container = document.getElementById("messageShortcuts"); if (!container) return; container.replaceChildren(); const shortcuts = items.filter(isVisibleConversation).filter(isShortcutConversation); const uniqueShortcuts = new Map(); shortcuts.forEach((item) => { const key = isSystemConversation(item) ? "system" : isAttentionConversation(item) ? "attention" : "trainer"; const current = uniqueShortcuts.get(key); const itemDate = messageDate(item.ultimoMensajeFecha || item.fechaUltimoMensaje || item.fecha)?.getTime() || 0; const currentDate = messageDate(current?.ultimoMensajeFecha || current?.fechaUltimoMensaje || current?.fecha)?.getTime() || 0; if (!current || itemDate > currentDate || Number(item.noLeidos) > Number(current.noLeidos)) uniqueShortcuts.set(key, item); }); const ordered = [...uniqueShortcuts.values()].sort((a,b) => { const priority = (item) => isSystemConversation(item) ? 0 : isAttentionConversation(item) ? 1 : 2; return priority(a)-priority(b); }); ordered.forEach((item) => { const button = document.createElement("button"); button.type = "button"; button.className = "message-shortcut"; const icon = document.createElement("span"); icon.className = "message-shortcut-icon"; icon.setAttribute("aria-hidden","true"); icon.textContent = isSystemConversation(item) ? "⚙️" : isAttentionConversation(item) ? "💁🏻‍♂️" : "🏋️"; const label = document.createElement("span"); label.className = "message-shortcut-label"; label.textContent = isSystemConversation(item) ? "SISTEMA" : isAttentionConversation(item) ? "ATENCIÓN" : "MI ENTRENADOR"; button.append(icon,label); if (Number(item.noLeidos)>0) { const count=document.createElement("span"); count.className="message-shortcut-count"; count.textContent=Number(item.noLeidos)>99?"99+":String(item.noLeidos); button.append(count); } button.addEventListener("click",()=>openConversation(item)); container.append(button); }); container.hidden = container.childElementCount === 0; }
+    function renderInbox(items = messageInboxItems) { const inbox=document.getElementById("messageInbox"); if(!inbox)return; inbox.replaceChildren(); const searchInput=document.getElementById("messageSearchInput"); const query=gymContext.en===true?normalizedMessageSearch(searchInput?.value):""; renderMessageShortcuts(items); const visibleItems=items.filter(isVisibleConversation).filter((item)=>!isShortcutConversation(item)).filter((item)=>{ if(!query)return true; return normalizedMessageSearch([conversationDisplayName(item),item.nombreVisible].join(" ")).includes(query); }).sort((a,b)=>conversationDisplayName(a).localeCompare(conversationDisplayName(b),"es")); if(!visibleItems.length){ if(gymContext.en!==true&&document.getElementById("messageShortcuts")?.childElementCount)return; const empty=document.createElement("p"); empty.className="message-empty"; empty.textContent=query?"No se encontraron usuarios vinculados.":"No hay conversaciones disponibles."; inbox.append(empty); return; } visibleItems.forEach((item)=>{ const button=document.createElement("button"); button.type="button"; button.className="conversation-item"; const avatar=document.createElement("span"); avatar.className="conversation-avatar"; const kind=conversationKind(item); const isAttention=kind.includes("ATENCION"); const isSystem=kind.includes("SISTEMA")||kind.includes("NOTIFIC"); const avatarUrl=isAttention||isSystem?"":normalizeWixImageUrl(item.avatar); if(isAttention||isSystem){avatar.classList.add("conversation-avatar--simple");avatar.setAttribute("role","img");avatar.setAttribute("aria-label",isAttention?"ATENCIÓN AL USUARIO":"NOTIFICACIONES");avatar.textContent=isAttention?"💁🏻‍♂️":"⚙️";}else if(avatarUrl){const image=document.createElement("img");image.src=avatarUrl;image.alt="";avatar.append(image);}else avatar.textContent=messageInitials(conversationDisplayName(item)); const copy=document.createElement("span");copy.className="conversation-copy";if(isTrainerConversation(item)){const role=document.createElement("p");role.className="conversation-role";role.textContent="TU ENTRENADOR";copy.append(role);}const name=document.createElement("p");name.className="conversation-name";name.textContent=conversationDisplayName(item);copy.append(name);button.append(avatar,copy);if(Number(item.noLeidos)>0){const count=document.createElement("span");count.className="conversation-count";count.textContent=Number(item.noLeidos)>99?"99+":String(item.noLeidos);button.append(count);}const arrow=document.createElement("span");arrow.className="conversation-arrow";arrow.setAttribute("aria-hidden","true");arrow.textContent="›";button.append(arrow);button.addEventListener("click",()=>openConversation(item));inbox.append(button);}); }
+    function showMessageState(container,text){if(!container)return;const state=document.createElement("p");state.className="message-empty";state.textContent=text;container.replaceChildren(state);}
+    async function loadMessageInbox(){const memberId=resolveGymMember().memberId;const inbox=document.getElementById("messageInbox");showMessageState(inbox,"Cargando conversaciones…");try{const data=await messageApi(`gymMensajeriaBandeja?memberId=${encodeURIComponent(memberId)}&t=${Date.now()}`);messageInboxItems=Array.isArray(data.items)?data.items:[];renderInbox();updateMessageBadge(data.totalNoLeidos,false);}catch(error){showMessageState(inbox,error.message);}}
+    function showMessageInbox(){activeConversation=null;document.querySelector(".message-dialog").dataset.view="inbox";document.getElementById("messageInbox").hidden=false;document.getElementById("messageThread").hidden=true;document.getElementById("messageBack").hidden=true;document.getElementById("messageInstruction").hidden=false;const search=document.getElementById("messageSearch");const searchInput=document.getElementById("messageSearchInput");if(search)search.hidden=gymContext.en!==true;if(searchInput&&gymContext.en!==true)searchInput.value="";document.getElementById("messageModalTitle").textContent="💬 Mensajes";loadMessageInbox();}
+    async function openConversation(item){activeConversation=item;const memberId=resolveGymMember().memberId;const list=document.getElementById("messageList");document.querySelector(".message-dialog").dataset.view="thread";document.getElementById("messageInbox").hidden=true;document.getElementById("messageThread").hidden=false;document.getElementById("messageBack").hidden=false;document.getElementById("messageInstruction").hidden=true;document.getElementById("messageSearch").hidden=true;document.getElementById("messageModalTitle").textContent=conversationDisplayName(item);document.getElementById("messageThreadReference").textContent=conversationDescription(item);document.getElementById("messageCompose").hidden=item.permiteRespuesta===false;showMessageState(list,"Cargando mensajes…");try{const query=`memberId=${encodeURIComponent(memberId)}&conversationId=${encodeURIComponent(item.conversationId)}&limit=200&t=${Date.now()}`;const data=await messageApi(`gymMensajeriaMensajes?${query}`);list.replaceChildren();let renderedDay="";(data.items||[]).forEach((message)=>{const dayKey=messageDayKey(message.fecha);if(dayKey&&dayKey!==renderedDay){const divider=document.createElement("div");divider.className="message-date-divider";const dividerLabel=document.createElement("span");dividerLabel.textContent=formatMessageDay(message.fecha);divider.append(dividerLabel);list.append(divider);renderedDay=dayKey;}const bubble=document.createElement("div");bubble.className="message-bubble";bubble.dataset.own=message.propio===true?"true":"false";bubble.textContent=message.mensaje||"";const time=document.createElement("span");time.className="message-time";time.textContent=formatMessageTime(message.fecha);bubble.append(time);list.append(bubble);});if(!(data.items||[]).length)showMessageState(list,"Aún no hay mensajes.");document.getElementById("messageCompose").hidden=data.conversation?.permiteRespuesta===false;list.scrollTop=list.scrollHeight;await messageApi("gymMensajeriaMarcarLeida",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({memberId,conversationId:item.conversationId})});await refreshMessageCount(false);}catch(error){showMessageState(list,error.message);}}
+    function openMessageModal(){if(!canUseMessages())return;const modal=document.getElementById("messageModal");modal.hidden=false;document.body.style.overflow="hidden";showMessageInbox();document.getElementById("messageClose")?.focus();}
+    function closeMessageModal(){document.getElementById("messageModal").hidden=true;document.body.style.overflow="";activeConversation=null;document.getElementById("messageButton")?.focus();}
+    document.getElementById("messageButton")?.addEventListener("click",()=>{if(!canUseMessages()){goToGymAccess();return;}openMessageModal();});
+    document.getElementById("messageClose")?.addEventListener("click",closeMessageModal);
+    document.getElementById("messageBack")?.addEventListener("click",showMessageInbox);
+    document.getElementById("messageSearchInput")?.addEventListener("input",()=>renderInbox());
+    document.getElementById("messageModal")?.addEventListener("click",(event)=>{if(event.target===event.currentTarget)closeMessageModal();});
+    document.getElementById("messageCompose")?.addEventListener("submit",async(event)=>{event.preventDefault();if(!activeConversation)return;const input=document.getElementById("messageInput");const send=document.getElementById("messageSend");const mensaje=String(input.value||"").trim();if(!mensaje)return;try{send.disabled=true;await messageApi("gymMensajeriaEnviar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({memberId:resolveGymMember().memberId,conversationId:activeConversation.conversationId,mensaje})});input.value="";await openConversation(activeConversation);playAppSound("messageSent");}catch(error){playAppSound("error");window.alert(error.message);}finally{send.disabled=false;}});
+    function getUrlParam(name){return new URLSearchParams(window.location.search).get(name)||"";}
+    function resolveGymMember(){const urlMemberId=getUrlParam("memberId")||getUrlParam("memberID")||getUrlParam("wixMemberId");if(urlMemberId)localStorage.setItem(MEMBER_ID_KEY,urlMemberId);return{memberId:urlMemberId||localStorage.getItem(MEMBER_ID_KEY)||""};}
+    function normalizeWixImageUrl(value){if(!value)return"";if(typeof value==="object")return normalizeWixImageUrl(value.src||value.url||value.fileUrl||value.imageUrl||"");const raw=String(value).trim();if(!raw)return"";if(/^https?:\/\//i.test(raw)||/^data:/i.test(raw)||/^blob:/i.test(raw))return raw;const wixMatch=raw.match(/^wix:image:\/\/v1\/([^/]+)\//i);return wixMatch?.[1]?`https://static.wixstatic.com/media/${wixMatch[1]}`:raw;}
+    function getInitials(name){const parts=String(name||"").trim().split(/\s+/).filter(Boolean);if(!parts.length)return"US";return(parts[0][0]+(parts.length>1?parts[parts.length-1][0]:"")).toUpperCase();}
+    function clearIdentityCard(){const card=document.getElementById("identityCard"),photo=document.getElementById("identityPhoto"),initials=document.getElementById("identityInitials"),name=document.getElementById("identityName"),program=document.getElementById("identityProgram");if(card)card.hidden=true;if(photo){photo.hidden=true;photo.removeAttribute("src");}if(initials)initials.textContent="US";if(name)name.textContent="";if(program)program.textContent="";}
+    function renderIdentityCard(){const card=document.getElementById("identityCard"),photo=document.getElementById("identityPhoto"),initials=document.getElementById("identityInitials"),name=document.getElementById("identityName"),program=document.getElementById("identityProgram");const visible=gymContext.se===true&&gymContext.us===true;if(!card||!photo||!initials||!name||!program||!visible){clearIdentityCard();return;}const displayName=gymContext.nombreApp||gymContext.nombre||"Usuario de entrenamiento";const photoUrl=normalizeWixImageUrl(gymContext.foto);name.textContent=displayName;program.textContent=gymContext.programa||"Usuario de entrenamiento";initials.textContent=getInitials(displayName);card.hidden=false;photo.onerror=()=>{photo.hidden=true;photo.removeAttribute("src");};if(photoUrl){photo.src=photoUrl;photo.hidden=false;}else{photo.hidden=true;photo.removeAttribute("src");}}
+    function renderCvc(){const value=`Se${gymContext.se?1:0}Us${gymContext.us?1:0}En${gymContext.en?1:0}`;const element=document.getElementById("cvc");if(element)element.textContent=value;}
+    function renderTrainerPanelCard(){const card=document.getElementById("cardPanelEntrenador");if(card)card.hidden=gymContext.en!==true;}
+    function renderSessionButton(){const button=document.getElementById("sessionButton");if(!button)return;const sessionActive=gymContext.se===true;button.textContent=sessionActive?"Cerrar sesión":"Iniciar sesión";button.dataset.sessionActive=sessionActive?"true":"false";button.setAttribute("aria-label",sessionActive?"Cerrar sesión":"Iniciar sesión");}
+    function clearGymIdentity(){localStorage.removeItem(MEMBER_ID_KEY);window.clearInterval(messagePollTimer);gymContext={se:false,us:false,en:false,nombre:"",nombreApp:"",foto:"",programa:""};clearIdentityCard();renderMessageAccess();}
+    function goToGymAccess(options={}){const url=new URL(GYM_ACCESS_URL);url.searchParams.set(options.logout===true?"logout":"login","1");window.location.href=url.toString();}
+    let deferredInstallPrompt=null;
+    function isAppInstalled(){return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;}
+    function isIosDevice(){return /iphone|ipad|ipod/i.test(window.navigator.userAgent);}
+    function openIosTutorial(){const modal=document.getElementById("iosTutorialModal"),video=document.getElementById("iosTutorialVideo");if(!modal||!video)return;modal.hidden=false;document.body.style.overflow="hidden";document.getElementById("iosTutorialClose")?.focus();video.load();}
+    function closeIosTutorial(){const modal=document.getElementById("iosTutorialModal"),video=document.getElementById("iosTutorialVideo");if(!modal||!video)return;if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{});else if(video.webkitDisplayingFullscreen&&video.webkitExitFullscreen)video.webkitExitFullscreen();video.pause();video.currentTime=0;modal.hidden=true;document.body.style.overflow="";document.getElementById("installButton")?.focus();}
+    document.getElementById("iosTutorialClose")?.addEventListener("click",closeIosTutorial);document.getElementById("iosTutorialModal")?.addEventListener("click",(event)=>{if(event.target===event.currentTarget)closeIosTutorial();});document.addEventListener("keydown",(event)=>{if(event.key!=="Escape")return;if(!document.getElementById("messageModal")?.hidden){closeMessageModal();return;}if(!document.getElementById("privacyModal")?.hidden){closePrivacyPolicy();return;}if(!document.getElementById("iosTutorialModal")?.hidden)closeIosTutorial();});
+    function openPrivacyPolicy(){const modal=document.getElementById("privacyModal"),content=document.getElementById("privacyContent");if(!modal||!content)return;content.textContent=PRIVACY_POLICY_TEXT;content.scrollTop=0;modal.hidden=false;document.body.style.overflow="hidden";document.getElementById("privacyClose")?.focus();}
+    function closePrivacyPolicy(){const modal=document.getElementById("privacyModal");if(!modal)return;modal.hidden=true;document.body.style.overflow="";document.getElementById("privacyLink")?.focus();}
+    document.getElementById("privacyLink")?.addEventListener("click",openPrivacyPolicy);document.getElementById("privacyClose")?.addEventListener("click",closePrivacyPolicy);document.getElementById("privacyModal")?.addEventListener("click",(event)=>{if(event.target===event.currentTarget)closePrivacyPolicy();});
+    function renderInstallOption(){const button=document.getElementById("installButton");if(!button)return;const installed=isAppInstalled();button.textContent=installed?"App instalada":"Instalar app";button.dataset.installed=installed?"true":"false";button.disabled=installed;button.setAttribute("aria-label",installed?"App instalada":"Instalar app");}
+    window.addEventListener("beforeinstallprompt",(event)=>{event.preventDefault();deferredInstallPrompt=event;renderInstallOption();});window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;renderInstallOption();});
+    document.getElementById("installButton")?.addEventListener("click",async()=>{if(isAppInstalled())return;if(isIosDevice()){openIosTutorial();return;}if(!deferredInstallPrompt){window.alert("La instalación todavía no está disponible. Abre el menú del navegador y selecciona Instalar app o Instalar Entrenamiento GYM.");return;}const button=document.getElementById("installButton");button.disabled=true;button.textContent="Instalando...";deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;button.disabled=false;renderInstallOption();});
     renderInstallOption();
-
-    async function loadGymContext() {
-      const identity = resolveGymMember();
-
-      if (!identity.memberId) {
-        clearIdentityCard();
-        renderCvc();
-        renderSessionButton();
-        renderTrainerPanelCard();
-        return;
-      }
-
-      try {
-        const url =
-          `${API_BASE}/gymPwaContext` +
-          `?memberId=${encodeURIComponent(identity.memberId)}` +
-          `&t=${Date.now()}`;
-
-        const response = await fetch(url, { cache: "no-store" });
-        const data = await response.json();
-
-        gymContext = {
-          se: data?.se === true,
-          us: data?.us === true,
-          en: data?.en === true,
-          nombre: String(data?.nombre || "").trim(),
-          nombreApp: String(data?.nombreApp || "").trim(),
-          foto: data?.foto || "",
-          programa: String(data?.programa || "").trim()
-        };
-      } catch (error) {
-        console.error("No fue posible cargar el contexto GYM:", error);
-      }
-
-      renderCvc();
-      renderSessionButton();
-      renderTrainerPanelCard();
-      renderIdentityCard();
-      renderMessageAccess();
-      startMessagePolling();
-
-      if (getUrlParam("view").toLowerCase() === "mensajes" && canUseMessages()) {
-        window.setTimeout(openMessageModal, 0);
-      }
-    }
-
-    function openProfileEditor() {
-      if (!(gymContext.se && gymContext.us)) return;
-      const modal = document.getElementById("profileModal");
-      const input = document.getElementById("profileNameInput");
-      const photoInput = document.getElementById("profilePhotoInput");
-      if (input) input.value = gymContext.nombreApp || gymContext.nombre || "";
-      if (photoInput) photoInput.value = "";
-      if (modal) modal.hidden = false;
-      window.setTimeout(() => input?.focus(), 0);
-    }
-
-    function closeProfileEditor() {
-      const modal = document.getElementById("profileModal");
-      if (modal) modal.hidden = true;
-    }
-
-    function fileToDataUrl(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result || ""));
-        reader.onerror = () => reject(new Error("No fue posible leer la fotografía."));
-        reader.readAsDataURL(file);
-      });
-    }
-
-    document.getElementById("identityPhotoButton")?.addEventListener("click", openProfileEditor);
-    document.getElementById("identityNameButton")?.addEventListener("click", openProfileEditor);
-    document.getElementById("profileCancelButton")?.addEventListener("click", closeProfileEditor);
-    document.getElementById("profileModal")?.addEventListener("click", (event) => {
-      if (event.target.id === "profileModal") closeProfileEditor();
-    });
-
-    document.getElementById("profileForm")?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const identity = resolveGymMember();
-      const nameInput = document.getElementById("profileNameInput");
-      const photoInput = document.getElementById("profilePhotoInput");
-      const saveButton = document.getElementById("profileSaveButton");
-      const file = photoInput?.files?.[0] || null;
-
-      if (!identity.memberId) return;
-      if (file && file.size > 5 * 1024 * 1024) {
-        playAppSound("error");
-        window.alert("La fotografía debe pesar máximo 5 MB.");
-        return;
-      }
-
-      const payload = {
-        memberId: identity.memberId,
-        nombreApp: String(nameInput?.value || "").trim()
-      };
-
-      try {
-        saveButton.disabled = true;
-        saveButton.textContent = "Guardando...";
-        if (file) {
-          payload.foto = {
-            base64: await fileToDataUrl(file),
-            mimeType: file.type,
-            fileName: file.name
-          };
-        }
-
-        const response = await fetch(`${API_BASE}/gymPwaProfile`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        const data = await response.json();
-        if (!response.ok || data?.ok !== true) {
-          throw new Error(data?.error || "No fue posible guardar la identidad.");
-        }
-
-        gymContext.nombre = String(data.nombre || gymContext.nombre || "").trim();
-        gymContext.nombreApp = String(data.nombreApp || "").trim();
-        gymContext.foto = data.foto || gymContext.foto || "";
-        renderIdentityCard();
-        closeProfileEditor();
-        playAppSound("success");
-      } catch (error) {
-        playAppSound("error");
-        window.alert(error.message || "No fue posible guardar la identidad.");
-      } finally {
-        saveButton.disabled = false;
-        saveButton.textContent = "Guardar";
-      }
-    });
-
-    document.getElementById("sessionButton")?.addEventListener("click", () => {
-      if (gymContext.se) {
-        clearGymIdentity();
-        renderCvc();
-        renderSessionButton();
-        renderTrainerPanelCard();
-        renderIdentityCard();
-        goToGymAccess({ logout: true });
-        return;
-      }
-
-      goToGymAccess();
-    });
-
-    document.getElementById("cardMiEntrenamiento")?.addEventListener("click", (event) => {
-      event.preventDefault();
-      window.location.href = GYM_TRAINING_ENTRY_URL;
-    });
-
-    document.getElementById("cardPanelEntrenador")?.addEventListener("click", (event) => {
-      event.preventDefault();
-
-      if (gymContext.se && gymContext.en) {
-        window.location.href = GYM_TRAINER_PANEL_URL;
-        return;
-      }
-
-      goToGymAccess();
-    });
-
-    renderInstallOption();
-    renderSessionButton();
-    renderTrainerPanelCard();
-    renderIdentityCard();
-    renderMessageAccess();
-    loadGymContext().finally(closeSplashScreen);
-
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("./service-worker.js", { updateViaCache: "none" })
-          .then((registration) => registration.update())
-          .catch((error) => {
-            console.error("No fue posible registrar la PWA:", error);
-          });
-      });
-    }
+    async function loadGymContext(){const identity=resolveGymMember();if(!identity.memberId){clearIdentityCard();renderCvc();renderSessionButton();renderTrainerPanelCard();return;}try{const url=`${API_BASE}/gymPwaContext?memberId=${encodeURIComponent(identity.memberId)}&t=${Date.now()}`;const response=await fetch(url,{cache:"no-store"});const data=await response.json();gymContext={se:data?.se===true,us:data?.us===true,en:data?.en===true,nombre:String(data?.nombre||"").trim(),nombreApp:String(data?.nombreApp||"").trim(),foto:data?.foto||"",programa:String(data?.programa||"").trim()};}catch(error){console.error("No fue posible cargar el contexto GYM:",error);}renderCvc();renderSessionButton();renderTrainerPanelCard();renderIdentityCard();renderMessageAccess();startMessagePolling();if(getUrlParam("view").toLowerCase()==="mensajes"&&canUseMessages())window.setTimeout(openMessageModal,0);}
+    function openProfileEditor(){if(!(gymContext.se&&gymContext.us))return;const modal=document.getElementById("profileModal"),input=document.getElementById("profileNameInput"),photoInput=document.getElementById("profilePhotoInput");if(input)input.value=gymContext.nombreApp||gymContext.nombre||"";if(photoInput)photoInput.value="";if(modal)modal.hidden=false;window.setTimeout(()=>input?.focus(),0);}
+    function closeProfileEditor(){const modal=document.getElementById("profileModal");if(modal)modal.hidden=true;}
+    function fileToDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result||""));reader.onerror=()=>reject(new Error("No fue posible leer la fotografía."));reader.readAsDataURL(file);});}
+    document.getElementById("identityPhotoButton")?.addEventListener("click",openProfileEditor);document.getElementById("identityNameButton")?.addEventListener("click",openProfileEditor);document.getElementById("profileCancelButton")?.addEventListener("click",closeProfileEditor);document.getElementById("profileModal")?.addEventListener("click",(event)=>{if(event.target.id==="profileModal")closeProfileEditor();});
+    document.getElementById("profileForm")?.addEventListener("submit",async(event)=>{event.preventDefault();const identity=resolveGymMember(),nameInput=document.getElementById("profileNameInput"),photoInput=document.getElementById("profilePhotoInput"),saveButton=document.getElementById("profileSaveButton"),file=photoInput?.files?.[0]||null;if(!identity.memberId)return;if(file&&file.size>5*1024*1024){playAppSound("error");window.alert("La fotografía debe pesar máximo 5 MB.");return;}const payload={memberId:identity.memberId,nombreApp:String(nameInput?.value||"").trim()};try{saveButton.disabled=true;saveButton.textContent="Guardando...";if(file)payload.foto={base64:await fileToDataUrl(file),mimeType:file.type,fileName:file.name};const response=await fetch(`${API_BASE}/gymPwaProfile`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});const data=await response.json();if(!response.ok||data?.ok!==true)throw new Error(data?.error||"No fue posible guardar la identidad.");gymContext.nombre=String(data.nombre||gymContext.nombre||"").trim();gymContext.nombreApp=String(data.nombreApp||"").trim();gymContext.foto=data.foto||gymContext.foto||"";renderIdentityCard();closeProfileEditor();playAppSound("success");}catch(error){playAppSound("error");window.alert(error.message||"No fue posible guardar la identidad.");}finally{saveButton.disabled=false;saveButton.textContent="Guardar";}});
+    document.getElementById("sessionButton")?.addEventListener("click",()=>{if(gymContext.se){clearGymIdentity();renderCvc();renderSessionButton();renderTrainerPanelCard();renderIdentityCard();goToGymAccess({logout:true});return;}goToGymAccess();});
+    document.getElementById("cardMiEntrenamiento")?.addEventListener("click",(event)=>{event.preventDefault();window.location.href=GYM_TRAINING_ENTRY_URL;});
+    document.getElementById("cardPanelEntrenador")?.addEventListener("click",(event)=>{event.preventDefault();if(gymContext.se&&gymContext.en){window.location.href=GYM_TRAINER_PANEL_URL;return;}goToGymAccess();});
+    renderInstallOption();renderSessionButton();renderTrainerPanelCard();renderIdentityCard();renderMessageAccess();loadGymContext().finally(closeSplashScreen);
+    if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).then((registration)=>registration.update()).catch((error)=>{console.error("No fue posible registrar la PWA:",error);});});}
   </script>
 </body>
 </html>
