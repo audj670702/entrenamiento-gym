@@ -1,9 +1,9 @@
 name: Patch GYM startup timeout
 
-on:
+"on":
   push:
-    paths:
-      - '.github/workflows/patch-startup-timeout.yml'
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -12,25 +12,24 @@ jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Patch index startup guards
+      - name: Patch index
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
 
-          path = Path('index.html')
-          text = path.read_text(encoding='utf-8')
+          a = '<span class="version" aria-label="Versión 0.1.43">v0.1.43</span>'
+          b = '<span class="version" aria-label="Versión 0.1.44">v0.1.44</span>'
+          assert s.count(a) == 1
+          s = s.replace(a, b, 1)
 
-          old_version = '<span class="version" aria-label="Versión 0.1.43">v0.1.43</span>'
-          new_version = '<span class="version" aria-label="Versión 0.1.44">v0.1.44</span>'
-          if text.count(old_version) != 1:
-              raise SystemExit(f'Version marker count unexpected: {text.count(old_version)}')
-          text = text.replace(old_version, new_version, 1)
-
-          old_fetch = '''        const response = await fetch(url, { cache: "no-store" });
-        const data = await response.json();'''
-          new_fetch = '''        const controller = new AbortController();
+          a = '        const response = await fetch(url, { cache: "no-store" });\n        const data = await response.json();'
+          b = '''        const controller = new AbortController();
         const timeoutId = window.setTimeout(() => controller.abort(), 7000);
         let response;
         let data;
@@ -44,26 +43,25 @@ jobs:
         } finally {
           window.clearTimeout(timeoutId);
         }'''
-          if text.count(old_fetch) != 1:
-              raise SystemExit(f'gymPwaContext fetch marker count unexpected: {text.count(old_fetch)}')
-          text = text.replace(old_fetch, new_fetch, 1)
+          assert s.count(a) == 1
+          s = s.replace(a, b, 1)
 
-          old_start = '''    loadGymContext().finally(closeSplashScreen);'''
-          new_start = '''    const splashSafetyTimer = window.setTimeout(closeSplashScreen, 4500);
+          a = '    loadGymContext().finally(closeSplashScreen);'
+          b = '''    const splashSafetyTimer = window.setTimeout(closeSplashScreen, 4500);
     loadGymContext().finally(() => {
       window.clearTimeout(splashSafetyTimer);
       closeSplashScreen();
     });'''
-          if text.count(old_start) != 1:
-              raise SystemExit(f'splash startup marker count unexpected: {text.count(old_start)}')
-          text = text.replace(old_start, new_start, 1)
+          assert s.count(a) == 1
+          s = s.replace(a, b, 1)
 
-          path.write_text(text, encoding='utf-8')
+          p.write_text(s, encoding="utf-8")
           PY
 
-      - name: Remove temporary workflow and commit patch
+      - name: Commit patch
+        shell: bash
         run: |
-          rm .github/workflows/patch-startup-timeout.yml
+          rm -f .github/workflows/patch-startup-timeout.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html .github/workflows/patch-startup-timeout.yml
