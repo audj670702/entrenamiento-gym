@@ -3,14 +3,14 @@
   "short_name": "GYM",
   "description": "Portal de acceso a Entrenamiento GYM",
   "lang": "es-MX",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f5f8fc",
   "theme_color": "#0f2f55",
   "icons": [
     {
-      "src": "./assets/entrenamiento-gym-logo-sentadilla.png",
+      "src": "/apple-touch-icon.png?v=2",
       "sizes": "1254x1254",
       "type": "image/png",
       "purpose": "any"
