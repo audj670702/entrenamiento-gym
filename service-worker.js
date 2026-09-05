@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.46";
+const CACHE_NAME = "entrenamiento-gym-v0.1.47";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -45,8 +45,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.46";
-    version.setAttribute("aria-label", "Versión 0.1.46");
+    version.textContent = "v0.1.47";
+    version.setAttribute("aria-label", "Versión 0.1.47");
   };
 
   if (document.readyState === "loading") {
@@ -131,6 +131,23 @@ async function cachedNavigationResponse() {
   return cached ? decorateNavigationResponse(cached) : cached;
 }
 
+function isAppShellNavigation(request) {
+  if (request.mode !== "navigate") return false;
+
+  const requestUrl = new URL(request.url);
+  if (requestUrl.origin !== self.location.origin) return false;
+
+  const scopeUrl = new URL(self.registration.scope);
+  const scopePath = scopeUrl.pathname.endsWith("/")
+    ? scopeUrl.pathname
+    : `${scopeUrl.pathname}/`;
+
+  return (
+    requestUrl.pathname === scopePath ||
+    requestUrl.pathname === `${scopePath}index.html`
+  );
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
@@ -140,27 +157,23 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(
         keys
           .filter((key) => key !== CACHE_NAME)
           .map((key) => caches.delete(key))
-      )
-    )
+      );
+
+      await self.clients.claim();
+    })()
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
-  const requestUrl = new URL(event.request.url);
-  const isNavigation =
-    event.request.mode === "navigate" ||
-    requestUrl.pathname.endsWith("/") ||
-    requestUrl.pathname.endsWith("/index.html");
-
-  if (isNavigation) {
+  if (isAppShellNavigation(event.request)) {
     event.respondWith(
       fetchWithTimeout(event.request, { cache: "no-store" })
         .then(async (response) => {
@@ -174,6 +187,12 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(cachedNavigationResponse)
     );
+    return;
+  }
+
+  // Una navegación directa a un recurso (PNG, JSON, MP3, etc.) debe ir a red
+  // y nunca puede recibir index.html como fallback de la aplicación.
+  if (event.request.mode === "navigate") {
     return;
   }
 
