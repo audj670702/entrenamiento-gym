@@ -945,27 +945,80 @@
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
     const APP_SOUNDS = {
-      click: new Audio("./assets/clic.mp3"),
-      error: new Audio("./assets/error.mp3"),
-      success: new Audio("./assets/exito.mp3"),
-      messageSent: new Audio("./assets/mensaje-enviado.mp3"),
-      messagePending: new Audio("./assets/mensaje-pendiente.mp3")
+      click: "./assets/clic.mp3",
+      error: "./assets/error.mp3",
+      success: "./assets/exito.mp3",
+      messageSent: "./assets/mensaje-enviado.mp3",
+      messagePending: "./assets/mensaje-pendiente.mp3"
     };
 
-    Object.values(APP_SOUNDS).forEach((audio) => {
-      audio.preload = "auto";
-    });
+    let appAudioContext = null;
+    const appSoundBuffers = new Map();
+    const appSoundBufferPromises = new Map();
+
+    function getAppAudioContext() {
+      if (appAudioContext) return appAudioContext;
+
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return null;
+
+      try {
+        appAudioContext = new AudioContextClass();
+        return appAudioContext;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    async function loadAppSoundBuffer(name) {
+      if (appSoundBuffers.has(name)) return appSoundBuffers.get(name);
+      if (appSoundBufferPromises.has(name)) return appSoundBufferPromises.get(name);
+
+      const url = APP_SOUNDS[name];
+      const context = getAppAudioContext();
+      if (!url || !context) return null;
+
+      const promise = fetch(url, { cache: "force-cache" })
+        .then((response) => {
+          if (!response.ok) throw new Error("No fue posible cargar el audio.");
+          return response.arrayBuffer();
+        })
+        .then((arrayBuffer) => context.decodeAudioData(arrayBuffer.slice(0)))
+        .then((buffer) => {
+          appSoundBuffers.set(name, buffer);
+          appSoundBufferPromises.delete(name);
+          return buffer;
+        })
+        .catch(() => {
+          appSoundBufferPromises.delete(name);
+          return null;
+        });
+
+      appSoundBufferPromises.set(name, promise);
+      return promise;
+    }
 
     let pendingMessageAnnouncement = false;
     let messageAnnouncementPlayed = false;
 
     async function playAppSound(name) {
-      const audio = APP_SOUNDS[name];
-      if (!audio) return false;
+      if (!APP_SOUNDS[name]) return false;
+
       try {
-        audio.pause();
-        audio.currentTime = 0;
-        await audio.play();
+        const context = getAppAudioContext();
+        if (!context) return false;
+
+        if (context.state === "suspended") {
+          await context.resume();
+        }
+
+        const buffer = await loadAppSoundBuffer(name);
+        if (!buffer) return false;
+
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0);
         return true;
       } catch (error) {
         return false;
