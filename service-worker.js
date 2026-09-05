@@ -1,8 +1,11 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.45";
+const CACHE_NAME = "entrenamiento-gym-v0.1.46";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.json",
+  "./apple-touch-icon.png",
+  "./apple-touch-icon-precomposed.png",
+  "./favicon.png",
   "./assets/entrenamiento-gym-logo-sentadilla.png",
   "./assets/scad-powered-logo.png",
   "./assets/clic.mp3",
@@ -42,8 +45,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.45";
-    version.setAttribute("aria-label", "Versión 0.1.45");
+    version.textContent = "v0.1.46";
+    version.setAttribute("aria-label", "Versión 0.1.46");
   };
 
   if (document.readyState === "loading") {
@@ -84,7 +87,22 @@ async function decorateNavigationResponse(response) {
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.includes("text/html")) return response;
 
-  const html = await response.text();
+  let html = await response.text();
+
+  html = html
+    .replace(
+      '<link rel="manifest" href="./manifest.json">',
+      '<link rel="manifest" href="/manifest.json?v=2">'
+    )
+    .replace(
+      '<link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">',
+      '<link rel="icon" href="/favicon.png?v=2" type="image/png">\n  <link rel="shortcut icon" href="/favicon.png?v=2" type="image/png">'
+    )
+    .replace(
+      '<link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">',
+      '<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">\n  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png?v=2">'
+    );
+
   if (html.includes("data-gym-startup-guard")) {
     return new Response(html, {
       status: response.status,
