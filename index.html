@@ -141,6 +141,61 @@
       color: var(--blue-dark);
       background: #ffffff;
       border-color: var(--line);
+      min-width: 38px;
+      font-size: 1.15rem;
+    }
+
+    .account-menu-container {
+      position: relative;
+    }
+
+    .account-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 20;
+      width: min(82vw, 250px);
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 18px 42px rgba(15, 47, 85, 0.18);
+    }
+
+    .account-menu[hidden] {
+      display: none;
+    }
+
+    .account-menu-link,
+    .account-menu-logout {
+      display: block;
+      width: 100%;
+      padding: 11px 14px;
+      color: var(--text);
+      background: #ffffff;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.25;
+      text-align: left;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .account-menu-link:hover,
+    .account-menu-logout:hover,
+    .account-menu-link:focus-visible,
+    .account-menu-logout:focus-visible {
+      color: var(--blue-dark);
+      background: #f2f6fa;
+      outline: 0;
+    }
+
+    .account-menu-logout {
+      color: #9b1c1c;
+      border-bottom: 0;
     }
 
     .message-button {
@@ -741,17 +796,28 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.43">v0.1.43</span>
+      <span class="version" aria-label="Versión 0.1.49">v0.1.49</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
       <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
-      <button
-        id="sessionButton"
-        class="topbar-action session-button"
-        type="button"
-        data-session-active="false"
-      >Iniciar sesión</button>
+      <div id="accountMenuContainer" class="account-menu-container">
+        <button
+          id="sessionButton"
+          class="topbar-action session-button"
+          type="button"
+          data-session-active="false"
+          aria-expanded="false"
+        >Iniciar sesión</button>
+        <nav id="accountMenu" class="account-menu" aria-label="Cuenta SCaD" hidden>
+          <a id="accountProfileLink" class="account-menu-link" href="#">Mi perfil SCaD</a>
+          <a id="accountSubscriptionsLink" class="account-menu-link" href="#">Mis suscripciones</a>
+          <a id="accountWalletLink" class="account-menu-link" href="#">Mis formas de pago</a>
+          <a id="accountGroupsLink" class="account-menu-link" href="#">Mis grupos</a>
+          <a class="account-menu-link" href="https://www.scad.mx">SCaD HUB</a>
+          <button id="accountLogoutButton" class="account-menu-logout" type="button">Cerrar sesión</button>
+        </nav>
+      </div>
     </div>
   </header>
   <main>
@@ -942,6 +1008,7 @@
     const GYM_ACCESS_URL = "https://www.scad.mx/gym-acceso";
     const GYM_TRAINING_ENTRY_URL = "https://www.scad.mx/gym-inicio-sesion";
     const GYM_TRAINER_PANEL_URL = "https://www.scad.mx/panel-de-entrenador";
+    const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
     const APP_SOUNDS = {
@@ -1146,7 +1213,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       nombre: "",
       nombreApp: "",
       foto: "",
-      programa: ""
+      programa: "",
+      slug: ""
     };
 
     let messageUnread = 0;
@@ -1703,12 +1771,52 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       }
 
       const sessionActive = gymContext.se === true;
-      button.textContent = sessionActive ? "Cerrar sesión" : "Iniciar sesión";
+      button.textContent = sessionActive ? "☰" : "Iniciar sesión";
       button.dataset.sessionActive = sessionActive ? "true" : "false";
+      button.setAttribute("aria-haspopup", sessionActive ? "menu" : "false");
       button.setAttribute(
         "aria-label",
-        sessionActive ? "Cerrar sesión" : "Iniciar sesión"
+        sessionActive ? "Abrir menú de cuenta SCaD" : "Iniciar sesión"
       );
+
+      if (!sessionActive) closeAccountMenu();
+      renderAccountMenuLinks();
+    }
+
+    function getMemberAreaUrl(pageSlug) {
+      const memberSlug = String(gymContext.slug || "").trim();
+      if (!memberSlug) return "#";
+      return `${SCAD_SITE_URL}/members-area/${encodeURIComponent(memberSlug)}/${pageSlug}?disableScrollToTop=true`;
+    }
+
+    function renderAccountMenuLinks() {
+      const routes = {
+        accountProfileLink: "my-account",
+        accountSubscriptionsLink: "my-subscriptions",
+        accountWalletLink: "my-wallet",
+        accountGroupsLink: "my-groups"
+      };
+
+      Object.entries(routes).forEach(([id, pageSlug]) => {
+        const link = document.getElementById(id);
+        if (link) link.href = getMemberAreaUrl(pageSlug);
+      });
+    }
+
+    function closeAccountMenu() {
+      const button = document.getElementById("sessionButton");
+      const menu = document.getElementById("accountMenu");
+      if (menu) menu.hidden = true;
+      if (button) button.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleAccountMenu() {
+      const button = document.getElementById("sessionButton");
+      const menu = document.getElementById("accountMenu");
+      if (!button || !menu || gymContext.se !== true) return;
+      const willOpen = menu.hidden;
+      menu.hidden = !willOpen;
+      button.setAttribute("aria-expanded", willOpen ? "true" : "false");
     }
 
     function clearGymIdentity() {
@@ -1721,7 +1829,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
         nombre: "",
         nombreApp: "",
         foto: "",
-        programa: ""
+        programa: "",
+        slug: ""
       };
       clearIdentityCard();
       renderMessageAccess();
@@ -1908,7 +2017,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
           nombre: String(data?.nombre || "").trim(),
           nombreApp: String(data?.nombreApp || "").trim(),
           foto: data?.foto || "",
-          programa: String(data?.programa || "").trim()
+          programa: String(data?.programa || "").trim(),
+          slug: String(data?.slug || "").trim()
         };
       } catch (error) {
         console.error("No fue posible cargar el contexto GYM:", error);
@@ -2016,16 +2126,34 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
     document.getElementById("sessionButton")?.addEventListener("click", () => {
       if (gymContext.se) {
-        clearGymIdentity();
-        renderCvc();
-        renderSessionButton();
-        renderTrainerPanelCard();
-        renderIdentityCard();
-        goToGymAccess({ logout: true });
+        toggleAccountMenu();
         return;
       }
 
       goToGymAccess();
+    });
+
+    document.getElementById("accountLogoutButton")?.addEventListener("click", () => {
+      closeAccountMenu();
+      clearGymIdentity();
+      renderCvc();
+      renderSessionButton();
+      renderTrainerPanelCard();
+      renderIdentityCard();
+      goToGymAccess({ logout: true });
+    });
+
+    document.getElementById("accountMenu")?.addEventListener("click", (event) => {
+      if (event.target.closest("a")) closeAccountMenu();
+    });
+
+    document.addEventListener("click", (event) => {
+      const container = document.getElementById("accountMenuContainer");
+      if (container && !container.contains(event.target)) closeAccountMenu();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeAccountMenu();
     });
 
     document.getElementById("cardMiEntrenamiento")?.addEventListener("click", (event) => {
