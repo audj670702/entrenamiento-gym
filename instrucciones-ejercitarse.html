@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Instrucciones para ejercitarse</title>
+  <style>
+    :root{--navy:#123a63;--blue:#2563eb;--text:#172033;--muted:#667085;--line:#dfe6ee;--bg:#f5f8fc;--panel:#fff;--ok:#138a63;--warn:#b54708}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+    button,a{font:inherit}.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(15,47,87,.045);backdrop-filter:blur(10px)}
+    .topbar-inner{width:min(1040px,100%);min-height:64px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand-logo{width:44px;height:44px;flex:0 0 auto}.brand-copy{min-width:0}.brand-kicker{font-size:.58rem;line-height:1;color:#7b8794;font-weight:750;letter-spacing:.12em;text-transform:uppercase}.brand-title{margin:4px 0 0;color:var(--navy);font-size:1.08rem;line-height:1.05;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top-actions{display:flex;align-items:center;gap:9px}.version{color:#98a2b3;font-size:.58rem;font-weight:600;white-space:nowrap}.home-button{width:38px;height:38px;border:1px solid #cfe0f4;border-radius:10px;display:grid;place-items:center;color:#1769aa;background:#f6fbff}.home-button svg{width:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .page{width:min(1040px,100%);margin:auto;padding:18px 14px 40px}.module-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px}.intro{margin:0;color:var(--muted);font-size:.78rem;line-height:1.45}.toggle-all{border:0;background:transparent;color:#477198;font-size:.67rem;font-weight:750;padding:7px;white-space:nowrap}.topics{display:grid;gap:9px}.topic{--tone:#2f6fad;display:grid;grid-template-columns:5px minmax(0,1fr);background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(19,52,82,.045)}.topic.is-open{grid-template-columns:5px minmax(0,1fr) 108px}.accent{background:var(--tone)}.copy{padding:12px 11px}.title-button{width:100%;border:0;background:transparent;padding:0;display:flex;align-items:center;gap:8px;text-align:left;color:inherit;cursor:pointer}.topic-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--tone);background:color-mix(in srgb,var(--tone) 11%,white);font-weight:900;flex:0 0 auto}.title-button h2{font-size:.84rem;line-height:1.2;margin:0;flex:1}.chevron{width:17px;height:17px;fill:none;stroke:#8090a0;stroke-width:2;transition:transform .2s}.topic.is-open .chevron{transform:rotate(180deg)}.details{display:none;padding:9px 0 0 36px}.topic.is-open .details{display:block}.lead{font-size:.71rem;line-height:1.42;margin:0 0 7px;color:#344054}.essentials{list-style:none;margin:0;padding:0;display:grid;gap:4px}.essentials li{display:flex;gap:6px;font-size:.68rem;line-height:1.35}.ok{color:var(--ok);font-weight:900}.warning{display:flex;gap:6px;margin:7px 0 0;color:var(--warn);font-size:.65rem;line-height:1.35}.thumb-button{display:none;border:0;border-left:1px solid var(--line);background:#f8fafc;padding:6px;cursor:zoom-in}.topic.is-open .thumb-button{display:block}.thumb-frame{display:block;height:100%;min-height:134px;border-radius:8px;overflow:hidden;background:#edf2f7}.thumb{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+    dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none}dialog::backdrop{background:rgba(8,20,34,.68)}.modal-card{position:relative;width:min(470px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:10px;background:white;border-radius:16px;box-shadow:0 22px 70px rgba(0,0,0,.28);display:flex;flex-direction:column}.modal-head{display:flex;align-items:center;gap:8px;padding:1px 2px 8px}.modal-head h3{margin:0;font-size:.86rem;color:var(--navy);flex:1}.close{width:32px;height:32px;border:0;border-radius:9px;background:#eef3f8;color:#344054;font-size:1.1rem;font-weight:800}.visual-wrap{min-height:0;display:grid;place-items:center;overflow:hidden;border-radius:10px;background:#f3f6fa}.full-visual{display:block;max-width:100%;max-height:calc(100vh - 116px);object-fit:contain}.note{margin:8px 3px 1px;color:#667085;font-size:.64rem;line-height:1.35}
+    [data-tone="red"]{--tone:#d82c2c}[data-tone="teal"]{--tone:#0aa6aa}[data-tone="purple"]{--tone:#6840ad}[data-tone="orange"]{--tone:#ed6c02}[data-tone="green"]{--tone:#55a832}
+    @media(max-width:560px){.topic.is-open{grid-template-columns:4px minmax(0,1fr) 88px}.copy{padding:11px 8px}.details{padding-left:0}.thumb-frame{min-height:126px}.brand-title{font-size:1rem}}
+    @media(max-width:380px){.topbar-inner{padding:7px 8px}.brand-logo{width:38px;height:38px}.brand-title{font-size:.9rem}.page{padding:12px 8px 30px}.version{display:none}.topic.is-open{grid-template-columns:4px minmax(0,1fr) 78px}.title-button h2{font-size:.78rem}.lead,.essentials li{font-size:.64rem}}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+<div class="topbar-inner">
+<div class="brand">
+    <svg class="brand-logo" viewBox="0 0 64 64" aria-label="GYM">
+<defs>
+<linearGradient id="g" x1="0" x2="1">
+<stop stop-color="#173b65"/>
+<stop offset="1" stop-color="#2d73af"/>
+</linearGradient>
+</defs>
+<rect width="64" height="64" rx="16" fill="url(#g)"/>
+<path d="M14 25v14m-5-10v6m10-13v20m31-17v14m5-10v6m-10-13v20M19 32h26" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+</svg>
+    <div class="brand-copy">
+<div class="brand-kicker">Entrenamiento GYM</div>
+<h1 class="brand-title">Instrucciones para ejercitarse</h1>
+</div>
+</div>
+    <div class="top-actions">
+<span class="version">v0.1.1</span>
+<a class="home-button" href="https://gym.scad.mx" target="_top" aria-label="Volver a la app" title="Inicio">
+<svg viewBox="0 0 24 24">
+<path d="m3 11 9-8 9 8"/>
+<path d="M5 10v10h14V10M9 20v-6h6v6"/>
+</svg>
+</a>
+</div>
+</div>
+</header>
+  <main class="page">
+<div class="module-head">
+<p class="intro">Seis criterios para que cada sesión produzca el estímulo previsto con técnica y control.</p>
+<button class="toggle-all" id="closeAll" type="button">ocultar contenido</button>
+</div>
+<section class="topics" id="topics">
+    <article class="topic is-open" data-tone="blue">
+<span class="accent"></span>
+<section class="copy">
+<button class="title-button" type="button"><span class="topic-icon">↗</span><h2>Peso insuficiente</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="details"><p class="lead">La carga debe acercarte a la fatiga dentro del rango indicado, sin sacrificar la técnica.</p><ul class="essentials"><li><span class="ok">✓</span><span>Completa las repeticiones previstas.</span></li><li><span class="ok">✓</span><span>Valora cuántas repeticiones adicionales podrías hacer.</span></li><li><span class="ok">✓</span><span>Aumenta gradualmente si el esfuerzo resulta demasiado cómodo.</span></li></ul><p class="warning"><span>⚠</span><span>Cansarte no garantiza un estímulo suficiente.</span></p></div>
+</section>
+<button class="thumb-button" data-title="Peso insuficiente" data-note="Ajusta la carga con tu entrenador y conserva siempre la ejecución técnica." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_a334b7b08ab84f41befac60cf84916f5~mv2.png" alt="Ficha de peso insuficiente"></span></button>
+</article>
+    <article class="topic" data-tone="red"><span class="accent"></span><section class="copy"><button class="title-button" type="button"><span class="topic-icon">↓</span><h2>Peso excesivo</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details"><p class="lead">Si la carga altera tu postura o el control del movimiento, deja de ser adecuada.</p><ul class="essentials"><li><span class="ok">✓</span><span>Reduce el peso ante compensaciones o impulso.</span></li><li><span class="ok">✓</span><span>Controla tanto la subida como la bajada.</span></li><li><span class="ok">✓</span><span>Conserva la alineación indicada.</span></li></ul><p class="warning"><span>⚠</span><span>Más peso no equivale a mejor entrenamiento.</span></p></div></section><button class="thumb-button" data-title="Peso excesivo" data-note="La técnica correcta define si la carga es apropiada." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_a5b7699df43244fa8286762dff7d7481~mv2.png" alt="Ficha de peso excesivo"></span></button></article>
+    <article class="topic" data-tone="teal"><span class="accent"></span><section class="copy"><button class="title-button" type="button"><span class="topic-icon">↕</span><h2>Rango de movimiento</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details"><p class="lead">Cada repetición debe cumplir el inicio y el final técnico definidos para el ejercicio.</p><ul class="essentials"><li><span class="ok">✓</span><span>Respeta el recorrido indicado.</span></li><li><span class="ok">✓</span><span>Mantén control en los extremos.</span></li><li><span class="ok">✓</span><span>Reduce carga si no completas el rango.</span></li></ul><p class="warning"><span>⚠</span><span>No recortes el movimiento para sumar repeticiones.</span></p></div></section><button class="thumb-button" data-title="Rango de movimiento" data-note="El rango correcto depende del ejercicio y de tus condiciones individuales." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_563f856ff1174ad9993fc11948f753b3~mv2.png" alt="Ficha de rango de movimiento"></span></button></article>
+    <article class="topic" data-tone="purple"><span class="accent"></span><section class="copy"><button class="title-button" type="button"><span class="topic-icon">◎</span><h2>Control técnico</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details"><p class="lead">El músculo debe producir el movimiento; la inercia no debe sustituir el esfuerzo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia desde una postura estable.</span></li><li><span class="ok">✓</span><span>Controla subida, pausa y bajada.</span></li><li><span class="ok">✓</span><span>Respira sin perder la posición.</span></li></ul><p class="warning"><span>⚠</span><span>Evita rebotes y movimientos bruscos.</span></p></div></section><button class="thumb-button" data-title="Control técnico" data-note="Una repetición controlada vale más que varias realizadas con impulso." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_66c53bf7d7f74b72a38ab8c4e16f5352~mv2.png" alt="Ficha de control técnico"></span></button></article>
+    <article class="topic" data-tone="orange"><span class="accent"></span><section class="copy"><button class="title-button" type="button"><span class="topic-icon">#</span><h2>Series, repeticiones y esfuerzo</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details"><p class="lead">El plan combina volumen y esfuerzo; ambos deben registrarse con precisión.</p><ul class="essentials"><li><span class="ok">✓</span><span>Respeta series y rango de repeticiones.</span></li><li><span class="ok">✓</span><span>Registra lo que realmente realizaste.</span></li><li><span class="ok">✓</span><span>Ajusta la carga para alcanzar el esfuerzo previsto.</span></li></ul><p class="warning"><span>⚠</span><span>No añadas volumen sólo para sentir más cansancio.</span></p></div></section><button class="thumb-button" data-title="Series, repeticiones y esfuerzo" data-note="El registro real permite ajustar el entrenamiento con mejor criterio." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_4d73b4ac82fe4071add263ac8efa5fb9~mv2.png" alt="Ficha de series y repeticiones"></span></button></article>
+    <article class="topic" data-tone="green"><span class="accent"></span><section class="copy"><button class="title-button" type="button"><span class="topic-icon">♥</span><h2>Intensidad de cardio</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details"><p class="lead">La intensidad debe corresponder a tu condición, objetivo y sesión programada.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia a ritmo suave.</span></li><li><span class="ok">✓</span><span>Progresa hasta la intensidad indicada.</span></li><li><span class="ok">✓</span><span>Reduce gradualmente al terminar.</span></li></ul><p class="warning"><span>⚠</span><span>Detente ante mareo, dolor o malestar inusual.</span></p></div></section><button class="thumb-button" data-title="Intensidad de cardio" data-note="La intensidad adecuada no es igual para todas las personas." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_06e009a7e0e94a6fbd4bae03a96ec6f3~mv2.png" alt="Ficha de intensidad de cardio"></span></button></article>
+  </section>
+</main>
+  <dialog id="visualModal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button class="close" type="button" aria-label="Cerrar">×</button></div><div class="visual-wrap"><img class="full-visual" alt=""></div><p class="note"></p></div></dialog>
+  <script>
+    (()=>{const topics=[...document.querySelectorAll('.topic')],closeAll=document.getElementById('closeAll'),modal=document.getElementById('visualModal'),modalTitle=document.getElementById('modalTitle'),full=modal.querySelector('.full-visual'),note=modal.querySelector('.note'),close=modal.querySelector('.close');let opener=null;
+      function openOnly(target){topics.forEach(t=>t.classList.toggle('is-open',t===target));closeAll.textContent='ocultar contenido'}
+      topics.forEach(topic=>topic.querySelector('.title-button').addEventListener('click',()=>topic.classList.contains('is-open')?(topic.classList.remove('is-open'),closeAll.textContent='mostrar primera'):openOnly(topic)));
+      closeAll.addEventListener('click',()=>{const any=topics.some(t=>t.classList.contains('is-open'));topics.forEach(t=>t.classList.remove('is-open'));if(!any)topics[0].classList.add('is-open');closeAll.textContent=any?'mostrar primera':'ocultar contenido'});
+      document.querySelectorAll('.thumb-button').forEach(button=>button.addEventListener('click',()=>{opener=button;modalTitle.textContent=button.dataset.title;full.src=button.querySelector('.thumb').src;full.alt=`Ficha visual de ${button.dataset.title.toLowerCase()}`;note.textContent=button.dataset.note;modal.showModal()}));
+      function shut(){modal.close();opener?.focus()}close.addEventListener('click',shut);modal.addEventListener('click',e=>{if(e.target===modal)shut()});modal.addEventListener('cancel',e=>{e.preventDefault();shut()});
+    })();
+  </script>
+</body>
+</html>
