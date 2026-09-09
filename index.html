@@ -796,7 +796,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.49">v0.1.49</span>
+      <span class="version" aria-label="Versión 0.1.50">v0.1.50</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -814,7 +814,7 @@
           <a id="accountSubscriptionsLink" class="account-menu-link" href="#">Mis suscripciones</a>
           <a id="accountWalletLink" class="account-menu-link" href="#">Mis formas de pago</a>
           <a id="accountGroupsLink" class="account-menu-link" href="#">Mis grupos</a>
-          <a class="account-menu-link" href="https://www.scad.mx">SCaD HUB</a>
+          <a id="accountHubLink" class="account-menu-link" href="#">SCaD HUB</a>
           <button id="accountLogoutButton" class="account-menu-logout" type="button">Cerrar sesión</button>
         </nav>
       </div>
@@ -1783,10 +1783,21 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       renderAccountMenuLinks();
     }
 
+    function withWixReturnUrl(rawUrl) {
+      const url = new URL(rawUrl, window.location.href);
+      url.searchParams.set("mensaje", window.location.href);
+      return url.toString();
+    }
+
     function getMemberAreaUrl(pageSlug) {
       const memberSlug = String(gymContext.slug || "").trim();
       if (!memberSlug) return "#";
-      return `${SCAD_SITE_URL}/members-area/${encodeURIComponent(memberSlug)}/${pageSlug}?disableScrollToTop=true`;
+
+      const url = new URL(
+        `${SCAD_SITE_URL}/members-area/${encodeURIComponent(memberSlug)}/${pageSlug}`
+      );
+      url.searchParams.set("disableScrollToTop", "true");
+      return withWixReturnUrl(url.toString());
     }
 
     function renderAccountMenuLinks() {
@@ -1801,6 +1812,9 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
         const link = document.getElementById(id);
         if (link) link.href = getMemberAreaUrl(pageSlug);
       });
+
+      const hubLink = document.getElementById("accountHubLink");
+      if (hubLink) hubLink.href = withWixReturnUrl(SCAD_SITE_URL);
     }
 
     function closeAccountMenu() {
@@ -1845,7 +1859,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
         url.searchParams.set("login", "1");
       }
 
-      window.location.href = url.toString();
+      window.location.href = withWixReturnUrl(url.toString());
     }
 
     let deferredInstallPrompt = null;
@@ -2158,14 +2172,14 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
     document.getElementById("cardMiEntrenamiento")?.addEventListener("click", (event) => {
       event.preventDefault();
-      window.location.href = GYM_TRAINING_ENTRY_URL;
+      window.location.href = withWixReturnUrl(GYM_TRAINING_ENTRY_URL);
     });
 
     document.getElementById("cardPanelEntrenador")?.addEventListener("click", (event) => {
       event.preventDefault();
 
       if (gymContext.se && gymContext.en) {
-        window.location.href = GYM_TRAINER_PANEL_URL;
+        window.location.href = withWixReturnUrl(GYM_TRAINER_PANEL_URL);
         return;
       }
 
