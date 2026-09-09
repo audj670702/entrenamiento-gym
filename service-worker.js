@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.47";
+const CACHE_NAME = "entrenamiento-gym-v0.1.48";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -12,8 +12,17 @@ const APP_SHELL = [
   "./assets/error.mp3",
   "./assets/exito.mp3",
   "./assets/mensaje-enviado.mp3",
-  "./assets/mensaje-pendiente.mp3"
+  "./assets/mensaje-pendiente.mp3",
+  "./buenas-practicas.html",
+  "./instrucciones-ejercitarse.html",
+  "./objetivos-entrenamiento.html"
 ];
+
+const LOCAL_HTML_PAGES = new Set([
+  "/buenas-practicas.html",
+  "/instrucciones-ejercitarse.html",
+  "/objetivos-entrenamiento.html"
+]);
 
 const NAVIGATION_TIMEOUT_MS = 3500;
 const GYM_CONTEXT_TIMEOUT_MS = 7000;
@@ -45,8 +54,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.47";
-    version.setAttribute("aria-label", "Versión 0.1.47");
+    version.textContent = "v0.1.48";
+    version.setAttribute("aria-label", "Versión 0.1.48");
   };
 
   if (document.readyState === "loading") {
@@ -101,6 +110,18 @@ async function decorateNavigationResponse(response) {
     .replace(
       '<link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">',
       '<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2">\n  <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png?v=2">'
+    )
+    .replace(
+      'href="https://www.scad.mx/gym-buenas-practicas"',
+      'href="./buenas-practicas.html"'
+    )
+    .replace(
+      'href="https://www.scad.mx/gym-instrucciones-ejercicios"',
+      'href="./instrucciones-ejercitarse.html"'
+    )
+    .replace(
+      'href="https://www.scad.mx/gym-objetivos-entrenamiento"',
+      'href="./objetivos-entrenamiento.html"'
     );
 
   if (html.includes("data-gym-startup-guard")) {
@@ -148,6 +169,15 @@ function isAppShellNavigation(request) {
   );
 }
 
+function isLocalHtmlNavigation(request) {
+  if (request.mode !== "navigate") return false;
+
+  const requestUrl = new URL(request.url);
+  if (requestUrl.origin !== self.location.origin) return false;
+
+  return LOCAL_HTML_PAGES.has(requestUrl.pathname);
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
@@ -186,6 +216,21 @@ self.addEventListener("fetch", (event) => {
           return decorateNavigationResponse(response);
         })
         .catch(cachedNavigationResponse)
+    );
+    return;
+  }
+
+  if (isLocalHtmlNavigation(event.request)) {
+    event.respondWith(
+      fetchWithTimeout(event.request, { cache: "no-store" })
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
     );
     return;
   }
