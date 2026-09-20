@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.50";
+const CACHE_NAME = "entrenamiento-gym-v0.1.51";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -15,13 +15,15 @@ const APP_SHELL = [
   "./assets/mensaje-pendiente.mp3",
   "./buenas-practicas.html",
   "./instrucciones-ejercitarse.html",
-  "./objetivos-entrenamiento.html"
+  "./objetivos-entrenamiento.html",
+  "./entrenadores.html"
 ];
 
 const LOCAL_HTML_PAGES = new Set([
   "/buenas-practicas.html",
   "/instrucciones-ejercitarse.html",
-  "/objetivos-entrenamiento.html"
+  "/objetivos-entrenamiento.html",
+  "/entrenadores.html"
 ]);
 
 const NAVIGATION_TIMEOUT_MS = 3500;
@@ -54,8 +56,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.50";
-    version.setAttribute("aria-label", "Versión 0.1.50");
+    version.textContent = "v0.1.51";
+    version.setAttribute("aria-label", "Versión 0.1.51");
   };
 
   if (document.readyState === "loading") {
