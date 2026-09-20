@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0f2f55">
+  <title>Entrenadores · GYM</title>
+  <style>
+    :root{--bg:#f5f8fc;--panel:#fff;--text:#10233d;--muted:#62748a;--line:#dce5ef;--blue:#174f82;--dark:#0f2f55}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;min-height:52px;padding:max(8px,env(safe-area-inset-top)) 14px 8px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
+    .back{display:grid;place-items:center;width:34px;height:34px;padding:0;color:var(--dark);background:transparent;border:0;font:inherit;font-size:1.5rem;text-decoration:none;cursor:pointer}
+    .title{margin:0;flex:1;font-size:.95rem;font-weight:850;letter-spacing:.03em;text-transform:uppercase}
+    .version{color:var(--muted);font-size:.68rem}
+    main{width:min(100%,560px);margin:0 auto;padding:18px 14px calc(24px + env(safe-area-inset-bottom))}
+    .list{display:grid;gap:10px}
+    .trainer{display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:12px;padding:11px 12px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+    .avatar{display:grid;place-items:center;width:58px;height:58px;overflow:hidden;color:#fff;background:var(--blue);border-radius:50%;font-size:.78rem;font-weight:850}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .copy{min-width:0}
+    .name{margin:0 0 3px;color:var(--dark);font-size:.9rem;font-weight:850}
+    .ref{margin:0;color:var(--muted);font-size:.74rem;line-height:1.35}
+    .link{display:grid;place-items:center;min-width:34px;height:34px;padding:0 7px;color:var(--blue);background:transparent;border:0;font-size:1.25rem;font-weight:850;text-decoration:none}
+    .state{padding:34px 16px;color:var(--muted);font-size:.8rem;text-align:center}
+    .state[hidden]{display:none}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="back" href="./" aria-label="Volver a GYM">←</a>
+    <h1 class="title">Entrenadores</h1>
+    <span class="version">v0.1.51</span>
+  </header>
+  <main>
+    <div id="state" class="state">Cargando entrenadores…</div>
+    <section id="list" class="list" aria-label="Entrenadores públicos"></section>
+  </main>
+  <script>
+    const API_URL="https://www.scad.mx/_functions/gymEntrenadoresPublicos";
+    function wixImage(value){
+      if(!value)return "";
+      if(typeof value==="object")return wixImage(value.src||value.url||value.fileUrl||value.imageUrl||"");
+      const raw=String(value).trim();
+      if(/^https?:\/\//i.test(raw))return raw;
+      const m=raw.match(/^wix:image:\/\/v1\/([^/]+)\//i);
+      return m?.[1]?("https://static.wixstatic.com/media/"+m[1]):raw;
+    }
+    function initials(name){
+      const p=String(name||"").trim().split(/\s+/).filter(Boolean);
+      return p.length?(p[0][0]+(p.length>1?p[p.length-1][0]:"")).toUpperCase():"GY";
+    }
+    function safeUrl(value){
+      try{
+        const u=new URL(String(value||"").trim());
+        return /^https?:$/.test(u.protocol)?u.toString():"";
+      }catch{return ""}
+    }
+    function render(items){
+      const list=document.getElementById("list");
+      const state=document.getElementById("state");
+      list.replaceChildren();
+      if(!items.length){state.textContent="No hay entrenadores publicados.";state.hidden=false;return}
+      state.hidden=true;
+      items.forEach(item=>{
+        const article=document.createElement("article"); article.className="trainer";
+        const avatar=document.createElement("div"); avatar.className="avatar";
+        const photo=wixImage(item.avatarEntrenador);
+        if(photo){const img=document.createElement("img");img.src=photo;img.alt="";img.onerror=()=>{avatar.replaceChildren(document.createTextNode(initials(item.nombre)))};avatar.append(img)}
+        else avatar.textContent=initials(item.nombre);
+        const copy=document.createElement("div"); copy.className="copy";
+        const name=document.createElement("h2"); name.className="name"; name.textContent=String(item.nombre||"Entrenador");
+        const ref=document.createElement("p"); ref.className="ref"; ref.textContent=String(item.refEntrenador||"");
+        copy.append(name); if(ref.textContent)copy.append(ref);
+        article.append(avatar,copy);
+        const url=safeUrl(item.referenciaUrl);
+        if(url){const a=document.createElement("a");a.className="link";a.href=url;a.target="_blank";a.rel="noopener noreferrer";a.setAttribute("aria-label","Abrir referencia de "+name.textContent);a.textContent="↗";article.append(a)}
+        list.append(article);
+      });
+    }
+    fetch(API_URL,{cache:"no-store"})
+      .then(async r=>{const d=await r.json();if(!r.ok||d?.ok===false)throw new Error(d?.error||"Error");return Array.isArray(d)?d:(Array.isArray(d?.entrenadores)?d.entrenadores:[])})
+      .then(render)
+      .catch(()=>{const s=document.getElementById("state");s.textContent="No fue posible cargar los entrenadores.";s.hidden=false});
+  </script>
+</body>
+</html>
