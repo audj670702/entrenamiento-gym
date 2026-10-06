@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.53";
+const CACHE_NAME = "entrenamiento-gym-v0.1.54";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -16,7 +16,9 @@ const APP_SHELL = [
   "./buenas-practicas.html",
   "./instrucciones-ejercitarse.html",
   "./objetivos-entrenamiento.html",
-  "./entrenadores.html"
+  "./entrenadores.html",
+  "./gym-tv.js",
+  "./gym-tv.css"
 ];
 
 const LOCAL_HTML_PAGES = new Set([
@@ -56,8 +58,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.53";
-    version.setAttribute("aria-label", "Versión 0.1.51");
+    version.textContent = "v0.1.54";
+    version.setAttribute("aria-label", "Versión 0.1.54");
   };
 
   if (document.readyState === "loading") {
@@ -202,6 +204,15 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function isLiveOrDynamicRequest(request) {
+  const url = new URL(request.url);
+  if (url.pathname.includes("/_functions/")) return true;
+  if (url.hostname === "motortv.scad.mx") return true;
+  if (/\.(m3u8|ts|m4s|aac)$/i.test(url.pathname)) return true;
+  if (/(^|\.)(youtube\.com|youtube-nocookie\.com|ytimg\.com|googlevideo\.com)$/i.test(url.hostname)) return true;
+  return false;
+}
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
 
@@ -240,6 +251,13 @@ self.addEventListener("fetch", (event) => {
   // Una navegación directa a un recurso (PNG, JSON, MP3, etc.) debe ir a red
   // y nunca puede recibir index.html como fallback de la aplicación.
   if (event.request.mode === "navigate") {
+    return;
+  }
+
+  // Señales en vivo y contexto dinámico nunca se sirven desde caché:
+  // la lista HLS de TV Digital cambia cada pocos segundos y el Canal GYM
+  // (gymPwaContext) debe reflejar lo que el Panel ADM tiene al aire.
+  if (isLiveOrDynamicRequest(event.request)) {
     return;
   }
 
