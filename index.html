@@ -9,6 +9,8 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
   <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
+  <link rel="stylesheet" href="./gym-tv.css?v=0.1.54">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
   <style>
     :root {
       --bg: #f5f8fc;
@@ -797,7 +799,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.52">v0.1.53</span>
+      <span class="version" aria-label="Versión 0.1.54">v0.1.54</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -822,16 +824,19 @@
     </div>
   </header>
   <main>
-    <div class="hero-zone">
-      <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
-        <span aria-hidden="true">💬</span>
-        <span id="messageBadge" class="message-badge" hidden>0</span>
-      </button>
-      <img
-        class="hero-logo"
-        src="./assets/entrenamiento-gym-logo-sentadilla.png"
-        alt="Identidad de Entrenamiento GYM"
-      >
+    <div class="hero-zone tv-home top-band">
+      <div class="top-band-left">
+        <button id="messageButton" class="message-button" type="button" data-visible="false" aria-label="Abrir mensajes">
+          <span aria-hidden="true">💬</span>
+          <span id="messageBadge" class="message-badge" hidden>0</span>
+        </button>
+        <img
+          class="hero-logo"
+          src="./assets/entrenamiento-gym-logo-sentadilla.png"
+          alt="Identidad de Entrenamiento GYM"
+        >
+      </div>
+      <div id="gymTvMount"></div>
     </div>
 
     <section id="identityCard" class="identity-card" aria-label="Identidad del usuario" hidden>
@@ -2217,6 +2222,32 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
             console.error("No fue posible registrar la PWA:", error);
           });
       });
+    }
+  </script>
+  <!-- Monitor TV (réplica CPC / NEXUS). Canal GYM llega en gymPwaContext → tv. -->
+  <script type="module">
+    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.54";
+
+    const mount = document.getElementById("gymTvMount");
+    if (mount) {
+      mount.outerHTML = tvMarkup();
+
+      // Misma identidad que usa el resto de la portada (resolveGymMember en el script principal).
+      const memberId = String(
+        (typeof window.resolveGymMember === "function" ? window.resolveGymMember().memberId : "") ||
+        localStorage.getItem("GYM_MEMBER_ID") || ""
+      ).trim();
+
+      async function loadGymTvContext() {
+        const url = "https://www.scad.mx/_functions/gymPwaContext?memberId=" +
+          encodeURIComponent(memberId) + "&tv=1&t=" + Date.now();
+        const response = await fetch(url, { cache: "no-store" });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data?.mensaje || ("Contexto GYM " + response.status));
+        return data;
+      }
+
+      initGymTv({ loadContext: memberId ? loadGymTvContext : null });
     }
   </script>
 </body>
