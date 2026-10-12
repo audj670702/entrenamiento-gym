@@ -7,7 +7,7 @@
 // configurado desde el Panel ADM en Wix (TV_SCaD_Canal / TV_SCaD_Parrilla, app = GYM) y
 // entregado en gymPwaContext → tv. Se vuelve a consultar cada POLL_MS mientras está al aire.
 
-const TVDI_HLS = "https://motortv.scad.mx/hls/canal.m3u8";
+const TVDI_HLS = "https://tvdigital.scad.mx/cfcx/canal/index.m3u8";
 const GYM_CHANNEL_NAME = "Canal GYM";
 const DIGITAL_CHANNEL_NAME = "TV Digital";
 const POLL_MS = 10000;
