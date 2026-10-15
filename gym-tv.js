@@ -1,5 +1,5 @@
-import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.56";
-// GYM · Monitor TV · v0.1.56
+import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.57";
+// GYM · Monitor TV · v0.1.57
 // Conserva el comportamiento de pantalla completa y navegación de CPC/NEXUS:
 //   nexus/js/tv.js        → reproducción, canales, sonido y pantalla completa.
 //   nexus/js/modes.js     → initTvOptions (menú de opciones del monitor).
@@ -51,9 +51,26 @@ export function tvMarkup() {
 
 // ---------- nexus/js/tv.js ----------
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function destroyHls(){if(hls){hls.destroy();hls=null}const v=$("#tvVideo");if(!v)return;v.pause();v.removeAttribute("src");v.load()}
+let digitalRetryTimer = null, digitalWatchTimer = null;
+function stopDigitalRecovery(){clearTimeout(digitalRetryTimer);clearInterval(digitalWatchTimer);digitalRetryTimer=null;digitalWatchTimer=null}
+function retryDigital(){
+  if(currentChannel()?.tipo!=='VPS'||digitalRetryTimer)return;
+  showPlayFallback();
+  digitalRetryTimer=setTimeout(()=>{digitalRetryTimer=null;if(document.visibilityState==='visible'&&currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal)},3000);
+}
+function watchDigital(v){
+  let lastTime=v.currentTime, lastProgress=Date.now();
+  v.onerror=retryDigital;
+  v.onplaying=()=>{lastProgress=Date.now();$("#tvResume").hidden=true};
+  digitalWatchTimer=setInterval(()=>{
+    if(document.visibilityState!=='visible'){lastProgress=Date.now();return}
+    if(v.currentTime!==lastTime){lastTime=v.currentTime;lastProgress=Date.now()}
+    else if(Date.now()-lastProgress>20000)retryDigital();
+  },5000);
+}
+function destroyHls(){stopDigitalRecovery();const oldVideo=$("#tvVideo");if(oldVideo){oldVideo.onerror=null;oldVideo.onplaying=null}if(hls){hls.destroy();hls=null}const v=$("#tvVideo");if(!v)return;v.pause();v.removeAttribute("src");v.load()}
 function setPlaceholder(active){const v=$("#tvVideo"),p=$("#tvPlaceholder"),c=$("#tvScreenCenter");if(p)p.hidden=!active;if(c)c.hidden=!active;if(v)v.hidden=active}
-function playUrl(url){communityVideoKey="";const c=$("#tvScreenCenter");if(c)c.innerHTML='<span class="tv-play">▶</span>';destroyHls();const v=$("#tvVideo");if(!v||!url){setPlaceholder(true);return}setPlaceholder(false);v.muted=tvMuted;if(/\.m3u8($|\?)/i.test(url)){if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=url;v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()});return}if(window.Hls&&Hls.isSupported()){hls=new Hls({enableWorker:true,lowLatencyMode:false,backBufferLength:30});hls.loadSource(url);hls.attachMedia(v);hls.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()}));hls.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal)setPlaceholder(true)});return}}v.src=url;v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()})}
+function playUrl(url){communityVideoKey="";const c=$("#tvScreenCenter");if(c)c.innerHTML='<span class="tv-play">▶</span>';destroyHls();const v=$("#tvVideo");if(!v||!url){setPlaceholder(true);return}setPlaceholder(false);v.muted=tvMuted;if(currentChannel()?.tipo==='VPS')watchDigital(v);if(/\.m3u8($|\?)/i.test(url)){if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=url;v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()});return}if(window.Hls&&Hls.isSupported()){hls=new Hls({enableWorker:true,lowLatencyMode:false,backBufferLength:30});hls.loadSource(url);hls.attachMedia(v);hls.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()}));hls.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal){setPlaceholder(true);retryDigital()}});return}}v.src=url;v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()})}
 function youtubeEmbedUrl(tv){const id=String(tv?.youtubeId||"").trim();if(!id)return"";const start=Math.max(0,Math.floor(Number(tv?.segundoInicio)||0));const u=new URL(`https://www.youtube.com/embed/${encodeURIComponent(id)}`);u.searchParams.set("autoplay","1");u.searchParams.set("mute",tvMuted?"1":"0");u.searchParams.set("playsinline","1");u.searchParams.set("controls","1");u.searchParams.set("rel","0");u.searchParams.set("enablejsapi","1");u.searchParams.set("start",String(start));u.searchParams.set("origin",location.origin);return u.toString()}
 function sendYoutubeCommand(func){const f=$("#tvCommunityFrame");if(f?.contentWindow)f.contentWindow.postMessage(JSON.stringify({event:"command",func,args:[]}),"https://www.youtube.com")}
 function renderGymTransmission(force=false){const tv=context?.tv,id=String(tv?.youtubeId||"").trim(),center=$("#tvScreenCenter");if(!id){communityVideoKey="";destroyHls();setPlaceholder(true);if(center)center.innerHTML='<span class="tv-play">▶</span>';return}const key=`${tv?.modo||""}:${tv?.itemId||""}:${tv?.occurrence??""}:${id}`;if(!force&&communityVideoKey===key)return;communityVideoKey=key;$("#tvResume").hidden=true;destroyHls();const v=$("#tvVideo"),p=$("#tvPlaceholder");if(v)v.hidden=true;if(p)p.hidden=false;if(center){center.hidden=false;center.innerHTML=`<iframe id="tvCommunityFrame" class="tv-youtube-frame" src="${esc(youtubeEmbedUrl(tv))}" title="${esc(tv.titulo||GYM_CHANNEL_NAME)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>`;
@@ -168,7 +185,7 @@ dial?.addEventListener('click',()=>{if(Date.now()>suppressClickUntil)stepChannel
 $("#tvDial")?.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowDown','ArrowRight','ArrowUp'].includes(e.key)){e.preventDefault();stepChannel(['ArrowLeft','ArrowDown'].includes(e.key)?-1:1)}});
 let wheelAt=0;
 $("#tvDial")?.addEventListener('wheel',e=>{e.preventDefault();if(Date.now()-wheelAt>250&&e.deltaY){wheelAt=Date.now();stepChannel(e.deltaY>0?1:-1)}},{passive:false});
-$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')$("#tvVideo")?.play().then(()=>$("#tvResume").hidden=true).catch(()=>{});else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
+$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal);else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
 setChannel("gym")}
 
 // ---------- nexus/js/modes.js · initTvOptions ----------
@@ -239,7 +256,7 @@ function bindDocumentOnce() {
     if (top) closeModal(top);
   });
   new MutationObserver(scan).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden"] });
-  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") { refreshCatalog(); communityVideoKey=''; if(selected === "gym") refreshGym(); else refreshSys(); } });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") { refreshCatalog(); communityVideoKey=''; if(selected === "gym") refreshGym(); else { if(currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal); refreshSys(); } } });
 }
 
 // ---------- Canal GYM: contexto desde el Panel ADM (Wix) ----------
