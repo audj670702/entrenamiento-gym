@@ -63,3 +63,25 @@ body.tv-fs .hero-zone .message-button { visibility: hidden; }
 .hero-zone.top-band { align-items: center; }
 .hero-zone .top-band-left { position: relative; display: grid; place-items: center; min-height: 100%; }
 .hero-zone .top-band-left .hero-logo { margin: 0 auto; width: min(30vw, 140px); }
+
+/* Shared compact television: controls remain outside the YouTube player. */
+.tv-console { padding:6px; background:linear-gradient(145deg,#30435b,#152338); border:1px solid #455a73; border-radius:12px; box-shadow:0 4px 10px #10233d22; }
+.tv-bar { color:#f1f5f9; gap:5px; }
+.tv-caption { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.tv-caption strong { font:800 11px system-ui; letter-spacing:.08em; }
+.tv-caption .tv-now { color:#cbd5e1; font-size:9px; }
+#tvContentTitle { color:#aebed0; font-size:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#tvContentTitle:empty { display:none; }
+.tv-dial { flex:none; width:30px; height:30px; padding:0; border:2px solid #8b9caf; border-radius:50%; background:repeating-conic-gradient(#46576c 0deg 7deg,#233449 7deg 14deg); box-shadow:inset 0 0 0 4px #26374c,0 2px 3px #0006; cursor:ns-resize; }
+.tv-dial span { display:block; width:3px; height:10px; background:#e2e8f0; margin:0 auto 11px; border-radius:2px; }
+.tv-dial:active { transform:rotate(25deg); }
+.tv-dial:focus-visible { outline:2px solid #93c5fd; outline-offset:3px; }
+.tv-options .tv-channels { grid-template-columns:1fr; max-height:260px; overflow:auto; }
+.tv-options .channel { justify-content:flex-start; text-align:left; }
+.tv-monitor video[hidden], .tv-screen-center[hidden], .tv-placeholder[hidden] { display:none; }
+/* YouTube embeds require at least 200 × 200 px, including on small screens. */
+.tv-monitor[data-source="youtube"] { min-width:200px; min-height:200px; }
+.top-band { grid-template-columns:minmax(0,1fr) minmax(214px,min(34%,300px)); }
+@media(max-width:380px) { .top-band { gap:5px; } .hero-zone .top-band-left .hero-logo { width:70px; } }
+.tv-resume { width:100%; border:0; border-radius:5px; padding:5px; background:#edf4fc; color:#174f82; font-size:10px; cursor:pointer; }
+.tv-resume[hidden] { display:none; }

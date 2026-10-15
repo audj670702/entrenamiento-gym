@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.54";
+const CACHE_NAME = "entrenamiento-gym-v0.1.55";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -18,6 +18,7 @@ const APP_SHELL = [
   "./objetivos-entrenamiento.html",
   "./entrenadores.html",
   "./gym-tv.js",
+  "./gym-tv-model.js",
   "./gym-tv.css"
 ];
 
@@ -58,8 +59,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.54";
-    version.setAttribute("aria-label", "Versión 0.1.54");
+    version.textContent = "v0.1.55";
+    version.setAttribute("aria-label", "Versión 0.1.55");
   };
 
   if (document.readyState === "loading") {
