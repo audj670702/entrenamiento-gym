@@ -1,5 +1,5 @@
-import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.58";
-// GYM · Monitor TV · v0.1.58
+import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.59";
+// GYM · Monitor TV · v0.1.59
 // Conserva el comportamiento de pantalla completa y navegación de CPC/NEXUS:
 //   nexus/js/tv.js        → reproducción, canales, sonido y pantalla completa.
 //   nexus/js/modes.js     → initTvOptions (menú de opciones del monitor).
@@ -27,26 +27,26 @@ const $ = s => document.querySelector(s);
 // ---------- marcado (idéntico a nexus/index.html) ----------
 export function tvMarkup() {
   return `<section class="tv-section" aria-label="${GYM_CHANNEL_NAME}">
-      <div class="tv-console">
-        <div id="tvMonitor" class="tv-monitor"><video id="tvVideo" autoplay muted playsinline preload="auto" aria-label="Canal en vivo"></video><div id="tvPlaceholder" class="tv-placeholder"></div><div id="tvScreenCenter" class="tv-screen-center"><span class="tv-play">▶</span></div></div>
-        <button id="tvResume" class="tv-resume" type="button" hidden>▶ Reproducir</button>
-        <div class="tv-bar">
-          <div class="tv-caption"><strong id="tvChannelNumber">CH 00</strong><span id="tvNowLabel" class="tv-now">${GYM_CHANNEL_NAME}</span><small id="tvContentTitle"></small></div>
-          <button id="tvDial" class="tv-dial" type="button" aria-label="Desliza hacia arriba o abajo para cambiar canal" title="Cambiar canal"><span aria-hidden="true"></span></button>
-          <button id="btnTvOptions" class="tv-options-trigger" type="button" aria-label="Opciones del monitor" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
-        </div>
-        <div id="tvFsLayer" class="tv-fs-layer" hidden><button id="btnCloseTvFs" class="tv-fs-close" type="button" aria-label="Salir de pantalla completa"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-        <div id="tvOptions" class="tv-controls tv-options" role="dialog" aria-label="Opciones del monitor" hidden>
-          <div class="tv-options-head"><strong>Monitor</strong><button id="btnTvOptionsClose" class="tv-options-close" type="button" aria-label="Cerrar">×</button></div>
-          <span class="tv-options-label">Canal</span>
-          <div class="tv-channels" id="tvChannelList"></div>
-          <div class="tv-options-actions">
-            <button id="btnTvMute" class="tv-opt-btn" type="button"><span id="tvMuteIcon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></span><span id="tvMuteText">Activar sonido</span></button>
-            <button id="btnTvExpand" class="tv-opt-btn" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>Pantalla completa</span></button>
-          </div>
-        </div>
+    <div class="tv-console">
+      <div id="tvMonitor" class="tv-monitor">
+        <video id="tvVideo" autoplay muted playsinline preload="auto" aria-label="Canal en vivo"></video>
+        <div id="tvPlaceholder" class="tv-placeholder"></div>
+        <div id="tvScreenCenter" class="tv-screen-center"><span class="tv-play">▶</span></div>
+        <div class="tv-caption"><div class="tv-channel-heading"><strong id="tvChannelNumber">CH 00</strong><span id="tvNowLabel" class="tv-now">${GYM_CHANNEL_NAME}</span></div><small id="tvContentTitle"></small></div>
       </div>
-    </section>`;
+      <button id="tvResume" class="tv-resume" type="button" hidden>▶ Reproducir</button>
+      <div class="tv-bar">
+        <button id="btnTvMute" class="tv-toolbar-button" type="button" aria-label="Activar sonido"><span id="tvMuteIcon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg></span><span id="tvMuteText" class="tv-sr-only">Activar sonido</span></button>
+        <button id="btnTvOptions" class="tv-toolbar-button tv-channel-trigger" type="button" aria-label="Elegir canal" aria-controls="tvOptions" aria-expanded="false"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="m8 2 4 4 4-4"/></svg><span>Canales</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <button id="btnTvExpand" class="tv-toolbar-button" type="button" aria-label="Ampliar monitor"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+      <div id="tvFsLayer" class="tv-fs-layer" hidden><button id="btnCloseTvFs" class="tv-fs-close" type="button" aria-label="Salir de pantalla completa">×</button></div>
+      <div id="tvOptions" class="tv-controls tv-options" role="dialog" aria-label="Elegir canal" hidden>
+        <div class="tv-options-head"><strong>Canales</strong><button id="btnTvOptionsClose" class="tv-options-close" type="button" aria-label="Cerrar canales">×</button></div>
+        <div class="tv-channels" id="tvChannelList"></div>
+      </div>
+    </div>
+  </section>`;
 }
 
 // ---------- nexus/js/tv.js ----------
@@ -164,7 +164,6 @@ function renderChannels(){
   if(!c)return;
   $("#tvChannelNumber").textContent=`CH ${String(c.numero).padStart(2,'0')}`;
   $("#tvNowLabel").textContent=c.nombre;
-  $("#tvDial")?.setAttribute('aria-label',`CH ${String(c.numero).padStart(2,'0')}, ${c.nombre}. Desliza arriba o abajo; flechas para cambiar`);
 }
 function showPlayFallback(){const b=$("#tvResume");if(b){b.textContent="▶ Reproducir";b.hidden=false}}
 function setTitle(title=''){const el=$("#tvContentTitle");if(el){el.textContent=title;el.title=title}}
@@ -252,20 +251,7 @@ function toggleTvFullscreen(){
   if(currentChannel()?.tipo==="VPS"&&v&&!v.hidden&&typeof v.webkitEnterFullscreen==="function"){try{v.webkitEnterFullscreen();closeTvOptions();return}catch{}}
   closeTvOptions();setTimeout(enterTvPseudoFullscreen,200);
 }
-function initTv(){const m=$("#tvMonitor"),x=$("#btnTvExpand"),c=$(".tv-controls");if(!m||!c)return;m.dataset.channel="gym";c.addEventListener("click",e=>{const b=e.target.closest("[data-channel]");if(b)setChannel(b.dataset.channel)});x?.addEventListener("click",()=>toggleTvFullscreen());$("#btnCloseTvFs")?.addEventListener("click",exitTvPseudoFullscreen);$("#btnTvMute")?.addEventListener("click",()=>{tvMuted=!tvMuted;const v=$("#tvVideo"),i=$("#tvMuteIcon");if(v)v.muted=tvMuted;if(i)i.innerHTML=tvMuted?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';const tt=$("#tvMuteText");if(tt)tt.textContent=tvMuted?"Activar sonido":"Silenciar";if(currentChannel()?.tipo!=="VPS")sendYoutubeCommand(tvMuted?"mute":"unMute");else if(!tvMuted)v?.play().catch(()=>{})});const dial=$("#tvDial");
-let pointerStart=null, suppressClickUntil=0;
-dial?.addEventListener('pointerdown',e=>{pointerStart=e.clientY;dial.setPointerCapture(e.pointerId)});
-dial?.addEventListener('pointerup',e=>{
-  if(pointerStart===null)return;
-  const delta=e.clientY-pointerStart;pointerStart=null;
-  if(Math.abs(delta)>=15){suppressClickUntil=Date.now()+400;stepChannel(delta<0?1:-1)}
-});
-dial?.addEventListener('pointercancel',()=>{pointerStart=null});
-dial?.addEventListener('click',()=>{if(Date.now()>suppressClickUntil)stepChannel(1)});
-$("#tvDial")?.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowDown','ArrowRight','ArrowUp'].includes(e.key)){e.preventDefault();stepChannel(['ArrowLeft','ArrowDown'].includes(e.key)?-1:1)}});
-let wheelAt=0;
-$("#tvDial")?.addEventListener('wheel',e=>{e.preventDefault();if(Date.now()-wheelAt>250&&e.deltaY){wheelAt=Date.now();stepChannel(e.deltaY>0?1:-1)}},{passive:false});
-$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')resumeDigital();else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
+function initTv(){const m=$("#tvMonitor"),x=$("#btnTvExpand"),c=$(".tv-controls");if(!m||!c)return;m.dataset.channel="gym";c.addEventListener("click",e=>{const b=e.target.closest("[data-channel]");if(b)setChannel(b.dataset.channel)});x?.addEventListener("click",()=>toggleTvFullscreen());$("#btnCloseTvFs")?.addEventListener("click",exitTvPseudoFullscreen);$("#btnTvMute")?.addEventListener("click",()=>{tvMuted=!tvMuted;const v=$("#tvVideo"),i=$("#tvMuteIcon");if(v)v.muted=tvMuted;if(i)i.innerHTML=tvMuted?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';const tt=$("#tvMuteText");if(tt)tt.textContent=tvMuted?"Activar sonido":"Silenciar";$("#btnTvMute")?.setAttribute("aria-label",tvMuted?"Activar sonido":"Silenciar");if(currentChannel()?.tipo!=="VPS")sendYoutubeCommand(tvMuted?"mute":"unMute");else if(!tvMuted)v?.play().catch(()=>{})});$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')resumeDigital();else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
 setChannel("gym")}
 
 // ---------- nexus/js/modes.js · initTvOptions ----------
@@ -328,7 +314,7 @@ function bindDocumentOnce() {
   });
   setInterval(()=>{if(document.visibilityState==='visible'&&selected!=='gym')renderSysTransmission()},1000);
   // tv.js: Esc sale de la pantalla completa dentro de la app.
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("tv-fs")) exitTvPseudoFullscreen(); });
+  document.addEventListener("keydown", e => { if(e.key==="Escape"){closeTvOptions();if(document.body.classList.contains("tv-fs"))exitTvPseudoFullscreen()} });
   // back-nav.js
   window.addEventListener("popstate", () => {
     if (ignorePops > 0) { ignorePops--; return; }
