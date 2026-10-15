@@ -72,15 +72,15 @@ body.tv-fs .hero-zone .message-button { visibility: hidden; }
 .tv-caption .tv-now { color:#cbd5e1; font-size:9px; }
 #tvContentTitle { color:#aebed0; font-size:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 #tvContentTitle:empty { display:none; }
-.tv-dial { flex:none; width:30px; height:30px; padding:0; border:2px solid #8b9caf; border-radius:50%; background:repeating-conic-gradient(#46576c 0deg 7deg,#233449 7deg 14deg); box-shadow:inset 0 0 0 4px #26374c,0 2px 3px #0006; cursor:ns-resize; }
-.tv-dial span { display:block; width:3px; height:10px; background:#e2e8f0; margin:0 auto 11px; border-radius:2px; }
-.tv-dial:active { transform:rotate(25deg); }
+.tv-dial { flex:none; width:46px; height:32px; padding:4px 0; border:1px solid #8293a8; border-radius:7px; background:linear-gradient(#152338,#687b92 45%,#40536a 60%,#152338); box-shadow:inset 0 1px 2px #0009,0 2px 3px #0006; cursor:ns-resize; touch-action:none; user-select:none; }
+.tv-dial span { display:block; height:100%; margin:0 5px; border-radius:3px; background:repeating-linear-gradient(to bottom,transparent 0 3px,#bac7d766 3px 4px); transition:transform .1s; }
+.tv-dial:active span { transform:translateY(2px); }
 .tv-dial:focus-visible { outline:2px solid #93c5fd; outline-offset:3px; }
 .tv-options .tv-channels { grid-template-columns:1fr; max-height:260px; overflow:auto; }
 .tv-options .channel { justify-content:flex-start; text-align:left; }
 .tv-monitor video[hidden], .tv-screen-center[hidden], .tv-placeholder[hidden] { display:none; }
-/* YouTube embeds require at least 200 × 200 px, including on small screens. */
-.tv-monitor[data-source="youtube"] { min-width:200px; min-height:200px; }
+/* Keep the screen horizontal; contain preserves the original video framing. */
+.tv-monitor { aspect-ratio:16 / 9; min-height:0; }
 .top-band { grid-template-columns:minmax(0,1fr) minmax(214px,min(34%,300px)); }
 @media(max-width:380px) { .top-band { gap:5px; } .hero-zone .top-band-left .hero-logo { width:70px; } }
 .tv-resume { width:100%; border:0; border-radius:5px; padding:5px; background:#edf4fc; color:#174f82; font-size:10px; cursor:pointer; }

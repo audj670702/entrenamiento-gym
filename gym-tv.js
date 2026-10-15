@@ -1,5 +1,5 @@
-import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.55";
-// GYM · Monitor TV · v0.1.55
+import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.56";
+// GYM · Monitor TV · v0.1.56
 // Conserva el comportamiento de pantalla completa y navegación de CPC/NEXUS:
 //   nexus/js/tv.js        → reproducción, canales, sonido y pantalla completa.
 //   nexus/js/modes.js     → initTvOptions (menú de opciones del monitor).
@@ -32,7 +32,7 @@ export function tvMarkup() {
         <button id="tvResume" class="tv-resume" type="button" hidden>▶ Reproducir</button>
         <div class="tv-bar">
           <div class="tv-caption"><strong id="tvChannelNumber">CH 00</strong><span id="tvNowLabel" class="tv-now">${GYM_CHANNEL_NAME}</span><small id="tvContentTitle"></small></div>
-          <button id="tvDial" class="tv-dial" type="button" aria-label="Canal siguiente; usa las flechas para cambiar" title="Cambiar canal"><span aria-hidden="true"></span></button>
+          <button id="tvDial" class="tv-dial" type="button" aria-label="Desliza hacia arriba o abajo para cambiar canal" title="Cambiar canal"><span aria-hidden="true"></span></button>
           <button id="btnTvOptions" class="tv-options-trigger" type="button" aria-label="Opciones del monitor" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></button>
         </div>
         <div id="tvFsLayer" class="tv-fs-layer" hidden><button id="btnCloseTvFs" class="tv-fs-close" type="button" aria-label="Salir de pantalla completa"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
@@ -67,7 +67,7 @@ function renderChannels(){
   if(!c)return;
   $("#tvChannelNumber").textContent=`CH ${String(c.numero).padStart(2,'0')}`;
   $("#tvNowLabel").textContent=c.nombre;
-  $("#tvDial")?.setAttribute('aria-label',`CH ${String(c.numero).padStart(2,'0')}, ${c.nombre}. Canal siguiente; flechas para cambiar`);
+  $("#tvDial")?.setAttribute('aria-label',`CH ${String(c.numero).padStart(2,'0')}, ${c.nombre}. Desliza arriba o abajo; flechas para cambiar`);
 }
 function showPlayFallback(){const b=$("#tvResume");if(b)b.hidden=false}
 function setTitle(title=''){const el=$("#tvContentTitle");if(el){el.textContent=title;el.title=title}}
@@ -155,7 +155,16 @@ function toggleTvFullscreen(){
   if(currentChannel()?.tipo==="VPS"&&v&&!v.hidden&&typeof v.webkitEnterFullscreen==="function"){try{v.webkitEnterFullscreen();closeTvOptions();return}catch{}}
   closeTvOptions();setTimeout(enterTvPseudoFullscreen,200);
 }
-function initTv(){const m=$("#tvMonitor"),x=$("#btnTvExpand"),c=$(".tv-controls");if(!m||!c)return;m.dataset.channel="gym";c.addEventListener("click",e=>{const b=e.target.closest("[data-channel]");if(b)setChannel(b.dataset.channel)});x?.addEventListener("click",()=>toggleTvFullscreen());$("#btnCloseTvFs")?.addEventListener("click",exitTvPseudoFullscreen);$("#btnTvMute")?.addEventListener("click",()=>{tvMuted=!tvMuted;const v=$("#tvVideo"),i=$("#tvMuteIcon");if(v)v.muted=tvMuted;if(i)i.innerHTML=tvMuted?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';const tt=$("#tvMuteText");if(tt)tt.textContent=tvMuted?"Activar sonido":"Silenciar";if(currentChannel()?.tipo!=="VPS")sendYoutubeCommand(tvMuted?"mute":"unMute");else if(!tvMuted)v?.play().catch(()=>{})});$("#tvDial")?.addEventListener('click',()=>stepChannel(1));
+function initTv(){const m=$("#tvMonitor"),x=$("#btnTvExpand"),c=$(".tv-controls");if(!m||!c)return;m.dataset.channel="gym";c.addEventListener("click",e=>{const b=e.target.closest("[data-channel]");if(b)setChannel(b.dataset.channel)});x?.addEventListener("click",()=>toggleTvFullscreen());$("#btnCloseTvFs")?.addEventListener("click",exitTvPseudoFullscreen);$("#btnTvMute")?.addEventListener("click",()=>{tvMuted=!tvMuted;const v=$("#tvVideo"),i=$("#tvMuteIcon");if(v)v.muted=tvMuted;if(i)i.innerHTML=tvMuted?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';const tt=$("#tvMuteText");if(tt)tt.textContent=tvMuted?"Activar sonido":"Silenciar";if(currentChannel()?.tipo!=="VPS")sendYoutubeCommand(tvMuted?"mute":"unMute");else if(!tvMuted)v?.play().catch(()=>{})});const dial=$("#tvDial");
+let pointerStart=null, suppressClickUntil=0;
+dial?.addEventListener('pointerdown',e=>{pointerStart=e.clientY;dial.setPointerCapture(e.pointerId)});
+dial?.addEventListener('pointerup',e=>{
+  if(pointerStart===null)return;
+  const delta=e.clientY-pointerStart;pointerStart=null;
+  if(Math.abs(delta)>=15){suppressClickUntil=Date.now()+400;stepChannel(delta<0?1:-1)}
+});
+dial?.addEventListener('pointercancel',()=>{pointerStart=null});
+dial?.addEventListener('click',()=>{if(Date.now()>suppressClickUntil)stepChannel(1)});
 $("#tvDial")?.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowDown','ArrowRight','ArrowUp'].includes(e.key)){e.preventDefault();stepChannel(['ArrowLeft','ArrowDown'].includes(e.key)?-1:1)}});
 let wheelAt=0;
 $("#tvDial")?.addEventListener('wheel',e=>{e.preventDefault();if(Date.now()-wheelAt>250&&e.deltaY){wheelAt=Date.now();stepChannel(e.deltaY>0?1:-1)}},{passive:false});
