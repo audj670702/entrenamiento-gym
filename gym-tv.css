@@ -107,3 +107,19 @@ body.tv-fs .hero-zone .message-button { visibility: hidden; }
 .tv-monitor:fullscreen .tv-now,.tv-monitor:-webkit-full-screen .tv-now,body.tv-fs .tv-now { font-size:14px; }
 
 .tv-toolbar-button #tvMuteIcon svg { color:inherit; }
+
+/* v0.1.60 · loading feedback stays inside the screen, without adding height. */
+.tv-load-indicator { position:absolute; inset:auto 0 0; z-index:4; pointer-events:none; color:#fff; background:linear-gradient(transparent,rgba(0,0,0,.75)); padding:12px 8px 8px; font:400 11px system-ui; }
+.tv-load-indicator[hidden] { display:none; }
+.tv-load-line { position:absolute; bottom:0; left:0; right:0; height:3px; background:#ffffff26; overflow:hidden; }
+.tv-load-line::after { content:""; position:absolute; height:100%; width:38%; background:#78c4ff; transform:translateX(-105%); }
+.tv-load-indicator[data-state="loading"] .tv-load-line::after,
+.tv-load-indicator[data-state="reconnecting"] .tv-load-line::after { animation:tv-signal-loading 1.35s ease-in-out infinite; }
+.tv-load-indicator[data-state="error"] .tv-load-line::after { width:100%; transform:none; background:#ffaf94; }
+.tv-load-indicator[data-state="action"] .tv-load-line,
+.tv-load-indicator[data-state="idle"] .tv-load-line { display:none; }
+@keyframes tv-signal-loading { to { transform:translateX(365%); } }
+@media(prefers-reduced-motion:reduce) {
+ .tv-load-indicator[data-state="loading"] .tv-load-line::after,
+ .tv-load-indicator[data-state="reconnecting"] .tv-load-line::after { animation:none;transform:none;width:100%;opacity:.65; }
+}

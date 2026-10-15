@@ -1,5 +1,5 @@
-import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.59";
-// GYM · Monitor TV · v0.1.59
+import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.60";
+// GYM · Monitor TV · v0.1.60
 // Conserva el comportamiento de pantalla completa y navegación de CPC/NEXUS:
 //   nexus/js/tv.js        → reproducción, canales, sonido y pantalla completa.
 //   nexus/js/modes.js     → initTvOptions (menú de opciones del monitor).
@@ -32,6 +32,7 @@ export function tvMarkup() {
         <video id="tvVideo" autoplay muted playsinline preload="auto" aria-label="Canal en vivo"></video>
         <div id="tvPlaceholder" class="tv-placeholder"></div>
         <div id="tvScreenCenter" class="tv-screen-center"><span class="tv-play">▶</span></div>
+        <div id="tvLoadIndicator" class="tv-load-indicator" role="status" aria-live="polite" hidden><span id="tvLoadText"></span><span class="tv-load-line" aria-hidden="true"></span></div>
         <div class="tv-caption"><div class="tv-channel-heading"><strong id="tvChannelNumber">CH 00</strong><span id="tvNowLabel" class="tv-now">${GYM_CHANNEL_NAME}</span></div><small id="tvContentTitle"></small></div>
       </div>
       <button id="tvResume" class="tv-resume" type="button" hidden>▶ Reproducir</button>
@@ -51,6 +52,13 @@ export function tvMarkup() {
 
 // ---------- nexus/js/tv.js ----------
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function setStreamState(state,message=''){
+  const el=$("#tvLoadIndicator"),label=$("#tvLoadText");
+  if(!el||!label)return;
+  const busy=state==='loading'||state==='reconnecting';
+  el.dataset.state=state;el.hidden=!message;label.textContent=message;
+  $("#tvMonitor")?.setAttribute('aria-busy',String(busy));
+}
 let digitalRetryTimer = null, digitalWatchTimer = null;
 let digitalNeedsGesture = false, digitalRetries = 0, digitalGeneration = 0;
 function stopDigitalRecovery(){
@@ -59,6 +67,7 @@ function stopDigitalRecovery(){
 }
 function digitalFallback(needsGesture=false){
   digitalNeedsGesture=needsGesture;
+  if(needsGesture)setStreamState('action','Pulsa Reproducir');
   const b=$("#tvResume");if(b){b.textContent=needsGesture?'▶ Reproducir':'↻ Reintentar señal';b.hidden=false}
   const v=$("#tvVideo");if(v&&needsGesture)v.controls=true;
 }
@@ -75,7 +84,8 @@ function attemptDigitalPlay(v){
 function retryDigital(){
   if(currentChannel()?.tipo!=='VPS'||digitalRetryTimer||digitalNeedsGesture)return;
   digitalFallback();
-  if(digitalRetries>=3)return;
+  if(digitalRetries>=3){setStreamState('error','Señal no disponible · Reintenta');return}
+  setStreamState('reconnecting','Reconectando…');
   const generation=digitalGeneration, delay=5000*(2**digitalRetries++);
   digitalRetryTimer=setTimeout(()=>{
     digitalRetryTimer=null;
@@ -85,10 +95,12 @@ function retryDigital(){
 function watchDigital(v){
   let lastTime=v.currentTime, lastProgress=Date.now(), hasPlayed=false;
   v.onerror=retryDigital;
+  v.onwaiting=()=>{if(!digitalNeedsGesture)setStreamState(hasPlayed?'reconnecting':'loading',hasPlayed?'Recuperando señal…':'Cargando señal…')};
+  v.onstalled=v.onwaiting;
   v.onplaying=()=>{
     hasPlayed=true;lastProgress=Date.now();digitalNeedsGesture=false;
     clearTimeout(digitalRetryTimer);digitalRetryTimer=null;
-    $("#tvResume").hidden=true;v.controls=false;
+    $("#tvResume").hidden=true;v.controls=false;setStreamState('playing');
   };
   digitalWatchTimer=setInterval(()=>{
     if(document.visibilityState!=='visible'||digitalNeedsGesture){lastProgress=Date.now();return}
@@ -102,7 +114,7 @@ function watchDigital(v){
 function destroyHls(){
   digitalGeneration++;stopDigitalRecovery();
   const v=$("#tvVideo");
-  if(v){v.onerror=null;v.onplaying=null;v.controls=false}
+  if(v){v.onerror=null;v.onplaying=null;v.onwaiting=null;v.onstalled=null;v.controls=false}
   if(hls){hls.destroy();hls=null}
   if(v){v.pause();v.removeAttribute("src");v.load()}
 }
@@ -114,7 +126,8 @@ function playUrl(url,recovering=false){
   if(!recovering)digitalRetries=0;
   digitalNeedsGesture=false;
   const v=$("#tvVideo");
-  if(!v||!url){setPlaceholder(true);return}
+  if(!v||!url){setPlaceholder(true);setStreamState('error','Señal no configurada');return}
+  setStreamState(recovering?'reconnecting':'loading',recovering?'Reconectando…':'Cargando señal…');
   setPlaceholder(false);
   v.defaultMuted=tvMuted;v.muted=tvMuted;v.playsInline=true;
   v.setAttribute('webkit-playsinline','');
@@ -131,7 +144,7 @@ function playUrl(url,recovering=false){
       hls.on(Hls.Events.ERROR,(_,d)=>{
         if(!d.fatal)return;
         if(d.type===Hls.ErrorTypes.MEDIA_ERROR&&digitalRetries<3){
-          digitalRetries++;hls.recoverMediaError();
+          digitalRetries++;setStreamState('reconnecting','Recuperando señal…');hls.recoverMediaError();
         }else retryDigital();
       });
       return;
@@ -148,13 +161,14 @@ function resumeDigital(){
   clearTimeout(digitalRetryTimer);digitalRetryTimer=null;digitalRetries=0;
   digitalNeedsGesture=false;
   // Keep the loaded stream and invoke play within the user's tap.
-  if(!v.error&&v.currentSrc){attemptDigitalPlay(v);return}
+  setStreamState('loading','Cargando señal…');
+  if(!v.error&&(v.currentSrc||v.getAttribute('src')||hls)){attemptDigitalPlay(v);return}
   playUrl(currentChannel().senal);
 }
 function youtubeEmbedUrl(tv){const id=String(tv?.youtubeId||"").trim();if(!id)return"";const start=Math.max(0,Math.floor(Number(tv?.segundoInicio)||0));const u=new URL(`https://www.youtube.com/embed/${encodeURIComponent(id)}`);u.searchParams.set("autoplay","1");u.searchParams.set("mute",tvMuted?"1":"0");u.searchParams.set("playsinline","1");u.searchParams.set("controls","1");u.searchParams.set("rel","0");u.searchParams.set("enablejsapi","1");u.searchParams.set("start",String(start));u.searchParams.set("origin",location.origin);return u.toString()}
 function sendYoutubeCommand(func){const f=$("#tvCommunityFrame");if(f?.contentWindow)f.contentWindow.postMessage(JSON.stringify({event:"command",func,args:[]}),"https://www.youtube.com")}
-function renderGymTransmission(force=false){const tv=context?.tv,id=String(tv?.youtubeId||"").trim(),center=$("#tvScreenCenter");if(!id){communityVideoKey="";destroyHls();setPlaceholder(true);if(center)center.innerHTML='<span class="tv-play">▶</span>';return}const key=`${tv?.modo||""}:${tv?.itemId||""}:${tv?.occurrence??""}:${id}`;if(!force&&communityVideoKey===key)return;communityVideoKey=key;$("#tvResume").hidden=true;destroyHls();const v=$("#tvVideo"),p=$("#tvPlaceholder");if(v)v.hidden=true;if(p)p.hidden=false;if(center){center.hidden=false;center.innerHTML=`<iframe id="tvCommunityFrame" class="tv-youtube-frame" src="${esc(youtubeEmbedUrl(tv))}" title="${esc(tv.titulo||GYM_CHANNEL_NAME)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>`;
-const frame=$("#tvCommunityFrame");frame?.addEventListener('load',()=>{for(const event of ['onStateChange','onAutoplayBlocked'])frame.contentWindow?.postMessage(JSON.stringify({event:'command',func:'addEventListener',args:[event]}),'https://www.youtube.com')});}}
+function renderGymTransmission(force=false){const tv=context?.tv,id=String(tv?.youtubeId||"").trim(),center=$("#tvScreenCenter");if(!id){setStreamState('idle',selected==='gym'&&!loadContext?'Inicia sesión para este canal':'Sin programación');communityVideoKey="";destroyHls();setPlaceholder(true);if(center)center.innerHTML='<span class="tv-play">▶</span>';return}const key=`${tv?.modo||""}:${tv?.itemId||""}:${tv?.occurrence??""}:${id}`;if(!force&&communityVideoKey===key)return;communityVideoKey=key;$("#tvResume").hidden=true;destroyHls();setStreamState('loading','Cargando señal…');const v=$("#tvVideo"),p=$("#tvPlaceholder");if(v)v.hidden=true;if(p)p.hidden=false;if(center){center.hidden=false;center.innerHTML=`<iframe id="tvCommunityFrame" class="tv-youtube-frame" src="${esc(youtubeEmbedUrl(tv))}" title="${esc(tv.titulo||GYM_CHANNEL_NAME)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>`;
+const frame=$("#tvCommunityFrame");frame?.addEventListener('load',()=>{frame.contentWindow?.postMessage(JSON.stringify({event:'listening',id:'gym-monitor'}),'https://www.youtube.com');for(const event of ['onStateChange','onAutoplayBlocked','onError'])frame.contentWindow?.postMessage(JSON.stringify({event:'command',func:'addEventListener',args:[event]}),'https://www.youtube.com')});}}
 function playGym(){renderGymTransmission(true)}
 function currentChannel(){return channels.find(c=>c.codigo===selected)}
 function renderChannels(){
@@ -165,7 +179,7 @@ function renderChannels(){
   $("#tvChannelNumber").textContent=`CH ${String(c.numero).padStart(2,'0')}`;
   $("#tvNowLabel").textContent=c.nombre;
 }
-function showPlayFallback(){const b=$("#tvResume");if(b){b.textContent="▶ Reproducir";b.hidden=false}}
+function showPlayFallback(){setStreamState('action','Pulsa Reproducir');const b=$("#tvResume");if(b){b.textContent="▶ Reproducir";b.hidden=false}}
 function setTitle(title=''){const el=$("#tvContentTitle");if(el){el.textContent=title;el.title=title}}
 function setChannel(ch){
   if(!channels.some(c=>c.codigo===ch))return;
@@ -175,8 +189,8 @@ function setChannel(ch){
   communityVideoKey='';
   // Remove the old YouTube iframe before switching to an HLS signal.
   const center=$("#tvScreenCenter");if(center)center.innerHTML='<span class="tv-play">▶</span>';
-  renderChannels();setTitle();$("#tvResume").hidden=true;
-  if(ch==='gym'){playGym();setTitle(context?.tv?.titulo||'');startGymPolling()}
+  renderChannels();setTitle();$("#tvResume").hidden=true;setStreamState('loading','Consultando señal…');
+  if(ch==='gym'){playGym();if(loadContext)setStreamState('loading','Consultando señal…');setTitle(context?.tv?.titulo||'');startGymPolling()}
   else {
     const c=currentChannel();
     if(c.tipo==='VPS')playUrl(c.senal);else {destroyHls();setPlaceholder(true)}
@@ -189,7 +203,7 @@ async function readPublic(path){
   const response=await fetch(`${API_BASE}/${path}`,{cache:'no-store',signal:AbortSignal.timeout(8000)});
   if(!response.ok)throw new Error(`TV ${response.status}`);
   const data=await response.json();
-  if(data.ok!==true)throw new Error(data.mensaje||data.codigo||'Sin programación');
+  if(data.ok!==true){const error=new Error(data.mensaje||data.codigo||'Sin programación');error.code=data.codigo;throw error;}
   const server=Date.parse(response.headers.get('Date'));
   if(Number.isFinite(server))clockOffset=server-Date.now();
   return data;
@@ -218,7 +232,7 @@ async function refreshSys(){
     sysTransmission=data;
     renderSysTransmission();
   }catch(error){
-    if(version===selectionVersion){sysTransmission=null;setTitle('');if(currentChannel()?.tipo==='VIRTUAL'){destroyHls();setPlaceholder(true)}}
+    if(version===selectionVersion){sysTransmission=null;setTitle('');if(currentChannel()?.tipo==='VIRTUAL'){destroyHls();setPlaceholder(true);setStreamState(error.code==='SIN_TRANSMISION_ACTIVA'?'idle':'error',error.code==='SIN_TRANSMISION_ACTIVA'?'Sin programación':'No se pudo cargar la señal');}}
   }finally{if(version===selectionVersion)sysLoading=false}
 }
 function renderSysTransmission(){
@@ -226,7 +240,7 @@ function renderSysTransmission(){
   const tv=resolveSysTransmission(sysTransmission,Date.now()+clockOffset);
   if(currentChannel()?.tipo==='VPS'){setTitle(sysTransmission.transmision?.videoAlAire||'');return}
   setTitle(tv?.titulo||'');
-  if(!tv){destroyHls();setPlaceholder(true);return}
+  if(!tv){destroyHls();setPlaceholder(true);setStreamState('idle','Sin programación');return}
   const previous=context;
   context={tv};renderGymTransmission(false);context=previous;
 }
@@ -251,7 +265,7 @@ function toggleTvFullscreen(){
   if(currentChannel()?.tipo==="VPS"&&v&&!v.hidden&&typeof v.webkitEnterFullscreen==="function"){try{v.webkitEnterFullscreen();closeTvOptions();return}catch{}}
   closeTvOptions();setTimeout(enterTvPseudoFullscreen,200);
 }
-function initTv(){const m=$("#tvMonitor"),x=$("#btnTvExpand"),c=$(".tv-controls");if(!m||!c)return;m.dataset.channel="gym";c.addEventListener("click",e=>{const b=e.target.closest("[data-channel]");if(b)setChannel(b.dataset.channel)});x?.addEventListener("click",()=>toggleTvFullscreen());$("#btnCloseTvFs")?.addEventListener("click",exitTvPseudoFullscreen);$("#btnTvMute")?.addEventListener("click",()=>{tvMuted=!tvMuted;const v=$("#tvVideo"),i=$("#tvMuteIcon");if(v)v.muted=tvMuted;if(i)i.innerHTML=tvMuted?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';const tt=$("#tvMuteText");if(tt)tt.textContent=tvMuted?"Activar sonido":"Silenciar";$("#btnTvMute")?.setAttribute("aria-label",tvMuted?"Activar sonido":"Silenciar");if(currentChannel()?.tipo!=="VPS")sendYoutubeCommand(tvMuted?"mute":"unMute");else if(!tvMuted)v?.play().catch(()=>{})});$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')resumeDigital();else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
+function initTv(){const m=$("#tvMonitor"),x=$("#btnTvExpand"),c=$(".tv-controls");if(!m||!c)return;m.dataset.channel="gym";c.addEventListener("click",e=>{const b=e.target.closest("[data-channel]");if(b)setChannel(b.dataset.channel)});x?.addEventListener("click",()=>toggleTvFullscreen());$("#btnCloseTvFs")?.addEventListener("click",exitTvPseudoFullscreen);$("#btnTvMute")?.addEventListener("click",()=>{tvMuted=!tvMuted;const v=$("#tvVideo"),i=$("#tvMuteIcon");if(v)v.muted=tvMuted;if(i)i.innerHTML=tvMuted?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg>';const tt=$("#tvMuteText");if(tt)tt.textContent=tvMuted?"Activar sonido":"Silenciar";$("#btnTvMute")?.setAttribute("aria-label",tvMuted?"Activar sonido":"Silenciar");if(currentChannel()?.tipo!=="VPS")sendYoutubeCommand(tvMuted?"mute":"unMute");else if(!tvMuted)v?.play().catch(()=>{})});$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')resumeDigital();else{setStreamState('loading','Cargando señal…');sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
 setChannel("gym")}
 
 // ---------- nexus/js/modes.js · initTvOptions ----------
@@ -309,7 +323,11 @@ function bindDocumentOnce() {
     if(event.origin!=='https://www.youtube.com'||event.source!==frame?.contentWindow)return;
     let data;try{data=typeof event.data==='string'?JSON.parse(event.data):event.data}catch{return}
     if(data?.event==='onAutoplayBlocked')showPlayFallback();
-    if(data?.event==='onStateChange'&&data.info===1)$("#tvResume").hidden=true;
+    const playerState=data?.event==='onStateChange'?data.info:data?.event==='infoDelivery'?data.info?.playerState:null;
+    if(playerState===1){$("#tvResume").hidden=true;setStreamState('playing')}
+    if(playerState===3)setStreamState('loading','Cargando señal…');
+    if(playerState===2)showPlayFallback();
+    if(data?.event==='onError'){setStreamState('error','Video no disponible');$("#tvResume").hidden=false}
     if(data?.event==='onStateChange'&&data.info===0){communityVideoKey='';if(selected==='gym')refreshGym();else refreshSys()}
   });
   setInterval(()=>{if(document.visibilityState==='visible'&&selected!=='gym')renderSysTransmission()},1000);
@@ -332,7 +350,7 @@ async function refreshGym() {
   if (!loadContext || gymLoading) return;
   gymLoading=true;
   try { const next = await loadContext(); if ($("#tvMonitor")?.dataset.channel === "gym") setTvContext(next); }
-  catch (error) { console.warn("[GYM TV] Canal GYM:", error); }
+  catch (error) { console.warn("[GYM TV] Canal GYM:", error);if(selected==='gym'&&!communityVideoKey)setStreamState('error','No se pudo cargar la señal'); }
   finally { gymLoading=false; }
 }
 function startGymPolling() {
