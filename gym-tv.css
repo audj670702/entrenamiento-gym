@@ -124,9 +124,9 @@ body.tv-fs .hero-zone .message-button { visibility: hidden; }
  .tv-load-indicator[data-state="reconnecting"] .tv-load-line::after { animation:none;transform:none;width:100%;opacity:.65; }
 }
 
-/* v0.1.61 · messages stay clear of the GYM logo on portrait phones. */
+/* v0.1.62 · messages stay clear of the GYM logo on portrait phones. */
 @media (max-width:639px) and (orientation:portrait) {
   .hero-zone .top-band-left { box-sizing:border-box; padding-top:44px; }
-  .hero-zone .message-button { top:0; left:0; transform:none; }
-  .hero-zone .message-button[data-pulse="true"] { animation:message-pulse 1.25s ease-in-out infinite; }
+  .hero-zone.top-band .top-band-left .message-button { top:0; left:0; transform:none; }
+  .hero-zone.top-band .top-band-left .message-button[data-pulse="true"] { animation:message-pulse 1.25s ease-in-out infinite; }
 }
