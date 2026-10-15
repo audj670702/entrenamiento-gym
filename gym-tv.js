@@ -1,5 +1,5 @@
-import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.57";
-// GYM · Monitor TV · v0.1.57
+import { resolveSysTransmission } from "./gym-tv-model.js?v=0.1.58";
+// GYM · Monitor TV · v0.1.58
 // Conserva el comportamiento de pantalla completa y navegación de CPC/NEXUS:
 //   nexus/js/tv.js        → reproducción, canales, sonido y pantalla completa.
 //   nexus/js/modes.js     → initTvOptions (menú de opciones del monitor).
@@ -52,25 +52,105 @@ export function tvMarkup() {
 // ---------- nexus/js/tv.js ----------
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 let digitalRetryTimer = null, digitalWatchTimer = null;
-function stopDigitalRecovery(){clearTimeout(digitalRetryTimer);clearInterval(digitalWatchTimer);digitalRetryTimer=null;digitalWatchTimer=null}
+let digitalNeedsGesture = false, digitalRetries = 0, digitalGeneration = 0;
+function stopDigitalRecovery(){
+  clearTimeout(digitalRetryTimer);clearInterval(digitalWatchTimer);
+  digitalRetryTimer=null;digitalWatchTimer=null;
+}
+function digitalFallback(needsGesture=false){
+  digitalNeedsGesture=needsGesture;
+  const b=$("#tvResume");if(b){b.textContent=needsGesture?'▶ Reproducir':'↻ Reintentar señal';b.hidden=false}
+  const v=$("#tvVideo");if(v&&needsGesture)v.controls=true;
+}
+function attemptDigitalPlay(v){
+  const generation=digitalGeneration;
+  const result=v.play();
+  result?.catch(error=>{
+    if(generation!==digitalGeneration)return;
+    if(error?.name==='AbortError')return;
+    if(error?.name==='NotAllowedError'){digitalFallback(true);return}
+    retryDigital();
+  });
+}
 function retryDigital(){
-  if(currentChannel()?.tipo!=='VPS'||digitalRetryTimer)return;
-  showPlayFallback();
-  digitalRetryTimer=setTimeout(()=>{digitalRetryTimer=null;if(document.visibilityState==='visible'&&currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal)},3000);
+  if(currentChannel()?.tipo!=='VPS'||digitalRetryTimer||digitalNeedsGesture)return;
+  digitalFallback();
+  if(digitalRetries>=3)return;
+  const generation=digitalGeneration, delay=5000*(2**digitalRetries++);
+  digitalRetryTimer=setTimeout(()=>{
+    digitalRetryTimer=null;
+    if(generation===digitalGeneration&&document.visibilityState==='visible'&&currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal,true);
+  },delay);
 }
 function watchDigital(v){
-  let lastTime=v.currentTime, lastProgress=Date.now();
+  let lastTime=v.currentTime, lastProgress=Date.now(), hasPlayed=false;
   v.onerror=retryDigital;
-  v.onplaying=()=>{lastProgress=Date.now();$("#tvResume").hidden=true};
+  v.onplaying=()=>{
+    hasPlayed=true;lastProgress=Date.now();digitalNeedsGesture=false;
+    clearTimeout(digitalRetryTimer);digitalRetryTimer=null;
+    $("#tvResume").hidden=true;v.controls=false;
+  };
   digitalWatchTimer=setInterval(()=>{
-    if(document.visibilityState!=='visible'){lastProgress=Date.now();return}
-    if(v.currentTime!==lastTime){lastTime=v.currentTime;lastProgress=Date.now()}
-    else if(Date.now()-lastProgress>20000)retryDigital();
+    if(document.visibilityState!=='visible'||digitalNeedsGesture){lastProgress=Date.now();return}
+    if(v.currentTime!==lastTime){
+      lastTime=v.currentTime;lastProgress=Date.now();
+      // A sustained connection earns a fresh recovery budget.
+      if(v.currentTime>10)digitalRetries=0;
+    }else if(Date.now()-lastProgress>(hasPlayed?45000:60000))retryDigital();
   },5000);
 }
-function destroyHls(){stopDigitalRecovery();const oldVideo=$("#tvVideo");if(oldVideo){oldVideo.onerror=null;oldVideo.onplaying=null}if(hls){hls.destroy();hls=null}const v=$("#tvVideo");if(!v)return;v.pause();v.removeAttribute("src");v.load()}
+function destroyHls(){
+  digitalGeneration++;stopDigitalRecovery();
+  const v=$("#tvVideo");
+  if(v){v.onerror=null;v.onplaying=null;v.controls=false}
+  if(hls){hls.destroy();hls=null}
+  if(v){v.pause();v.removeAttribute("src");v.load()}
+}
 function setPlaceholder(active){const v=$("#tvVideo"),p=$("#tvPlaceholder"),c=$("#tvScreenCenter");if(p)p.hidden=!active;if(c)c.hidden=!active;if(v)v.hidden=active}
-function playUrl(url){communityVideoKey="";const c=$("#tvScreenCenter");if(c)c.innerHTML='<span class="tv-play">▶</span>';destroyHls();const v=$("#tvVideo");if(!v||!url){setPlaceholder(true);return}setPlaceholder(false);v.muted=tvMuted;if(currentChannel()?.tipo==='VPS')watchDigital(v);if(/\.m3u8($|\?)/i.test(url)){if(v.canPlayType("application/vnd.apple.mpegurl")){v.src=url;v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()});return}if(window.Hls&&Hls.isSupported()){hls=new Hls({enableWorker:true,lowLatencyMode:false,backBufferLength:30});hls.loadSource(url);hls.attachMedia(v);hls.on(Hls.Events.MANIFEST_PARSED,()=>v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()}));hls.on(Hls.Events.ERROR,(_,d)=>{if(d.fatal){setPlaceholder(true);retryDigital()}});return}}v.src=url;v.play().catch(()=>{if(currentChannel()?.tipo==='VPS')showPlayFallback()})}
+function playUrl(url,recovering=false){
+  communityVideoKey="";
+  const c=$("#tvScreenCenter");if(c)c.innerHTML='<span class="tv-play">▶</span>';
+  destroyHls();
+  if(!recovering)digitalRetries=0;
+  digitalNeedsGesture=false;
+  const v=$("#tvVideo");
+  if(!v||!url){setPlaceholder(true);return}
+  setPlaceholder(false);
+  v.defaultMuted=tvMuted;v.muted=tvMuted;v.playsInline=true;
+  v.setAttribute('webkit-playsinline','');
+  watchDigital(v);
+  if(/\.m3u8($|\?)/i.test(url)){
+    // Safari/iOS use native HLS. Android/Chromium use the MSE player when available.
+    const apple=/iPad|iPhone|iPod/.test(navigator.userAgent)||
+      (/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1)||
+      (/Safari/.test(navigator.userAgent)&&!/Chrome|Chromium|Android/.test(navigator.userAgent));
+    if(!apple&&window.Hls&&Hls.isSupported()){
+      hls=new Hls({enableWorker:true,lowLatencyMode:false,backBufferLength:30,maxBufferLength:30});
+      hls.attachMedia(v);hls.loadSource(url);
+      hls.on(Hls.Events.MANIFEST_PARSED,()=>attemptDigitalPlay(v));
+      hls.on(Hls.Events.ERROR,(_,d)=>{
+        if(!d.fatal)return;
+        if(d.type===Hls.ErrorTypes.MEDIA_ERROR&&digitalRetries<3){
+          digitalRetries++;hls.recoverMediaError();
+        }else retryDigital();
+      });
+      return;
+    }
+    if(v.canPlayType("application/vnd.apple.mpegurl")){
+      v.src=url;attemptDigitalPlay(v);return;
+    }
+  }
+  v.src=url;attemptDigitalPlay(v);
+}
+function resumeDigital(){
+  const v=$("#tvVideo");
+  if(!v||currentChannel()?.tipo!=='VPS')return;
+  clearTimeout(digitalRetryTimer);digitalRetryTimer=null;digitalRetries=0;
+  digitalNeedsGesture=false;
+  // Keep the loaded stream and invoke play within the user's tap.
+  if(!v.error&&v.currentSrc){attemptDigitalPlay(v);return}
+  playUrl(currentChannel().senal);
+}
 function youtubeEmbedUrl(tv){const id=String(tv?.youtubeId||"").trim();if(!id)return"";const start=Math.max(0,Math.floor(Number(tv?.segundoInicio)||0));const u=new URL(`https://www.youtube.com/embed/${encodeURIComponent(id)}`);u.searchParams.set("autoplay","1");u.searchParams.set("mute",tvMuted?"1":"0");u.searchParams.set("playsinline","1");u.searchParams.set("controls","1");u.searchParams.set("rel","0");u.searchParams.set("enablejsapi","1");u.searchParams.set("start",String(start));u.searchParams.set("origin",location.origin);return u.toString()}
 function sendYoutubeCommand(func){const f=$("#tvCommunityFrame");if(f?.contentWindow)f.contentWindow.postMessage(JSON.stringify({event:"command",func,args:[]}),"https://www.youtube.com")}
 function renderGymTransmission(force=false){const tv=context?.tv,id=String(tv?.youtubeId||"").trim(),center=$("#tvScreenCenter");if(!id){communityVideoKey="";destroyHls();setPlaceholder(true);if(center)center.innerHTML='<span class="tv-play">▶</span>';return}const key=`${tv?.modo||""}:${tv?.itemId||""}:${tv?.occurrence??""}:${id}`;if(!force&&communityVideoKey===key)return;communityVideoKey=key;$("#tvResume").hidden=true;destroyHls();const v=$("#tvVideo"),p=$("#tvPlaceholder");if(v)v.hidden=true;if(p)p.hidden=false;if(center){center.hidden=false;center.innerHTML=`<iframe id="tvCommunityFrame" class="tv-youtube-frame" src="${esc(youtubeEmbedUrl(tv))}" title="${esc(tv.titulo||GYM_CHANNEL_NAME)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>`;
@@ -86,7 +166,7 @@ function renderChannels(){
   $("#tvNowLabel").textContent=c.nombre;
   $("#tvDial")?.setAttribute('aria-label',`CH ${String(c.numero).padStart(2,'0')}, ${c.nombre}. Desliza arriba o abajo; flechas para cambiar`);
 }
-function showPlayFallback(){const b=$("#tvResume");if(b)b.hidden=false}
+function showPlayFallback(){const b=$("#tvResume");if(b){b.textContent="▶ Reproducir";b.hidden=false}}
 function setTitle(title=''){const el=$("#tvContentTitle");if(el){el.textContent=title;el.title=title}}
 function setChannel(ch){
   if(!channels.some(c=>c.codigo===ch))return;
@@ -185,7 +265,7 @@ dial?.addEventListener('click',()=>{if(Date.now()>suppressClickUntil)stepChannel
 $("#tvDial")?.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowDown','ArrowRight','ArrowUp'].includes(e.key)){e.preventDefault();stepChannel(['ArrowLeft','ArrowDown'].includes(e.key)?-1:1)}});
 let wheelAt=0;
 $("#tvDial")?.addEventListener('wheel',e=>{e.preventDefault();if(Date.now()-wheelAt>250&&e.deltaY){wheelAt=Date.now();stepChannel(e.deltaY>0?1:-1)}},{passive:false});
-$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal);else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
+$("#tvResume")?.addEventListener('click',()=>{if(currentChannel()?.tipo==='VPS')resumeDigital();else{sendYoutubeCommand('playVideo');$("#tvResume").hidden=true}});
 setChannel("gym")}
 
 // ---------- nexus/js/modes.js · initTvOptions ----------
@@ -256,7 +336,7 @@ function bindDocumentOnce() {
     if (top) closeModal(top);
   });
   new MutationObserver(scan).observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden"] });
-  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") { refreshCatalog(); communityVideoKey=''; if(selected === "gym") refreshGym(); else { if(currentChannel()?.tipo==='VPS')playUrl(currentChannel().senal); refreshSys(); } } });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") { refreshCatalog(); communityVideoKey=''; if(selected === "gym") refreshGym(); else { if(currentChannel()?.tipo==='VPS'){const v=$("#tvVideo");if(v&&!digitalNeedsGesture&&(v.paused||v.error))resumeDigital()} refreshSys(); } } });
 }
 
 // ---------- Canal GYM: contexto desde el Panel ADM (Wix) ----------
