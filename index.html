@@ -9,9 +9,49 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
   <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
-  <link rel="stylesheet" href="./gym-tv.css?v=0.1.62">
+  <link rel="stylesheet" href="./gym-tv.css?v=0.1.63">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+  <script>
+    (() => {
+      const key = "GYM_THEME";
+      const saved = (() => { try { return localStorage.getItem(key); } catch (_) { return null; } })();
+      const mode = ["light","dark","auto"].includes(saved) ? saved : "auto";
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      const apply = () => {
+        const dark = mode === "dark" || (mode === "auto" && media.matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#101923" : "#0f2f55");
+      };
+      window.GYM_THEME = { key, media, apply };
+      apply();
+    })();
+  </script>
   <style>
+    /* GYM · apariencia v0.1.63 */
+    :root { color-scheme: light; --soft: #eef3f8; }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101923; --panel: #192635; --text: #eef4fc;
+      --muted: #b1c1d4; --line: #35465a; --blue: #78b9f1;
+      --blue-dark: #a7d4ff; --soft: #25364a;
+      --shadow: 0 12px 30px rgba(0,0,0,.3);
+    }
+    :root[data-theme="dark"] .topbar { background: rgba(20,31,44,.96); }
+    :root[data-theme="dark"] .account-menu,
+    :root[data-theme="dark"] .account-menu-link,
+    :root[data-theme="dark"] .account-menu-logout,
+    :root[data-theme="dark"] .message-dialog,
+    :root[data-theme="dark"] .conversation-item { background: var(--panel); color: var(--text); }
+    :root[data-theme="dark"] .account-menu-link:hover,
+    :root[data-theme="dark"] .account-menu-logout:hover { background: var(--soft); color: var(--text); }
+    :root[data-theme="dark"] .message-thread-reference,
+    :root[data-theme="dark"] .message-date-divider span { background: var(--soft); }
+    :root[data-theme="dark"] .session-button[data-session-active="true"] { background: var(--panel); color: var(--text); }
+    :root[data-theme="dark"] input,
+    :root[data-theme="dark"] textarea,
+    :root[data-theme="dark"] select { background: var(--panel); color: var(--text); border-color: var(--line); }
+    .theme-select { max-width: 116px; min-height: 31px; padding: 5px 7px; font: inherit; font-size: .73rem; border: 1px solid var(--line); border-radius: 7px; background: var(--panel); color: var(--text); }
+
     :root {
       --bg: #f5f8fc;
       --panel: #ffffff;
@@ -799,10 +839,11 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.62">v0.1.62</span>
+      <span class="version" aria-label="Versión 0.1.63">v0.1.63</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
+      <select id="gymThemeSelect" class="theme-select" aria-label="Apariencia" title="Apariencia"><option value="auto">📱 Auto</option><option value="light">☀️ Claro</option><option value="dark">🌙 Oscuro</option></select>
       <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
       <div id="accountMenuContainer" class="account-menu-container">
         <button
@@ -1987,7 +2028,27 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
       deferredInstallPrompt = event;
-      renderInstallOption();
+  
+    // Apariencia: preferencia local, automática por defecto.
+    (() => {
+      const select = document.getElementById("gymThemeSelect");
+      const theme = window.GYM_THEME;
+      if (!select || !theme) return;
+      try { select.value = localStorage.getItem(theme.key) || "auto"; } catch (_) { select.value = "auto"; }
+      if (!["auto","light","dark"].includes(select.value)) select.value = "auto";
+      const apply = () => {
+        const dark = select.value === "dark" || (select.value === "auto" && theme.media.matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", dark ? "#101923" : "#0f2f55");
+      };
+      select.addEventListener("change", () => {
+        try { localStorage.setItem(theme.key, select.value); } catch (_) {}
+        apply();
+      });
+      theme.media.addEventListener?.("change", apply);
+      apply();
+    })();
+\n    renderInstallOption();
     });
 
     window.addEventListener("appinstalled", () => {
@@ -2226,7 +2287,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
   </script>
   <!-- Monitor TV (réplica CPC / NEXUS). Canal GYM llega en gymPwaContext → tv. -->
   <script type="module">
-    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.62";
+    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.63";
 
     const mount = document.getElementById("gymTvMount");
     if (mount) {
