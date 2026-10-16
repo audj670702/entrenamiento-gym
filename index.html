@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
   <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
-  <link rel="stylesheet" href="./gym-tv.css?v=0.1.64">
+  <link rel="stylesheet" href="./gym-tv.css?v=0.1.65">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
   <script>
     (() => {
@@ -787,7 +787,7 @@
     }
 
 
-    /* GYM · apariencia v0.1.64 */
+    /* GYM · apariencia v0.1.65 */
     :root { color-scheme: light; --soft: #eef3f8; }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -834,11 +834,11 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.64">v0.1.64</span>
+      <span class="version" aria-label="Versión 0.1.65">v0.1.65</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
-      <button id="gymThemeToggle" class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar apariencia">🌙</button>
+      <button id="gymThemeToggle" class="theme-toggle" type="button" aria-label="Cambiar a modo oscuro" title="Cambiar apariencia"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"/></svg></button>
       <button id="installButton" class="topbar-action install-button" type="button">Instalar app</button>
       <div id="accountMenuContainer" class="account-menu-container">
         <button
@@ -2025,7 +2025,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       deferredInstallPrompt = event;
   
 
-\n    renderInstallOption();
+    renderInstallOption();
     });
 
     window.addEventListener("appinstalled", () => {
@@ -2250,7 +2250,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       if (!button) return;
       const render = () => {
         const dark = document.documentElement.dataset.theme === "dark";
-        button.textContent = dark ? "☀️" : "🌙";
+        button.innerHTML = dark ? "<svg viewBox=\"0 0 24 24\" width=\"19\" height=\"19\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42\"/></svg>" : "<svg viewBox=\"0 0 24 24\" width=\"19\" height=\"19\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z\"/></svg>";
         button.setAttribute("aria-label", dark ? "Cambiar a modo claro" : "Cambiar a modo oscuro");
         button.title = button.getAttribute("aria-label");
       };
@@ -2283,7 +2283,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
   </script>
   <!-- Monitor TV (réplica CPC / NEXUS). Canal GYM llega en gymPwaContext → tv. -->
   <script type="module">
-    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.64";
+    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.65";
 
     const mount = document.getElementById("gymTvMount");
     if (mount) {
