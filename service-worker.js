@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.63";
+const CACHE_NAME = "entrenamiento-gym-v0.1.64";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -59,8 +59,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.63";
-    version.setAttribute("aria-label", "Versión 0.1.63");
+    version.textContent = "v0.1.64";
+    version.setAttribute("aria-label", "Versión 0.1.64");
   };
 
   if (document.readyState === "loading") {
