@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.65";
+const CACHE_NAME = "entrenamiento-gym-v0.1.66";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,7 +8,6 @@ const APP_SHELL = [
   "./favicon.png",
   "./assets/entrenamiento-gym-logo-sentadilla.png",
   "./assets/scad-powered-logo.png",
-  "./assets/clic.mp3",
   "./assets/error.mp3",
   "./assets/exito.mp3",
   "./assets/mensaje-enviado.mp3",
@@ -59,8 +58,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.65";
-    version.setAttribute("aria-label", "Versión 0.1.65");
+    version.textContent = "v0.1.66";
+    version.setAttribute("aria-label", "Versión 0.1.66");
   };
 
   if (document.readyState === "loading") {

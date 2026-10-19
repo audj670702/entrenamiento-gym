@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
   <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
-  <link rel="stylesheet" href="./gym-tv.css?v=0.1.65">
+  <link rel="stylesheet" href="./gym-tv.css?v=0.1.66">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
   <script>
     (() => {
@@ -787,7 +787,7 @@
     }
 
 
-    /* GYM · apariencia v0.1.65 */
+    /* GYM · apariencia v0.1.66 */
     :root { color-scheme: light; --soft: #eef3f8; }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -834,7 +834,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.65">v0.1.65</span>
+      <span class="version" aria-label="Versión 0.1.66">v0.1.66</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -1067,8 +1067,8 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
+    console.info("Entrenamiento GYM v0.1.66 | botones sin audio de clic");
     const APP_SOUNDS = {
-      click: "./assets/clic.mp3",
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
       messageSent: "./assets/mensaje-enviado.mp3",
@@ -1158,25 +1158,11 @@
       return played;
     }
 
-    function isClickSoundAction(target) {
-      if (!(target instanceof Element)) return false;
-      const action = target.closest("button:not(:disabled), a[href]");
-      if (!action) return false;
-      if (action.closest("#messageModal")) return false;
-      return ![
-        "privacyClose",
-        "profileCancelButton",
-        "profileSaveButton",
-        "iosTutorialClose"
-      ].includes(action.id);
-    }
-
-    document.addEventListener("click", (event) => {
+    // El gesto habilita avisos pendientes; los botones no reproducen clic.
+    document.addEventListener("click", () => {
       if (pendingMessageAnnouncement && messageUnread > 0) {
         announcePendingMessages();
-        return;
       }
-      if (isClickSoundAction(event.target)) playAppSound("click");
     }, true);
 
     const splashStartedAt = performance.now();
@@ -2283,7 +2269,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
   </script>
   <!-- Monitor TV (réplica CPC / NEXUS). Canal GYM llega en gymPwaContext → tv. -->
   <script type="module">
-    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.65";
+    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.66";
 
     const mount = document.getElementById("gymTvMount");
     if (mount) {
