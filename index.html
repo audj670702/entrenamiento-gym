@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
   <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
-  <link rel="stylesheet" href="./gym-tv.css?v=0.1.67">
+  <link rel="stylesheet" href="./gym-tv.css?v=0.1.68">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
   <script>
     (() => {
@@ -497,7 +497,7 @@
     .training-card--trainers { --card-accent: #287a62; }
     .training-card--videocall { --card-accent: #0e7490; }
 
-    /* SYS Videollamadas · v0.1.67 */
+    /* SYS Videollamadas · v0.1.68 */
     .video-call-card { margin-bottom: 11px; cursor: default; }
     .video-call-card + .training-card { margin-top: 0; }
     .video-call-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
@@ -505,6 +505,15 @@
     .video-call-wa[hidden] { display: none; }
     .video-call-decline { padding: 4px 2px; border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 0.8rem; font-weight: 700; text-decoration: underline; cursor: pointer; }
     .video-call-decline:disabled { opacity: 0.5; cursor: default; }
+    .video-call-ok { min-height: 34px; padding: 7px 18px; border: 0; border-radius: 10px; background: var(--blue); color: #ffffff; font: inherit; font-size: 0.82rem; font-weight: 800; cursor: pointer; }
+    .video-call-ok:disabled { opacity: 0.5; cursor: default; }
+    .video-call-ok[hidden], .video-call-decline[hidden] { display: none; }
+    @keyframes videoCallPulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(14, 116, 144, 0)); }
+      50% { transform: scale(1.12); filter: drop-shadow(0 0 6px rgba(14, 116, 144, 0.55)); }
+    }
+    .video-call-card.is-pending .card-icon { animation: videoCallPulse 1.6s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) { .video-call-card.is-pending .card-icon { animation: none; } }
 
     .card-icon {
       color: var(--card-accent, var(--blue));
@@ -797,7 +806,7 @@
     }
 
 
-    /* GYM · apariencia v0.1.67 */
+    /* GYM · apariencia v0.1.68 */
     :root { color-scheme: light; --soft: #eef3f8; }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -844,7 +853,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.67">v0.1.67</span>
+      <span class="version" aria-label="Versión 0.1.68">v0.1.68</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -906,6 +915,7 @@
         <p id="videoCallText" class="card-description"></p>
         <div class="video-call-actions">
           <a id="videoCallWhatsApp" class="video-call-wa" href="#" target="_blank" rel="noopener" hidden>Abrir WhatsApp</a>
+          <button id="videoCallOk" class="video-call-ok" type="button">Ok</button>
           <button id="videoCallDecline" class="video-call-decline" type="button">No por ahora</button>
         </div>
       </div>
@@ -1089,7 +1099,7 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
-    console.info("Entrenamiento GYM v0.1.67 | videollamada con tu entrenador");
+    console.info("Entrenamiento GYM v0.1.68 | videollamada: Ok / No por ahora");
     const APP_SOUNDS = {
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
@@ -1343,7 +1353,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       }
     }
 
-    /* SYS Videollamadas · v0.1.67 · tarjeta "Videollamada con tu entrenador" */
+    /* SYS Videollamadas · v0.1.68 · tarjeta "Videollamada con tu entrenador" (Ok / No por ahora) */
     let videoCallData = null;
 
     function videoCallWhen(iso) {
@@ -1372,13 +1382,19 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
       const text = document.getElementById("videoCallText");
       const whatsapp = document.getElementById("videoCallWhatsApp");
+      const okButton = document.getElementById("videoCallOk");
+      const declineButton = document.getElementById("videoCallDecline");
+      const answered = call ? call.respuestaUsuario === "Ok" : data.invitacionRespuesta === "Ok";
+      card.classList.toggle("is-pending", !answered);
+      okButton.hidden = answered;
+      declineButton.hidden = answered;
       const pretty = (value) => String(value || "").toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
       const trainer = pretty(data.entrenador?.nombre) || "Tu entrenador";
 
       if (call) {
         const when = videoCallWhen(call.fechaHora);
         const what = call.tipo === "Inicial" ? "Entrevista de inicio" : (call.motivo || "Seguimiento");
-        text.textContent = `${when} · ${what} con ${trainer}`;
+        text.textContent = `${answered ? "✓ Confirmada · " : ""}${when} · ${what} con ${trainer}`;
 
         const phone = String(data.entrenador?.whatsapp || "").replace(/\D/g, "");
         const number = phone.length === 10 ? `52${phone}` : phone;
@@ -1391,7 +1407,9 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
           whatsapp.hidden = true;
         }
       } else {
-        text.textContent = `${trainer} te propondrá una breve videollamada de inicio (5 a 8 min) para conocer tus objetivos.`;
+        text.textContent = answered
+          ? `✓ Aceptaste. ${trainer} te avisará el día y la hora de la videollamada de inicio.`
+          : `${trainer} te propondrá una breve videollamada de inicio (5 a 8 min) para conocer tus objetivos.`;
         whatsapp.hidden = true;
       }
 
@@ -1418,31 +1436,38 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       renderVideoCallCard();
     }
 
-    async function declineVideoCall() {
-      const button = document.getElementById("videoCallDecline");
+    async function answerVideoCall(respuesta) {
       const memberId = resolveGymMember().memberId;
       if (!memberId || !videoCallData) return;
 
-      button.disabled = true;
+      const buttons = [document.getElementById("videoCallOk"), document.getElementById("videoCallDecline")];
+      buttons.forEach((button) => { button.disabled = true; });
       try {
         const response = await fetch(`${API_BASE}/sysVideollamadaResponder`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ app: "GYM", memberId, videollamadaId: videoCallData.videollamada?.id || "" })
+          body: JSON.stringify({ app: "GYM", memberId, videollamadaId: videoCallData.videollamada?.id || "", respuesta })
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok || data?.ok !== true) throw new Error(data?.error || "No fue posible registrar tu respuesta.");
-        videoCallData = null;
+
+        if (respuesta === "Ok") {
+          if (videoCallData.videollamada) videoCallData.videollamada.respuestaUsuario = "Ok";
+          else videoCallData.invitacionRespuesta = "Ok";
+        } else {
+          videoCallData = null;
+        }
         renderVideoCallCard();
       } catch (error) {
         console.error(error);
         document.getElementById("videoCallText").textContent = "No fue posible registrar tu respuesta. Intenta de nuevo.";
       } finally {
-        button.disabled = false;
+        buttons.forEach((button) => { button.disabled = false; });
       }
     }
 
-    document.getElementById("videoCallDecline")?.addEventListener("click", declineVideoCall);
+    document.getElementById("videoCallOk")?.addEventListener("click", () => answerVideoCall("Ok"));
+    document.getElementById("videoCallDecline")?.addEventListener("click", () => answerVideoCall("No por ahora"));
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") loadVideoCall();
     });
@@ -2396,7 +2421,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
   </script>
   <!-- Monitor TV (réplica CPC / NEXUS). Canal GYM llega en gymPwaContext → tv. -->
   <script type="module">
-    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.67";
+    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.68";
 
     const mount = document.getElementById("gymTvMount");
     if (mount) {
