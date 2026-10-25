@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
   <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
-  <link rel="stylesheet" href="./gym-tv.css?v=0.1.68">
+  <link rel="stylesheet" href="./gym-tv.css?v=0.1.69">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
   <script>
     (() => {
@@ -497,7 +497,7 @@
     .training-card--trainers { --card-accent: #287a62; }
     .training-card--videocall { --card-accent: #0e7490; }
 
-    /* SYS Videollamadas · v0.1.68 */
+    /* SYS Videollamadas · v0.1.69 */
     .video-call-card { margin-bottom: 11px; cursor: default; }
     .video-call-card + .training-card { margin-top: 0; }
     .video-call-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
@@ -806,7 +806,10 @@
     }
 
 
-    /* GYM · apariencia v0.1.68 */
+    /* MNS: contraste de burbujas en modo oscuro; no afecta modo claro. */
+    :root[data-theme="dark"] .message-bubble:not([data-own="true"]) { color: #eef4fc; background: #2a3b50; }
+    :root[data-theme="dark"] .message-bubble[data-own="true"] { color: #ffffff; background: #245b94; }
+    /* GYM · apariencia v0.1.69 */
     :root { color-scheme: light; --soft: #eef3f8; }
     :root[data-theme="dark"] {
       color-scheme: dark;
@@ -853,7 +856,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.68">v0.1.68</span>
+      <span class="version" aria-label="Versión 0.1.69">v0.1.69</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -1099,7 +1102,7 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
-    console.info("Entrenamiento GYM v0.1.68 | videollamada: Ok / No por ahora");
+    console.info("Entrenamiento GYM v0.1.69 | videollamada: Ok / No por ahora");
     const APP_SOUNDS = {
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
@@ -1353,7 +1356,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       }
     }
 
-    /* SYS Videollamadas · v0.1.68 · tarjeta "Videollamada con tu entrenador" (Ok / No por ahora) */
+    /* SYS Videollamadas · v0.1.69 · tarjeta "Videollamada con tu entrenador" (Ok / No por ahora) */
     let videoCallData = null;
 
     function videoCallWhen(iso) {
@@ -2421,7 +2424,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
   </script>
   <!-- Monitor TV (réplica CPC / NEXUS). Canal GYM llega en gymPwaContext → tv. -->
   <script type="module">
-    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.68";
+    import { tvMarkup, initGymTv } from "./gym-tv.js?v=0.1.69";
 
     const mount = document.getElementById("gymTvMount");
     if (mount) {
