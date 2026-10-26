@@ -172,6 +172,9 @@
       box-shadow: 0 18px 42px rgba(15, 47, 85, 0.18);
     }
 
+    .account-email,.identity-email { color: var(--muted); font-size: .72rem; font-weight: 400; overflow-wrap: anywhere; line-height: 1.35; }
+    .account-email { padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    .account-email[hidden],.identity-email[hidden] { display: none; }
     .account-menu[hidden] {
       display: none;
     }
@@ -856,7 +859,7 @@
         <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
         <span class="brand-name">Entrenamiento GYM</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.69">v0.1.69</span>
+      <span class="version" aria-label="Versión 0.1.70">v0.1.70</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -871,6 +874,7 @@
           aria-expanded="false"
         >Iniciar sesión</button>
         <nav id="accountMenu" class="account-menu" aria-label="Cuenta SCaD" hidden>
+          <div id="accountEmail" class="account-email" hidden></div>
           <a id="accountProfileLink" class="account-menu-link" href="#">Mi perfil SCaD</a>
           <a id="accountSubscriptionsLink" class="account-menu-link" href="#">Mis suscripciones</a>
           <a id="accountWalletLink" class="account-menu-link" href="#">Mis formas de pago</a>
@@ -907,6 +911,7 @@
           <p id="identityName" class="identity-name"></p>
           <button id="identityNameButton" class="identity-edit-name" type="button" aria-label="Editar nombre">✎</button>
         </div>
+        <p id="identityEmail" class="identity-email" hidden></p>
         <p id="identityProgram" class="identity-program"></p>
       </div>
     </section>
@@ -1102,7 +1107,7 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
-    console.info("Entrenamiento GYM v0.1.69 | videollamada: Ok / No por ahora");
+    console.info("Entrenamiento GYM v0.1.70 | videollamada: Ok / No por ahora");
     const APP_SOUNDS = {
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
@@ -1291,7 +1296,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       nombreApp: "",
       foto: "",
       programa: "",
-      slug: ""
+      slug: "",
+      email: ""
     };
 
     let messageUnread = 0;
@@ -1893,6 +1899,10 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       const initials = document.getElementById("identityInitials");
       const name = document.getElementById("identityName");
       const program = document.getElementById("identityProgram");
+      const email = document.getElementById("identityEmail");
+      if (email) { email.textContent = ""; email.hidden = true; }
+      const accountEmail = document.getElementById("accountEmail");
+      if (accountEmail) { accountEmail.textContent = ""; accountEmail.hidden = true; }
 
       if (card) card.hidden = true;
       if (photo) {
@@ -1922,6 +1932,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
       name.textContent = displayName;
       program.textContent = gymContext.programa || "Usuario de entrenamiento";
+      const email = document.getElementById("identityEmail");
+      if (email) { email.textContent = gymContext.email || ""; email.hidden = !gymContext.email; }
       initials.textContent = getInitials(displayName);
       card.hidden = false;
 
@@ -1977,6 +1989,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
       if (!sessionActive) closeAccountMenu();
       renderAccountMenuLinks();
+      const accountEmail = document.getElementById("accountEmail");
+      if (accountEmail) { const email = sessionActive ? gymContext.email : ""; accountEmail.textContent = email || ""; accountEmail.hidden = !email; }
     }
 
     function withWixReturnUrl(rawUrl) {
@@ -2040,7 +2054,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
         nombreApp: "",
         foto: "",
         programa: "",
-        slug: ""
+        slug: "",
+        email: ""
       };
       clearIdentityCard();
       renderMessageAccess();
@@ -2230,7 +2245,8 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
           nombreApp: String(data?.nombreApp || "").trim(),
           foto: data?.foto || "",
           programa: String(data?.programa || "").trim(),
-          slug: String(data?.slug || "").trim()
+          slug: String(data?.slug || "").trim(),
+          email: String(data?.email || data?.correo || data?.member?.loginEmail || "").trim()
         };
       } catch (error) {
         console.error("No fue posible cargar el contexto GYM:", error);
