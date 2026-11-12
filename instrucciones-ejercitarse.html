@@ -75,27 +75,76 @@
       outline-offset: -4px;
     }
 
-    .topic .details { padding: 12px 14px; }
-
-    .topic .thumb-button {
-      justify-self: start;
-      width: min(100%, 120px);
-      margin: 0 14px 14px;
-      border: 1px solid var(--line);
-      border-radius: 9px;
+    .instruction-dialog {
+      width: min(860px, calc(100vw - 24px));
+      max-height: calc(100dvh - 24px);
+      overflow: auto;
+      border-radius: 16px;
+      background: #fff;
     }
 
-    .topic .thumb-frame { height: 86px; min-height: 0; }
+    .instruction-heading {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .instruction-heading h2 { margin: 0; color: var(--navy); font-size: 1.15rem; }
+    .instruction-content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+      align-items: start;
+      gap: 18px;
+      padding: 16px;
+    }
+
+    #instructionText .lead,
+    #instructionText .essentials li,
+    #instructionText .warning { font-size: .95rem; line-height: 1.48; }
+
+    #instructionText .essentials { gap: 7px; }
+
+    .instruction-poster {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+      padding: 0 0 9px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f5f8fc;
+      color: var(--navy);
+      cursor: zoom-in;
+    }
+
+    .instruction-poster img { display: block; width: 100%; height: auto; }
+    #visualModal .modal-card { width: min(760px, calc(100vw - 24px)); }
+    #visualModal .visual-wrap { overflow: auto; }
+    #visualModal .full-visual { width: 100%; max-height: none; }
 
     @media (max-width: 760px) {
-      .topics { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-      .title-button { align-items: center; min-height: 84px; aspect-ratio: auto; }
-      .title-button h2 { max-width: 58%; }
-      .title-button .chevron { margin-left: auto; }
-      .topic-photo { left: auto; width: 65%; object-position: center 40%; }
-      .title-button::before {
-        background: linear-gradient(90deg, #082d47 35%, #082d47eb 47%, #082d471a 78%, #082d4780);
+      .topics { gap: 6px; }
+      .topic { border-radius: 9px; }
+      .title-button {
+        min-height: 0;
+        aspect-ratio: 1;
+        padding: 6px;
+        gap: 0;
       }
+      .title-button h2 { font-size: clamp(.625rem, 2.9vw, .95rem); }
+      .title-button .chevron { display: none; }
+      .topic-photo { object-fit: contain; }
+      .title-button::before {
+        background: linear-gradient(180deg, transparent 39%, #082d47d9 75%, #082d47);
+      }
+      .instruction-content { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 13px; }
     }
   </style>
 </head>
@@ -110,7 +159,7 @@
 </div>
 </div>
     <div class="top-actions">
-<span class="version">v0.1.2</span>
+<span class="version">v0.1.3</span>
 <a class="home-button" href="https://gym.scad.mx" target="_top" aria-label="Volver a la app" title="Inicio">
 <svg viewBox="0 0 24 24">
 <path d="m3 11 9-8 9 8"/>
@@ -123,47 +172,77 @@
   <main class="page">
 <div class="module-head">
 <p class="intro">Seis criterios para que cada sesión produzca el estímulo previsto con técnica y control.</p>
-<button class="toggle-all" id="closeAll" type="button">Mostrar primer tema</button>
 </div>
 <section class="topics" id="topics">
     <article class="topic" data-tone="blue">
 
 <section class="copy">
-<button class="title-button" type="button" aria-expanded="false" aria-controls="topic-peso-insuficiente"><img class="topic-photo" src="./assets/instrucciones-peso-insuficiente.webp" alt=""><h2>Peso insuficiente</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+<button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail"><img class="topic-photo" src="./assets/instrucciones-peso-insuficiente.webp" alt=""><h2>Peso insuficiente</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
 <div class="details" id="topic-peso-insuficiente"><p class="lead">La carga debe acercarte a la fatiga dentro del rango indicado, sin sacrificar la técnica.</p><ul class="essentials"><li><span class="ok">✓</span><span>Completa las repeticiones previstas.</span></li><li><span class="ok">✓</span><span>Valora cuántas repeticiones adicionales podrías hacer.</span></li><li><span class="ok">✓</span><span>Aumenta gradualmente si el esfuerzo resulta demasiado cómodo.</span></li></ul><p class="warning"><span>⚠</span><span>Cansarte no garantiza un estímulo suficiente.</span></p></div>
 </section>
 <button class="thumb-button" data-title="Peso insuficiente" data-note="Ajusta la carga con tu entrenador y conserva siempre la ejecución técnica." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_a334b7b08ab84f41befac60cf84916f5~mv2.png" alt="Ficha de peso insuficiente"></span></button>
 </article>
-    <article class="topic" data-tone="red"><section class="copy"><button class="title-button" type="button" aria-expanded="false" aria-controls="topic-peso-excesivo"><img class="topic-photo" src="./assets/instrucciones-peso-excesivo.webp" alt=""><h2>Peso excesivo</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-peso-excesivo"><p class="lead">Si la carga altera tu postura o el control del movimiento, deja de ser adecuada.</p><ul class="essentials"><li><span class="ok">✓</span><span>Reduce el peso ante compensaciones o impulso.</span></li><li><span class="ok">✓</span><span>Controla tanto la subida como la bajada.</span></li><li><span class="ok">✓</span><span>Conserva la alineación indicada.</span></li></ul><p class="warning"><span>⚠</span><span>Más peso no equivale a mejor entrenamiento.</span></p></div></section><button class="thumb-button" data-title="Peso excesivo" data-note="La técnica correcta define si la carga es apropiada." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_a5b7699df43244fa8286762dff7d7481~mv2.png" alt="Ficha de peso excesivo"></span></button></article>
-    <article class="topic" data-tone="teal"><section class="copy"><button class="title-button" type="button" aria-expanded="false" aria-controls="topic-rango"><img class="topic-photo" src="./assets/instrucciones-rango.webp" alt=""><h2>Rango de movimiento</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-rango"><p class="lead">Cada repetición debe cumplir el inicio y el final técnico definidos para el ejercicio.</p><ul class="essentials"><li><span class="ok">✓</span><span>Respeta el recorrido indicado.</span></li><li><span class="ok">✓</span><span>Mantén control en los extremos.</span></li><li><span class="ok">✓</span><span>Reduce carga si no completas el rango.</span></li></ul><p class="warning"><span>⚠</span><span>No recortes el movimiento para sumar repeticiones.</span></p></div></section><button class="thumb-button" data-title="Rango de movimiento" data-note="El rango correcto depende del ejercicio y de tus condiciones individuales." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_563f856ff1174ad9993fc11948f753b3~mv2.png" alt="Ficha de rango de movimiento"></span></button></article>
-    <article class="topic" data-tone="purple"><section class="copy"><button class="title-button" type="button" aria-expanded="false" aria-controls="topic-control"><img class="topic-photo" src="./assets/instrucciones-control.webp" alt=""><h2>Control técnico</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-control"><p class="lead">El músculo debe producir el movimiento; la inercia no debe sustituir el esfuerzo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia desde una postura estable.</span></li><li><span class="ok">✓</span><span>Controla subida, pausa y bajada.</span></li><li><span class="ok">✓</span><span>Respira sin perder la posición.</span></li></ul><p class="warning"><span>⚠</span><span>Evita rebotes y movimientos bruscos.</span></p></div></section><button class="thumb-button" data-title="Control técnico" data-note="Una repetición controlada vale más que varias realizadas con impulso." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_66c53bf7d7f74b72a38ab8c4e16f5352~mv2.png" alt="Ficha de control técnico"></span></button></article>
-    <article class="topic" data-tone="orange"><section class="copy"><button class="title-button" type="button" aria-expanded="false" aria-controls="topic-series"><img class="topic-photo" src="./assets/instrucciones-series.webp" alt=""><h2>Series, repeticiones y esfuerzo</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-series"><p class="lead">El plan combina volumen y esfuerzo; ambos deben registrarse con precisión.</p><ul class="essentials"><li><span class="ok">✓</span><span>Respeta series y rango de repeticiones.</span></li><li><span class="ok">✓</span><span>Registra lo que realmente realizaste.</span></li><li><span class="ok">✓</span><span>Ajusta la carga para alcanzar el esfuerzo previsto.</span></li></ul><p class="warning"><span>⚠</span><span>No añadas volumen sólo para sentir más cansancio.</span></p></div></section><button class="thumb-button" data-title="Series, repeticiones y esfuerzo" data-note="El registro real permite ajustar el entrenamiento con mejor criterio." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_4d73b4ac82fe4071add263ac8efa5fb9~mv2.png" alt="Ficha de series y repeticiones"></span></button></article>
-    <article class="topic" data-tone="green"><section class="copy"><button class="title-button" type="button" aria-expanded="false" aria-controls="topic-cardio"><img class="topic-photo" src="./assets/instrucciones-cardio.webp" alt=""><h2>Intensidad de cardio</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-cardio"><p class="lead">La intensidad debe corresponder a tu condición, objetivo y sesión programada.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia a ritmo suave.</span></li><li><span class="ok">✓</span><span>Progresa hasta la intensidad indicada.</span></li><li><span class="ok">✓</span><span>Reduce gradualmente al terminar.</span></li></ul><p class="warning"><span>⚠</span><span>Detente ante mareo, dolor o malestar inusual.</span></p></div></section><button class="thumb-button" data-title="Intensidad de cardio" data-note="La intensidad adecuada no es igual para todas las personas." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_06e009a7e0e94a6fbd4bae03a96ec6f3~mv2.png" alt="Ficha de intensidad de cardio"></span></button></article>
+    <article class="topic" data-tone="red"><section class="copy"><button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail"><img class="topic-photo" src="./assets/instrucciones-peso-excesivo.webp" alt=""><h2>Peso excesivo</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-peso-excesivo"><p class="lead">Si la carga altera tu postura o el control del movimiento, deja de ser adecuada.</p><ul class="essentials"><li><span class="ok">✓</span><span>Reduce el peso ante compensaciones o impulso.</span></li><li><span class="ok">✓</span><span>Controla tanto la subida como la bajada.</span></li><li><span class="ok">✓</span><span>Conserva la alineación indicada.</span></li></ul><p class="warning"><span>⚠</span><span>Más peso no equivale a mejor entrenamiento.</span></p></div></section><button class="thumb-button" data-title="Peso excesivo" data-note="La técnica correcta define si la carga es apropiada." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_a5b7699df43244fa8286762dff7d7481~mv2.png" alt="Ficha de peso excesivo"></span></button></article>
+    <article class="topic" data-tone="teal"><section class="copy"><button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail"><img class="topic-photo" src="./assets/instrucciones-rango.webp" alt=""><h2>Rango de movimiento</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-rango"><p class="lead">Cada repetición debe cumplir el inicio y el final técnico definidos para el ejercicio.</p><ul class="essentials"><li><span class="ok">✓</span><span>Respeta el recorrido indicado.</span></li><li><span class="ok">✓</span><span>Mantén control en los extremos.</span></li><li><span class="ok">✓</span><span>Reduce carga si no completas el rango.</span></li></ul><p class="warning"><span>⚠</span><span>No recortes el movimiento para sumar repeticiones.</span></p></div></section><button class="thumb-button" data-title="Rango de movimiento" data-note="El rango correcto depende del ejercicio y de tus condiciones individuales." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_563f856ff1174ad9993fc11948f753b3~mv2.png" alt="Ficha de rango de movimiento"></span></button></article>
+    <article class="topic" data-tone="purple"><section class="copy"><button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail"><img class="topic-photo" src="./assets/instrucciones-control.webp" alt=""><h2>Control técnico</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-control"><p class="lead">El músculo debe producir el movimiento; la inercia no debe sustituir el esfuerzo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia desde una postura estable.</span></li><li><span class="ok">✓</span><span>Controla subida, pausa y bajada.</span></li><li><span class="ok">✓</span><span>Respira sin perder la posición.</span></li></ul><p class="warning"><span>⚠</span><span>Evita rebotes y movimientos bruscos.</span></p></div></section><button class="thumb-button" data-title="Control técnico" data-note="Una repetición controlada vale más que varias realizadas con impulso." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_66c53bf7d7f74b72a38ab8c4e16f5352~mv2.png" alt="Ficha de control técnico"></span></button></article>
+    <article class="topic" data-tone="orange"><section class="copy"><button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail"><img class="topic-photo" src="./assets/instrucciones-series.webp" alt=""><h2>Series, repeticiones y esfuerzo</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-series"><p class="lead">El plan combina volumen y esfuerzo; ambos deben registrarse con precisión.</p><ul class="essentials"><li><span class="ok">✓</span><span>Respeta series y rango de repeticiones.</span></li><li><span class="ok">✓</span><span>Registra lo que realmente realizaste.</span></li><li><span class="ok">✓</span><span>Ajusta la carga para alcanzar el esfuerzo previsto.</span></li></ul><p class="warning"><span>⚠</span><span>No añadas volumen sólo para sentir más cansancio.</span></p></div></section><button class="thumb-button" data-title="Series, repeticiones y esfuerzo" data-note="El registro real permite ajustar el entrenamiento con mejor criterio." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_4d73b4ac82fe4071add263ac8efa5fb9~mv2.png" alt="Ficha de series y repeticiones"></span></button></article>
+    <article class="topic" data-tone="green"><section class="copy"><button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail"><img class="topic-photo" src="./assets/instrucciones-cardio.webp" alt=""><h2>Intensidad de cardio</h2><svg class="chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="details" id="topic-cardio"><p class="lead">La intensidad debe corresponder a tu condición, objetivo y sesión programada.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia a ritmo suave.</span></li><li><span class="ok">✓</span><span>Progresa hasta la intensidad indicada.</span></li><li><span class="ok">✓</span><span>Reduce gradualmente al terminar.</span></li></ul><p class="warning"><span>⚠</span><span>Detente ante mareo, dolor o malestar inusual.</span></p></div></section><button class="thumb-button" data-title="Intensidad de cardio" data-note="La intensidad adecuada no es igual para todas las personas." type="button"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_06e009a7e0e94a6fbd4bae03a96ec6f3~mv2.png" alt="Ficha de intensidad de cardio"></span></button></article>
   </section>
 </main>
-  <dialog id="visualModal"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button class="close" type="button" aria-label="Cerrar">×</button></div><div class="visual-wrap"><img class="full-visual" alt=""></div><p class="note"></p></div></dialog>
+  <dialog id="instructionDetail" aria-labelledby="instructionTitle">
+    <div class="instruction-dialog">
+      <header class="instruction-heading">
+        <h2 id="instructionTitle"></h2>
+        <form method="dialog"><button class="close" aria-label="Cerrar instrucciones">×</button></form>
+      </header>
+      <div class="instruction-content">
+        <div id="instructionText"></div>
+        <button class="instruction-poster" type="button" aria-label="Ampliar cartel">
+          <img alt="">
+          <span>Ampliar cartel ↗</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="visualModal" aria-labelledby="modalTitle"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button class="close" type="button" aria-label="Cerrar">×</button></div><div class="visual-wrap"><img class="full-visual" alt=""></div><p class="note"></p></div></dialog>
   <script>
-    (()=>{const topics=[...document.querySelectorAll('.topic')],closeAll=document.getElementById('closeAll'),modal=document.getElementById('visualModal'),modalTitle=document.getElementById('modalTitle'),full=modal.querySelector('.full-visual'),note=modal.querySelector('.note'),close=modal.querySelector('.close');let opener=null;
-      function openOnly(target) {
-        topics.forEach(topic => {
-          const expanded = topic === target;
-          topic.classList.toggle('is-open', expanded);
-          topic.querySelector('.title-button').setAttribute('aria-expanded', String(expanded));
-        });
-        closeAll.textContent = target ? 'Ocultar contenido' : 'Mostrar primer tema';
-      }
+    const detail = document.getElementById('instructionDetail');
+    const detailTitle = document.getElementById('instructionTitle');
+    const detailText = document.getElementById('instructionText');
+    const poster = detail.querySelector('.instruction-poster');
+    const posterImage = poster.querySelector('img');
+    const visual = document.getElementById('visualModal');
+    let activeTopic;
 
-      topics.forEach(topic => {
-        topic.querySelector('.title-button').addEventListener('click', () => {
-          openOnly(topic.classList.contains('is-open') ? null : topic);
-        });
+    document.getElementById('topics').addEventListener('click', event => {
+      const trigger = event.target.closest('.title-button');
+      if (!trigger) return;
+      const topic = trigger.closest('.topic');
+      activeTopic = topic.querySelector('.thumb-button');
+      const source = activeTopic.querySelector('img');
+      detailTitle.textContent = activeTopic.dataset.title;
+      detailText.replaceChildren(...Array.from(topic.querySelector('.details').children, child => child.cloneNode(true)));
+      posterImage.src = source.src;
+      posterImage.alt = source.alt;
+      detail.showModal();
+    });
+
+    poster.addEventListener('click', () => {
+      visual.querySelector('#modalTitle').textContent = activeTopic.dataset.title;
+      const image = visual.querySelector('.full-visual');
+      image.src = posterImage.src;
+      image.alt = posterImage.alt;
+      visual.querySelector('.note').textContent = activeTopic.dataset.note;
+      visual.showModal();
+    });
+
+    visual.querySelector('.close').addEventListener('click', () => visual.close());
+    for (const dialog of [detail, visual]) {
+      dialog.addEventListener('click', event => {
+        if (event.target === dialog) dialog.close();
       });
-      closeAll.addEventListener('click', () => {
-        openOnly(topics.some(topic => topic.classList.contains('is-open')) ? null : topics[0]);
-      });
-      document.querySelectorAll('.thumb-button').forEach(button=>button.addEventListener('click',()=>{opener=button;modalTitle.textContent=button.dataset.title;full.src=button.querySelector('.thumb').src;full.alt=`Ficha visual de ${button.dataset.title.toLowerCase()}`;note.textContent=button.dataset.note;modal.showModal()}));
-      function shut(){modal.close();opener?.focus()}close.addEventListener('click',shut);modal.addEventListener('click',e=>{if(e.target===modal)shut()});modal.addEventListener('cancel',e=>{e.preventDefault();shut()});
-    })();
+    }
+    visual.addEventListener('close', () => poster.focus());
   </script>
 </body>
 </html>
