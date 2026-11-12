@@ -1,13 +1,13 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.71";
+const CACHE_NAME = "entrenamiento-gym-v0.1.71-logo-alpha";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./manifest.json?v=3",
   "./assets/apple-touch-icon-180.png",
-  "./assets/icon-192.png",
+  new Request("./assets/icon-192.png", { cache: "reload" }),
   "./assets/icon-512.png",
   "./assets/icon-maskable-512.png",
-  "./assets/logo-entrenamiento-640.webp",
+  new Request("./assets/logo-entrenamiento-640.webp", { cache: "reload" }),
   "./assets/scad-powered-logo.png",
   "./assets/error.mp3",
   "./assets/exito.mp3",
