@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.71-logo-alpha";
+const CACHE_NAME = "entrenamiento-gym-v0.1.72-recursos";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,6 +8,10 @@ const APP_SHELL = [
   "./assets/icon-512.png",
   "./assets/icon-maskable-512.png",
   new Request("./assets/logo-entrenamiento-640.webp", { cache: "reload" }),
+  "./assets/portada-buenas-practicas.webp",
+  "./assets/portada-instrucciones.webp",
+  "./assets/portada-objetivos.webp",
+  "./assets/portada-entrenadores.webp",
   "./assets/scad-powered-logo.png",
   "./assets/error.mp3",
   "./assets/exito.mp3",
@@ -59,8 +63,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.71";
-    version.setAttribute("aria-label", "Versión 0.1.71");
+    version.textContent = "v0.1.72";
+    version.setAttribute("aria-label", "Versión 0.1.72");
   };
 
   if (document.readyState === "loading") {

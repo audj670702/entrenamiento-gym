@@ -492,12 +492,84 @@
       background: var(--card-accent, var(--blue));
     }
 
+
+    .home-resources {
+      margin-block: 11px;
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(5px, 1.6vw, 12px);
+    }
+
+    .resource-link {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      align-items: flex-end;
+      aspect-ratio: 1;
+      overflow: hidden;
+      padding: clamp(5px, 1.65vw, 15px);
+      border-radius: clamp(8px, 2vw, 16px);
+      background: #082d47;
+      color: #fff;
+      font-size: clamp(0.625rem, 2.9vw, 1.125rem);
+      font-weight: 700;
+      line-height: 1.12;
+      text-decoration: none;
+    }
+
+    .resource-link img,
+    .resource-link::before {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .resource-link img {
+      z-index: -2;
+      object-fit: cover;
+    }
+
+    .resource-link::before {
+      content: "";
+      z-index: -1;
+      background: linear-gradient(180deg, transparent 32%, #082d47e8 69%, #082d47 100%);
+    }
+
+    .resource-link:focus-visible {
+      outline: 3px solid #bc9959;
+      outline-offset: 2px;
+    }
+
+    .resource-link--banner {
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      aspect-ratio: auto;
+      min-height: clamp(48px, 12vw, 90px);
+      margin-top: 8px;
+      padding-inline: clamp(10px, 3vw, 24px);
+      font-size: clamp(0.8rem, 3.35vw, 1.125rem);
+    }
+
+    .resource-link--banner img {
+      object-position: center 30%;
+    }
+
+    .resource-link--banner::before {
+      background: linear-gradient(90deg, #082d47 8%, #082d47f5 37%, #082d4766 65%, #082d474d 100%);
+    }
+
+    .resource-arrow {
+      font-size: 1.5em;
+      line-height: 1;
+    }
+
     .training-card--training { --card-accent: #174f82; }
-    .training-card--practices { --card-accent: #1f8a70; }
-    .training-card--instructions { --card-accent: #7656a8; }
-    .training-card--objectives { --card-accent: #c2416c; }
     .training-card--trainer { --card-accent: #b06b24; }
-    .training-card--trainers { --card-accent: #287a62; }
     .training-card--videocall { --card-accent: #0e7490; }
 
     /* SYS Videollamadas · v0.1.69 */
@@ -859,7 +931,7 @@
         <img src="./assets/icon-192.png" alt="">
         <span class="brand-name">SCaD Entrenamiento</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.71">v0.1.71</span>
+      <span class="version" aria-label="Versión 0.1.72">v0.1.72</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -943,61 +1015,27 @@
       <span class="arrow" aria-hidden="true">→</span>
     </a>
 
-    <a
-      id="cardBuenasPracticas"
-      class="training-card training-card--practices"
-      href="https://www.scad.mx/gym-buenas-practicas"
-      aria-label="Abrir Buenas Prácticas"
-    >
-      <span class="card-icon" aria-hidden="true">✓</span>
-      <div>
-        <h2 class="card-title">Buenas Prácticas</h2>
-        <p class="card-description">Consulta recomendaciones para entrenar de forma segura</p>
+    <nav class="home-resources" aria-label="Recursos de entrenamiento">
+      <div class="resource-grid">
+        <a id="cardBuenasPracticas" class="resource-link" href="https://www.scad.mx/gym-buenas-practicas">
+          <img src="./assets/portada-buenas-practicas.webp" alt="">
+          <span>Buenas prácticas</span>
+        </a>
+        <a id="cardInstruccionesEjercicios" class="resource-link" href="https://www.scad.mx/gym-instrucciones-ejercicios">
+          <img src="./assets/portada-instrucciones.webp" alt="">
+          <span>Instrucciones para ejercitarse</span>
+        </a>
+        <a id="cardObjetivosEntrenamiento" class="resource-link" href="https://www.scad.mx/gym-objetivos-entrenamiento">
+          <img src="./assets/portada-objetivos.webp" alt="">
+          <span>Objetivos del entrenamiento</span>
+        </a>
       </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardInstruccionesEjercicios"
-      class="training-card training-card--instructions"
-      href="https://www.scad.mx/gym-instrucciones-ejercicios"
-      aria-label="Abrir Instrucciones para Ejercitarse"
-    >
-      <span class="card-icon" aria-hidden="true">◎</span>
-      <div>
-        <h2 class="card-title">Instrucciones para Ejercitarse</h2>
-        <p class="card-description">Aprende a ejecutar tus ejercicios con técnica, esfuerzo y control</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardObjetivosEntrenamiento"
-      class="training-card training-card--objectives"
-      href="https://www.scad.mx/gym-objetivos-entrenamiento"
-      aria-label="Abrir Objetivos del Entrenamiento"
-    >
-      <span class="card-icon" aria-hidden="true">🎯</span>
-      <div>
-        <h2 class="card-title">Objetivos del Entrenamiento</h2>
-        <p class="card-description">Identifica el objetivo que orienta tu entrenamiento</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a
-      id="cardEntrenadores"
-      class="training-card training-card--trainers"
-      href="./entrenadores.html"
-      aria-label="Abrir Entrenadores"
-    >
-      <span class="card-icon" aria-hidden="true">👤</span>
-      <div>
-        <h2 class="card-title">Entrenadores</h2>
-        <p class="card-description">Conoce a los entrenadores de SCaD Entrenamiento</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
+      <a id="cardEntrenadores" class="resource-link resource-link--banner" href="./entrenadores.html">
+        <img src="./assets/portada-entrenadores.webp" alt="">
+        <span>Conoce a los entrenadores</span>
+        <span class="resource-arrow" aria-hidden="true">›</span>
+      </a>
+    </nav>
 
     <a
       id="cardPanelEntrenador"
@@ -1107,7 +1145,7 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
-    console.info("SCaD Entrenamiento v0.1.71 | videollamada: Ok / No por ahora");
+    console.info("SCaD Entrenamiento v0.1.72 | videollamada: Ok / No por ahora");
     const APP_SOUNDS = {
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
