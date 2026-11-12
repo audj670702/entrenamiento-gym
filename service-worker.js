@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.72-recursos";
+const CACHE_NAME = "entrenamiento-gym-v0.1.72-objetivos";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -20,6 +20,12 @@ const APP_SHELL = [
   "./buenas-practicas.html",
   "./instrucciones-ejercitarse.html",
   "./objetivos-entrenamiento.html",
+  "./assets/objetivos-grasa.webp",
+  "./assets/objetivos-fuerza.webp",
+  "./assets/objetivos-resistencia.webp",
+  "./assets/objetivos-competencia.webp",
+  "./assets/objetivos-bienestar.webp",
+
   "./entrenadores.html",
   "./gym-tv.js",
   "./gym-tv-model.js",

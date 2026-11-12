@@ -77,6 +77,90 @@
   .more-grid{grid-template-columns:1fr}.more-grid .info+.info{border-left:0;border-top:1px solid var(--line)}
   .single-detail{grid-template-columns:1fr 82px}.single-detail .info{padding:9px 10px}.single-detail .info:nth-child(2){grid-column:1;border-left:0;border-top:1px solid var(--line)}.sheet-thumb{grid-column:2;grid-row:1/3;border-left:1px solid var(--line)}.sheet-thumb img{width:54px;height:70px}
 }
+
+/* Tarjetas fotográficas del paso Conoce. */
+#goalDeck {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+#goalDeck .goal {
+  display: flex;
+  align-items: flex-end;
+  isolation: isolate;
+  aspect-ratio: 2 / 3;
+  min-height: 0;
+  padding: 14px 11px;
+  border: 0;
+  border-radius: 13px;
+  background: #082d47;
+  color: #fff;
+}
+#goalDeck .goal-photo,
+#goalDeck .goal::before {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+#goalDeck .goal-photo {
+  z-index: -2;
+  object-fit: cover;
+}
+#goalDeck .goal::before {
+  content: "";
+  z-index: -1;
+  background: linear-gradient(180deg, transparent 35%, #082d47eb 76%, #082d47);
+}
+#goalDeck .goal-copy {
+  padding: 0;
+  font-size: clamp(.8rem, 1.65vw, 1.06rem);
+  font-weight: 700;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+#goalDeck .goal::after {
+  content: "›";
+  flex: 0 0 auto;
+  width: auto;
+  color: #fff;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+#goalDeck .goal.chosen {
+  outline: 3px solid #be9651;
+  outline-offset: 2px;
+}
+#goalDeck .goal.chosen::after {
+  content: "✓";
+  color: #ffe2a0;
+}
+@media (max-width: 760px) {
+  #goalDeck {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  #goalDeck .goal {
+    align-items: center;
+    aspect-ratio: auto;
+    min-height: 88px;
+    padding: 12px 14px;
+  }
+  #goalDeck .goal-photo {
+    left: auto;
+    width: 62%;
+    object-position: center var(--banner-crop, 37%);
+  }
+  #goalDeck .goal[data-goal="sport"] { --banner-crop: 48%; }
+  #goalDeck .goal[data-goal="wellbeing"] { --banner-crop: 22%; }
+  #goalDeck .goal::before {
+    background: linear-gradient(90deg, #082d47 35%, #082d47ed 47%, #082d471a 78%, #082d4780);
+  }
+  #goalDeck .goal-copy {
+    flex: 0 1 58%;
+    font-size: .98rem;
+  }
+}
+
 </style>
 <style>
 /* V4: selector superior y detalle en modal */
@@ -195,7 +279,7 @@
 </style>
 </head>
 <body>
-<header class="topbar"><div class="topin"><div class="brand"><svg class="logo" viewBox="0 0 64 64"><defs><linearGradient id="g"><stop stop-color="#173b65"/><stop offset="1" stop-color="#2d73af"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><path d="M14 25v14m-5-10v6m10-13v20m31-17v14m5-10v6m-10-13v20M19 32h26" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg><div><div class="kicker">SCaD Entrenamiento</div><h1>Objetivos del entrenamiento</h1></div></div><div class="actions"><span class="version">v0.5.0</span><a class="home" href="https://gym.scad.mx" target="_top" aria-label="Inicio"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8M5 10v10h14V10M9 20v-6h6v6"/></svg></a></div></div></header>
+<header class="topbar"><div class="topin"><div class="brand"><svg class="logo" viewBox="0 0 64 64"><defs><linearGradient id="g"><stop stop-color="#173b65"/><stop offset="1" stop-color="#2d73af"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#g)"/><path d="M14 25v14m-5-10v6m10-13v20m31-17v14m5-10v6m-10-13v20M19 32h26" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg><div><div class="kicker">SCaD Entrenamiento</div><h1>Objetivos del entrenamiento</h1></div></div><div class="actions"><span class="version">v0.5.1</span><a class="home" href="https://gym.scad.mx" target="_top" aria-label="Inicio"><svg viewBox="0 0 24 24"><path d="m3 11 9-8 9 8M5 10v10h14V10M9 20v-6h6v6"/></svg></a></div></div></header>
 <main class="page">
 <section class="hero"><div class="hero-copy"><div class="eyebrow">Descubre · Ubícate · Oriéntate</div><h2>No todos entrenamos para lo mismo</h2><p>Explora cada objetivo, reconoce lo que buscas y obtén una orientación inicial.</p></div></section>
 <nav class="route" aria-label="Recorrido"><button class="active" data-go="learn">1 · Conoce</button><button data-go="locate">2 · Ubícate</button><button data-go="result">3 · Tu orientación</button></nav>
@@ -218,12 +302,12 @@ const goals=[
 {id:'cardio',title:'Resistencia cardiovascular',short:'Menos fatiga y mayor tolerancia al esfuerzo.',definition:'Busca mejorar la capacidad de sostener actividad y recuperarse. Puede desarrollarse con caminata, carrera, bicicleta, remo, circuitos u otras modalidades adecuadas a la persona.',plan:['Trabajo aeróbico continuo o por intervalos.','Aumento gradual de tiempo o dificultad.','Combinación con fuerza y recuperación.'],signals:['Tiempo o distancia sostenidos.','Percepción de esfuerzo.','Recuperación y tolerancia.'],fit:'Te puede representar si quieres cansarte menos, subir escaleras con mayor facilidad o rendir mejor en actividades prolongadas.',caution:'La intensidad debe corresponder a tu punto de partida.',pos:'50%'},
 {id:'sport',title:'Rendimiento para competencia',short:'Preparación dirigida a una prueba o disciplina.',definition:'Parte de una demanda concreta: distancia, tiempo, fuerza, habilidad o fecha de competencia. El entrenamiento se organiza para desarrollar capacidades específicas y llegar preparado.',plan:['Trabajo específico de la disciplina.','Control de tiempos, cargas y recuperación.','Etapas y evaluaciones de rendimiento.'],signals:['Marcas propias de la prueba.','Calidad técnica bajo fatiga.','Cumplimiento de etapas de preparación.'],fit:'Te representa si existe una prueba, competencia o marca concreta y puedes describir qué necesitas rendir y cuándo.',caution:'Requiere evaluación y programación del entrenador; no es sólo entrenar con mayor intensidad.',pos:'75%'},
 {id:'wellbeing',title:'Bienestar y condición general',short:'Energía, movilidad y capacidad para la vida diaria.',definition:'Integra fuerza, resistencia, movilidad y hábitos de actividad para sentirse mejor y conservar capacidad funcional. Es un objetivo completo, no una opción menor.',plan:['Rutinas equilibradas de cuerpo completo.','Intensidad adaptable y progresiva.','Movilidad, fuerza funcional y constancia.'],signals:['Energía y regularidad.','Movilidad y tareas cotidianas.','Percepción de bienestar y capacidad.'],fit:'Te puede representar si quieres mantenerte activo, recuperar condición o sentirte mejor sin una meta estética o competitiva dominante.',caution:'También necesita progresión; “salud” no significa entrenar sin propósito.',pos:'100%'}];
-const goalImages=['objetivo_assets/objetivo_0.jpg','objetivo_assets/objetivo_1.jpg','objetivo_assets/objetivo_2.jpg','objetivo_assets/objetivo_3.jpg','objetivo_assets/objetivo_4.jpg'];
+const goalImages=['./assets/objetivos-grasa.webp','./assets/objetivos-fuerza.webp','./assets/objetivos-resistencia.webp','./assets/objetivos-competencia.webp','./assets/objetivos-bienestar.webp'];
 const goalSheets=['https://static.wixstatic.com/media/0492f8_d7f2ae00801e46dc8e13185388097cf4~mv2.png','https://static.wixstatic.com/media/0492f8_699337a4337848ba8dc01619027b5ea8~mv2.png','https://static.wixstatic.com/media/0492f8_83834b55cf4f46d883eb3e120a1fb9f7~mv2.png','https://static.wixstatic.com/media/0492f8_3ffd3ef7777041f697c519f9dadb33a2~mv2.png','https://static.wixstatic.com/media/0492f8_05739dd355ca418abf4ac45fa38afbbe~mv2.png'];
 goals.forEach((g,i)=>{g.image=goalImages[i];g.sheet=goalSheets[i]});
 const deck=document.getElementById('goalDeck');let selected='fat',chosenGoal=null;
 const goalIcons={fat:'⚖',muscle:'🏋',cardio:'♥',sport:'🏆',wellbeing:'☀'};
-deck.innerHTML=goals.map(g=>`<button class="goal" data-goal="${g.id}" aria-label="Consultar ${g.title}"><span class="goal-copy"><h4>${g.title}</h4></span></button>`).join('');
+deck.innerHTML=goals.map(g=>`<button class="goal" type="button" data-goal="${g.id}" aria-label="Consultar ${g.title}"><img class="goal-photo" src="${g.image}" alt=""><span class="goal-copy">${g.title}</span></button>`).join('');
 const goalModal=document.getElementById('goalModal'),goalDialog=document.getElementById('goalDialog'),goalContent=document.getElementById('goalModalContent'),goalClose=document.getElementById('goalClose'),sheetFull=document.getElementById('sheetFull'),sheetTitle=document.getElementById('sheetTitle');
 function markSelected(){document.querySelectorAll('.goal').forEach(x=>x.classList.toggle('chosen',x.dataset.goal===chosenGoal))}
 function positionGoalDialog(trigger){const r=trigger.getBoundingClientRect(),gap=10,margin=7,w=Math.min(560,innerWidth-margin*2),estimated=Math.min(goalDialog.scrollHeight||420,innerHeight-margin*2),below=innerHeight-r.bottom-gap,above=r.top-gap,side=below>=Math.min(estimated,360)||below>=above?'below':'above',top=side==='below'?Math.min(r.bottom+gap,innerHeight-estimated-margin):Math.max(margin,r.top-gap-estimated),left=Math.min(Math.max(margin,r.left),innerWidth-w-margin);goalDialog.dataset.side=side;goalDialog.style.setProperty('--dialog-top',`${top}px`);goalDialog.style.setProperty('--dialog-left',`${left}px`);goalDialog.style.setProperty('--dialog-max-height',`${Math.max(180,side==='below'?innerHeight-top-margin:r.top-gap-margin)}px`);goalDialog.style.setProperty('--arrow-left',`${Math.min(Math.max(18,r.left+r.width/2-left-8),w-34)}px`)}
