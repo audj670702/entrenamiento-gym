@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0f2f55">
-  <meta name="description" content="Portal de acceso a Entrenamiento GYM">
-  <title>Entrenamiento GYM</title>
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./assets/entrenamiento-gym-logo-sentadilla.png" type="image/png">
-  <link rel="apple-touch-icon" href="./assets/entrenamiento-gym-logo-sentadilla.png">
+  <meta name="description" content="Portal de acceso a SCaD Entrenamiento">
+  <title>SCaD Entrenamiento</title>
+  <link rel="manifest" href="./manifest.json?v=3">
+  <link rel="icon" href="./assets/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon-180.png" sizes="180x180">
   <link rel="stylesheet" href="./gym-tv.css?v=0.1.69">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
   <script>
@@ -841,11 +841,11 @@
   </style>
 </head>
 <body>
-  <div id="appSplash" class="app-splash" role="status" aria-label="Cargando Entrenamiento GYM">
+  <div id="appSplash" class="app-splash" role="status" aria-label="Cargando SCaD Entrenamiento">
     <img
       class="app-splash-logo"
-      src="./assets/entrenamiento-gym-logo-sentadilla.png"
-      alt="Entrenamiento GYM"
+      src="./assets/logo-entrenamiento-640.webp"
+      alt="SCaD Entrenamiento"
     >
     <div class="app-splash-powered" aria-label="Powered by SCaD">
       <span>Powered by</span>
@@ -856,10 +856,10 @@
   <header class="topbar">
     <div class="topbar-row topbar-meta">
       <div class="brand">
-        <img src="./assets/entrenamiento-gym-logo-sentadilla.png" alt="">
-        <span class="brand-name">Entrenamiento GYM</span>
+        <img src="./assets/icon-192.png" alt="">
+        <span class="brand-name">SCaD Entrenamiento</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.70">v0.1.70</span>
+      <span class="version" aria-label="Versión 0.1.71">v0.1.71</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -894,8 +894,8 @@
         </button>
         <img
           class="hero-logo"
-          src="./assets/entrenamiento-gym-logo-sentadilla.png"
-          alt="Identidad de Entrenamiento GYM"
+          src="./assets/logo-entrenamiento-640.webp"
+          alt="Identidad de SCaD Entrenamiento"
         >
       </div>
       <div id="gymTvMount"></div>
@@ -994,7 +994,7 @@
       <span class="card-icon" aria-hidden="true">👤</span>
       <div>
         <h2 class="card-title">Entrenadores</h2>
-        <p class="card-description">Conoce a los entrenadores de GYM</p>
+        <p class="card-description">Conoce a los entrenadores de SCaD Entrenamiento</p>
       </div>
       <span class="arrow" aria-hidden="true">→</span>
     </a>
@@ -1107,7 +1107,7 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
-    console.info("Entrenamiento GYM v0.1.70 | videollamada: Ok / No por ahora");
+    console.info("SCaD Entrenamiento v0.1.71 | videollamada: Ok / No por ahora");
     const APP_SOUNDS = {
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
@@ -1223,21 +1223,21 @@
     const PRIVACY_POLICY_TEXT = "POLÍTICA DE PRIVACIDAD\
 Última actualización: 31 de julio de 2026\
 \
-Esta política explica cómo se obtienen, utilizan, comparten, protegen y conservan los datos personales de quienes usan la App GYM.\
+Esta política explica cómo se obtienen, utilizan, comparten, protegen y conservan los datos personales de quienes usan la app SCaD Entrenamiento.\
 \
 1. Responsable y contacto\
-JM OPERADORA INTEGRAL EN SERVICIOS Y SOLUCIONES, S.A. DE C.V. (en adelante, el \"Responsable\") es responsable del tratamiento de los datos personales recabados mediante la App GYM.\
+JM OPERADORA INTEGRAL EN SERVICIOS Y SOLUCIONES, S.A. DE C.V. (en adelante, el \"Responsable\") es responsable del tratamiento de los datos personales recabados mediante la app SCaD Entrenamiento.\
 Para asuntos de privacidad, ejercicio de derechos ARCO, revocación del consentimiento o limitación del uso de datos, el único canal de contacto es logcontrol@scad.mx.\
 \
 2. Alcance\
-Esta política aplica a quienes acceden o utilizan la App GYM, incluidos usuarios y entrenadores autorizados, así como a sus módulos, formularios, paneles, contenidos, funciones instalables y comunicaciones relacionadas. No cubre sitios o servicios externos con políticas propias a los que la app pudiera enlazar.\
+Esta política aplica a quienes acceden o utilizan la app SCaD Entrenamiento, incluidos usuarios y entrenadores autorizados, así como a sus módulos, formularios, paneles, contenidos, funciones instalables y comunicaciones relacionadas. No cubre sitios o servicios externos con políticas propias a los que la app pudiera enlazar.\
 \
 3. Datos personales tratados\
-Según las funciones utilizadas y el tipo de cuenta, la App GYM puede tratar datos de identificación y contacto; fotografía o avatar; datos de acceso; identificadores internos; tipo y estado de cuenta; entrenador asignado; autorizaciones y registros de actividad.\
+Según las funciones utilizadas y el tipo de cuenta, la app SCaD Entrenamiento puede tratar datos de identificación y contacto; fotografía o avatar; datos de acceso; identificadores internos; tipo y estado de cuenta; entrenador asignado; autorizaciones y registros de actividad.\
 También puede tratar objetivos, planes y sesiones de entrenamiento; ejercicios, cargas, repeticiones, tiempos, asistencia, observaciones, avances y métricas; edad o fecha de nacimiento, sexo cuando sea pertinente, estatura, peso, medidas y composición corporal; mensajes y solicitudes de soporte; así como datos técnicos necesarios para operar y proteger la app, entre ellos dirección IP, navegador, sistema operativo, identificadores de sesión o dispositivo, fecha y hora de acceso, preferencias y registros de errores.\
 \
 4. Datos personales sensibles\
-La App GYM puede tratar datos sobre salud y condición física, como lesiones, limitaciones, padecimientos, antecedentes relevantes, restricciones médicas, mediciones físicas, embarazo cuando sea pertinente y observaciones relacionadas con la aptitud para entrenar. Estos datos son sensibles y reciben protección reforzada.\
+La app SCaD Entrenamiento puede tratar datos sobre salud y condición física, como lesiones, limitaciones, padecimientos, antecedentes relevantes, restricciones médicas, mediciones físicas, embarazo cuando sea pertinente y observaciones relacionadas con la aptitud para entrenar. Estos datos son sensibles y reciben protección reforzada.\
 Su tratamiento se limita a personalizar y dar seguimiento al entrenamiento, prevenir riesgos razonablemente previsibles y documentar las indicaciones comunicadas por la persona usuaria. Cuando corresponda, se solicitará consentimiento expreso mediante un mecanismo electrónico que permita acreditarlo.\
 \
 5. Finalidades necesarias\
@@ -1271,13 +1271,13 @@ La persona titular puede solicitar Acceso, Rectificación, Cancelación u Oposic
 La solicitud deberá incluir nombre y medio para recibir respuesta; documentos que acrediten identidad o representación; descripción clara de los datos y del derecho que desea ejercer; y cualquier elemento que facilite su localización. Para rectificación deberá indicar la corrección y acompañar el soporte correspondiente. Se acusará recibo y se responderá dentro de los plazos legales. Solo podrá solicitarse información adicional o negarse la petición en los supuestos permitidos por la ley, explicando la decisión.\
 \
 14. Menores de edad\
-La App GYM está dirigida principalmente a personas mayores de edad. El tratamiento de datos de menores solo deberá realizarse con intervención y consentimiento verificable de quien ejerza patria potestad o tutela, atendiendo al interés superior de la persona menor. Si se detectan datos obtenidos sin autorización válida, la cuenta podrá suspenderse y los datos eliminarse.\
+La app SCaD Entrenamiento está dirigida principalmente a personas mayores de edad. El tratamiento de datos de menores solo deberá realizarse con intervención y consentimiento verificable de quien ejerza patria potestad o tutela, atendiendo al interés superior de la persona menor. Si se detectan datos obtenidos sin autorización válida, la cuenta podrá suspenderse y los datos eliminarse.\
 \
 15. Cálculos y recomendaciones\
 La app puede generar cálculos, recordatorios, indicadores o sugerencias basados en los registros de entrenamiento. Salvo aviso expreso, estas funciones no producen decisiones jurídicas ni efectos equivalentes y no sustituyen la valoración de un profesional de la salud.\
 \
 16. Salud y seguridad física\
-La App GYM es una herramienta de organización y seguimiento del entrenamiento; no presta servicios médicos ni sustituye diagnóstico, tratamiento o valoración profesional. La persona usuaria debe informar condiciones relevantes, detener la actividad ante síntomas adversos y buscar atención médica cuando sea necesario.\
+La app SCaD Entrenamiento es una herramienta de organización y seguimiento del entrenamiento; no presta servicios médicos ni sustituye diagnóstico, tratamiento o valoración profesional. La persona usuaria debe informar condiciones relevantes, detener la actividad ante síntomas adversos y buscar atención médica cuando sea necesario.\
 \
 17. Cambios y legislación aplicable\
 Esta política puede actualizarse por cambios legales, técnicos, operativos o en las finalidades del tratamiento. La versión vigente estará disponible dentro de la app e indicará su fecha de actualización. Si un cambio requiere nuevo consentimiento, este se solicitará antes de aplicar el tratamiento correspondiente.\
@@ -2198,7 +2198,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
       if (!deferredInstallPrompt) {
         window.alert(
-          "La instalación todavía no está disponible. Abre el menú del navegador y selecciona Instalar app o Instalar Entrenamiento GYM."
+          "La instalación todavía no está disponible. Abre el menú del navegador y selecciona Instalar app o Instalar SCaD Entrenamiento."
         );
         return;
       }
