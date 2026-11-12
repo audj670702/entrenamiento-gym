@@ -175,7 +175,8 @@
     .account-email,.identity-email { color: var(--muted); font-size: .72rem; font-weight: 400; overflow-wrap: anywhere; line-height: 1.35; }
     .account-email { padding: 10px 14px; border-bottom: 1px solid var(--line); }
     .account-email[hidden],.identity-email[hidden] { display: none; }
-    .account-menu[hidden] {
+    .account-menu[hidden],
+    .account-menu-link[hidden] {
       display: none;
     }
 
@@ -496,7 +497,6 @@
     .training-card--practices { --card-accent: #1f8a70; }
     .training-card--instructions { --card-accent: #7656a8; }
     .training-card--objectives { --card-accent: #c2416c; }
-    .training-card--trainer { --card-accent: #b06b24; }
     .training-card--trainers { --card-accent: #287a62; }
     .training-card--videocall { --card-accent: #0e7490; }
 
@@ -859,7 +859,7 @@
         <img src="./assets/icon-192.png" alt="">
         <span class="brand-name">SCaD Entrenamiento</span>
       </div>
-      <span class="version" aria-label="Versión 0.1.71">v0.1.71</span>
+      <span class="version" aria-label="Versión 0.1.72">v0.1.72</span>
       <span id="cvc" class="cvc" aria-label="Cadena de validación codificada">Se0Us0En0</span>
     </div>
     <div class="topbar-row topbar-actions">
@@ -880,6 +880,7 @@
           <a id="accountWalletLink" class="account-menu-link" href="#">Mis formas de pago</a>
           <a id="accountGroupsLink" class="account-menu-link" href="#">Mis grupos</a>
           <a id="accountHubLink" class="account-menu-link" href="#">SCaD HUB</a>
+          <a id="accountTrainerPanelLink" class="account-menu-link" href="https://www.scad.mx/panel-de-entrenador" hidden>Panel del Entrenador</a>
           <button id="accountLogoutButton" class="account-menu-logout" type="button">Cerrar sesión</button>
         </nav>
       </div>
@@ -999,22 +1000,6 @@
       <span class="arrow" aria-hidden="true">→</span>
     </a>
 
-    <a
-      id="cardPanelEntrenador"
-      class="training-card training-card--trainer"
-      href="https://www.scad.mx/panel-de-entrenador"
-      aria-label="Abrir Panel del Entrenador"
-      hidden
-    >
-      <span class="card-icon" aria-hidden="true">▣</span>
-      <div>
-        <h2 class="card-title">Panel del Entrenador</h2>
-        <p class="card-description">Gestiona los planes y sesiones de tus usuarios</p>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-
     <footer class="privacy-footer">
       <button id="privacyLink" class="privacy-link" type="button">Política de privacidad</button>
     </footer>
@@ -1107,7 +1092,7 @@
     const SCAD_SITE_URL = "https://www.scad.mx";
     const MEMBER_ID_KEY = "GYM_MEMBER_ID";
 
-    console.info("SCaD Entrenamiento v0.1.71 | videollamada: Ok / No por ahora");
+    console.info("SCaD Entrenamiento v0.1.72 | videollamada: Ok / No por ahora");
     const APP_SOUNDS = {
       error: "./assets/error.mp3",
       success: "./assets/exito.mp3",
@@ -1963,13 +1948,13 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       }
     }
 
-    function renderTrainerPanelCard() {
-      const card = document.getElementById("cardPanelEntrenador");
-      if (!card) {
+    function renderTrainerPanelLink() {
+      const link = document.getElementById("accountTrainerPanelLink");
+      if (!link) {
         return;
       }
 
-      card.hidden = gymContext.en !== true;
+      link.hidden = gymContext.en !== true;
     }
 
     function renderSessionButton() {
@@ -2224,7 +2209,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
         clearIdentityCard();
         renderCvc();
         renderSessionButton();
-        renderTrainerPanelCard();
+        renderTrainerPanelLink();
         return;
       }
 
@@ -2254,7 +2239,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
 
       renderCvc();
       renderSessionButton();
-      renderTrainerPanelCard();
+      renderTrainerPanelLink();
       renderIdentityCard();
       renderMessageAccess();
       startMessagePolling();
@@ -2367,7 +2352,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       clearGymIdentity();
       renderCvc();
       renderSessionButton();
-      renderTrainerPanelCard();
+      renderTrainerPanelLink();
       renderIdentityCard();
       goToGymAccess({ logout: true });
     });
@@ -2390,7 +2375,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
       window.location.href = withWixReturnUrl(GYM_TRAINING_ENTRY_URL);
     });
 
-    document.getElementById("cardPanelEntrenador")?.addEventListener("click", (event) => {
+    document.getElementById("accountTrainerPanelLink")?.addEventListener("click", (event) => {
       event.preventDefault();
 
       if (gymContext.se && gymContext.en) {
@@ -2422,7 +2407,7 @@ Canal de privacidad y derechos ARCO: logcontrol@scad.mx";
     })();
     renderInstallOption();
     renderSessionButton();
-    renderTrainerPanelCard();
+    renderTrainerPanelLink();
     renderIdentityCard();
     renderMessageAccess();
     loadGymContext().finally(closeSplashScreen);
