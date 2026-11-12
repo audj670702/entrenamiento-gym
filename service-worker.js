@@ -1,13 +1,13 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.71";
+const CACHE_NAME = "entrenamiento-gym-v0.1.72";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./manifest.json?v=3",
+  "./manifest.json?v=4",
   "./assets/apple-touch-icon-180.png",
-  "./assets/icon-192.png",
-  "./assets/icon-512.png",
+  "./assets/icon-192.png?v=4",
+  "./assets/icon-512.png?v=4",
   "./assets/icon-maskable-512.png",
-  "./assets/logo-entrenamiento-640.webp",
+  "./assets/logo-entrenamiento-640.webp?v=4",
   "./assets/scad-powered-logo.png",
   "./assets/error.mp3",
   "./assets/exito.mp3",
@@ -59,8 +59,8 @@ const STARTUP_GUARD_SCRIPT = `
   const markVersion = () => {
     const version = document.querySelector(".version");
     if (!version) return;
-    version.textContent = "v0.1.71";
-    version.setAttribute("aria-label", "Versión 0.1.71");
+    version.textContent = "v0.1.72";
+    version.setAttribute("aria-label", "Versión 0.1.72");
   };
 
   if (document.readyState === "loading") {
