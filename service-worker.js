@@ -1,4 +1,4 @@
-const CACHE_NAME = "entrenamiento-gym-v0.1.72-objetivos";
+const CACHE_NAME = "entrenamiento-gym-v0.1.72-instrucciones";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -19,6 +19,13 @@ const APP_SHELL = [
   "./assets/mensaje-pendiente.mp3",
   "./buenas-practicas.html",
   "./instrucciones-ejercitarse.html",
+  "./assets/instrucciones-peso-insuficiente.webp",
+  "./assets/instrucciones-peso-excesivo.webp",
+  "./assets/instrucciones-rango.webp",
+  "./assets/instrucciones-control.webp",
+  "./assets/instrucciones-series.webp",
+  "./assets/instrucciones-cardio.webp",
+
   "./objetivos-entrenamiento.html",
   "./assets/objetivos-grasa.webp",
   "./assets/objetivos-fuerza.webp",
