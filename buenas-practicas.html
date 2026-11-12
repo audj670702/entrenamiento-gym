@@ -7,82 +7,150 @@
   <title>Buenas prácticas</title>
   <link rel="icon" href="./assets/icon-192.png" type="image/png" sizes="192x192">
   <style>
-    :root{
-      --bg:#f3f6fa;--card:#fff;--navy:#0b2f5b;--text:#172033;--muted:#667085;
-      --line:#dbe3ed;--blue:#2563eb;--teal:#14847d;--orange:#f97316;
-      --purple:#7c3aed;--green:#15906f;--soft-blue:#eff6ff;--soft-orange:#fff7ed;
+    :root{--navy:#123a63;--blue:#2563eb;--text:#172033;--muted:#667085;--line:#dfe6ee;--bg:#f5f8fc;--panel:#fff;--ok:#138a63;--warn:#b54708}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+    button,a{font:inherit}.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(15,47,87,.045);backdrop-filter:blur(10px)}
+    .topbar-inner{width:min(1040px,100%);min-height:64px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand-logo{width:44px;height:44px;flex:0 0 auto}.brand-copy{min-width:0}.brand-kicker{font-size:.58rem;line-height:1;color:#7b8794;font-weight:750;letter-spacing:.12em;text-transform:uppercase}.brand-title{margin:4px 0 0;color:var(--navy);font-size:1.08rem;line-height:1.05;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top-actions{display:flex;align-items:center;gap:9px}.version{color:#98a2b3;font-size:.58rem;font-weight:600;white-space:nowrap}.home-button{width:38px;height:38px;border:1px solid #cfe0f4;border-radius:10px;display:grid;place-items:center;color:#1769aa;background:#f6fbff}.home-button svg{width:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .page{width:min(1040px,100%);margin:auto;padding:18px 14px 40px}.module-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:12px}.intro{margin:0;color:var(--muted);font-size:.78rem;line-height:1.45}.toggle-all{border:0;background:transparent;color:#477198;font-size:.67rem;font-weight:750;padding:7px;white-space:nowrap}.topics{display:grid;gap:9px}.topic{--tone:#2f6fad;display:grid;grid-template-columns:5px minmax(0,1fr);background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(19,52,82,.045)}.topic.is-open{grid-template-columns:5px minmax(0,1fr) 108px}.accent{background:var(--tone)}.copy{padding:12px 11px}.title-button{width:100%;border:0;background:transparent;padding:0;display:flex;align-items:center;gap:8px;text-align:left;color:inherit;cursor:pointer}.topic-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--tone);background:color-mix(in srgb,var(--tone) 11%,white);font-weight:900;flex:0 0 auto}.title-button h2{font-size:.84rem;line-height:1.2;margin:0;flex:1}.chevron{width:17px;height:17px;fill:none;stroke:#8090a0;stroke-width:2;transition:transform .2s}.topic.is-open .chevron{transform:rotate(180deg)}.details{display:none;padding:9px 0 0 36px}.topic.is-open .details{display:block}.lead{font-size:.71rem;line-height:1.42;margin:0 0 7px;color:#344054}.essentials{list-style:none;margin:0;padding:0;display:grid;gap:4px}.essentials li{display:flex;gap:6px;font-size:.68rem;line-height:1.35}.ok{color:var(--ok);font-weight:900}.warning{display:flex;gap:6px;margin:7px 0 0;color:var(--warn);font-size:.65rem;line-height:1.35}.thumb-button{display:none;border:0;border-left:1px solid var(--line);background:#f8fafc;padding:6px;cursor:zoom-in}.topic.is-open .thumb-button{display:block}.thumb-frame{display:block;height:100%;min-height:134px;border-radius:8px;overflow:hidden;background:#edf2f7}.thumb{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+    dialog{border:0;padding:0;background:transparent;max-width:none;max-height:none}dialog::backdrop{background:rgba(8,20,34,.68)}.modal-card{position:relative;width:min(470px,calc(100vw - 24px));max-height:calc(100vh - 24px);padding:10px;background:white;border-radius:16px;box-shadow:0 22px 70px rgba(0,0,0,.28);display:flex;flex-direction:column}.modal-head{display:flex;align-items:center;gap:8px;padding:1px 2px 8px}.modal-head h3{margin:0;font-size:.86rem;color:var(--navy);flex:1}.close{width:32px;height:32px;border:0;border-radius:9px;background:#eef3f8;color:#344054;font-size:1.1rem;font-weight:800}.visual-wrap{min-height:0;display:grid;place-items:center;overflow:hidden;border-radius:10px;background:#f3f6fa}.full-visual{display:block;max-width:100%;max-height:calc(100vh - 116px);object-fit:contain}.note{margin:8px 3px 1px;color:#667085;font-size:.64rem;line-height:1.35}
+    [data-tone="red"]{--tone:#d82c2c}[data-tone="teal"]{--tone:#0aa6aa}[data-tone="purple"]{--tone:#6840ad}[data-tone="orange"]{--tone:#ed6c02}[data-tone="green"]{--tone:#55a832}
+    @media(max-width:560px){.topic.is-open{grid-template-columns:4px minmax(0,1fr) 88px}.copy{padding:11px 8px}.details{padding-left:0}.thumb-frame{min-height:126px}.brand-title{font-size:1rem}}
+    @media(max-width:380px){.topbar-inner{padding:7px 8px}.brand-logo{width:38px;height:38px}.brand-title{font-size:.9rem}.page{padding:12px 8px 30px}.version{display:none}.topic.is-open{grid-template-columns:4px minmax(0,1fr) 78px}.title-button h2{font-size:.78rem}.lead,.essentials li{font-size:.64rem}}
+
+    .topics {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+      gap: 12px;
     }
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    body{background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
-    button{font:inherit;-webkit-tap-highlight-color:transparent}
-    .topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(15,47,87,.045);backdrop-filter:blur(10px)}
-    .topbar-inner{width:min(1040px,100%);min-height:64px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-    .brand{display:flex;align-items:center;gap:10px;min-width:0}
-    .brand-logo{width:43px;height:43px;flex:0 0 auto}
-    .brand-copy{min-width:0}
-    .brand-kicker{display:block;margin-bottom:1px;color:var(--blue);font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
-    .brand-title{margin:0;color:var(--navy);font-size:clamp(1rem,2.8vw,1.3rem);line-height:1.1;letter-spacing:-.02em}
-    .top-actions{display:flex;align-items:center;gap:9px;flex:0 0 auto}
-    .version{color:#98a2b3;font-size:.58rem;font-weight:600;letter-spacing:.025em;white-space:nowrap}
-    .home-button{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid #bfdbfe;border-radius:10px;background:var(--soft-blue);color:var(--blue);cursor:pointer;box-shadow:0 2px 8px rgba(37,99,235,.08);transition:color .18s ease,border-color .18s ease,background .18s ease,transform .18s ease}
-    .home-button svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-    .home-button:hover{color:#1d4ed8;border-color:#93c5fd;background:#dbeafe}
-    .home-button:active{transform:translateY(1px)}
-    .home-button:focus-visible{outline:3px solid rgba(37,99,235,.2);outline-offset:2px}
-    .page{width:min(1040px,100%);margin:auto;padding:17px 14px 40px}
-    .module-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin:0 2px 14px}
-    .head-copy{min-width:0}
-    .intro{margin:5px 0 0;color:var(--muted);font-size:.81rem;line-height:1.4}
-    .topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-    .topic{--accent:var(--blue);position:relative;display:grid;grid-template-columns:5px minmax(0,1fr);height:58px;overflow:hidden;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 5px 15px rgba(15,47,87,.05);cursor:pointer;transition:border-color .18s ease,box-shadow .18s ease}
-    .topic.is-open{grid-column:1/-1;grid-template-columns:5px minmax(0,1fr) 116px;height:auto;min-height:154px;border-color:color-mix(in srgb,var(--accent) 28%,var(--line));box-shadow:0 8px 22px rgba(15,47,87,.07)}
-    .topic:not(.is-open) .copy{display:flex;align-items:center;padding-top:8px;padding-bottom:8px}
-    .topic:not(.is-open) .title-row{width:100%}
-    .topic:not(.is-open) .lead,.topic:not(.is-open) .details,.topic:not(.is-open) .thumb-button{display:none}
-    .topic[data-tone="teal"]{--accent:var(--teal)}
-    .topic[data-tone="orange"]{--accent:var(--orange)}
-    .topic[data-tone="purple"]{--accent:var(--purple)}
-    .topic[data-tone="green"]{--accent:var(--green)}
-    .accent{background:var(--accent)}
-    .copy{padding:12px 10px;min-width:0}
-    .title-row{display:flex;align-items:center;gap:8px;margin:0;min-height:30px;cursor:pointer;user-select:none}
-    .topic-icon{display:grid;place-items:center;width:27px;height:27px;flex:0 0 auto;border:1px solid color-mix(in srgb,var(--accent) 28%,white);border-radius:8px;background:color-mix(in srgb,var(--accent) 8%,white);color:var(--accent)}
-    .topic-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-    h2{min-width:0;margin:0;color:var(--navy);font-size:.9rem;line-height:1.15}
-    .chevron{width:18px;height:18px;margin-left:auto;flex:0 0 auto;color:#8090a5;transition:transform .2s ease}
-    .topic.is-open .chevron{transform:rotate(180deg)}
-    .lead{margin:4px 0 0;color:var(--muted);font-size:.7rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .details{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .22s ease,opacity .18s ease}
-    .details-inner{min-height:0;overflow:hidden}
-    .topic.is-open .details{grid-template-rows:1fr;opacity:1}
-    .essentials{display:grid;gap:4px;margin:8px 0 0;padding:0;list-style:none}
-    .essentials li{display:grid;grid-template-columns:12px 1fr;gap:4px;font-size:.68rem;line-height:1.25}
-    .ok{color:var(--teal);font-weight:900}
-    .warning{display:grid;grid-template-columns:12px 1fr;gap:4px;margin:7px 0 0;color:#9a4b0b;font-size:.65rem;line-height:1.25}
-    .thumb-button{position:relative;align-self:stretch;width:100%;padding:6px;border:0;border-left:1px solid var(--line);background:#f8fafc;cursor:pointer}
-    .thumb-frame{position:relative;display:block;width:100%;height:100%;min-height:0;overflow:hidden;border:1px solid #c8d4e3;border-radius:9px;background:#fff;box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 5%,transparent)}
-    .topic.is-open .thumb-frame{min-height:140px}
-    .thumb{display:block;width:100%;height:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;background:#fff}
-    .thumb-button:focus-visible{outline:3px solid rgba(37,99,235,.28);outline-offset:-3px}
-    .thumb-button:hover .thumb-frame{border-color:color-mix(in srgb,var(--accent) 46%,#c8d4e3)}
+
+    .topic,
+    .topic.is-open {
+      grid-template-columns: minmax(0, 1fr);
+      border: 0;
+    }
+
+    .topic .copy { padding: 0; }
+
+    .title-button {
+      position: relative;
+      isolation: isolate;
+      align-items: flex-end;
+      min-height: 110px;
+      aspect-ratio: 6 / 5;
+      padding: 14px;
+      color: white;
+      background: #082d47;
+    }
+
+    .topic-photo,
+    .title-button::before {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .topic-photo {
+      z-index: -2;
+      object-fit: cover;
+    }
+
+    .title-button::before {
+      content: "";
+      z-index: -1;
+      background: linear-gradient(180deg, transparent 30%, #082d47eb 77%, #082d47);
+    }
+
+    .title-button h2 {
+      font-size: clamp(.95rem, 1.6vw, 1.15rem);
+      line-height: 1.18;
+    }
+
+    .title-button .chevron {
+      flex: 0 0 17px;
+      stroke: currentColor;
+    }
+
+    .title-button:focus-visible {
+      outline: 3px solid #e1bc72;
+      outline-offset: -4px;
+    }
+
+    .instruction-dialog {
+      width: min(860px, calc(100vw - 24px));
+      max-height: calc(100dvh - 24px);
+      overflow: auto;
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .instruction-heading {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .instruction-heading h2 { margin: 0; color: var(--navy); font-size: 1.15rem; }
+    .instruction-content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+      align-items: start;
+      gap: 18px;
+      padding: 16px;
+    }
+
+    #instructionText .lead,
+    #instructionText .essentials li,
+    #instructionText .warning { font-size: .95rem; line-height: 1.48; }
+
+    #instructionText .essentials { gap: 7px; }
+
+    .instruction-poster {
+      display: grid;
+      gap: 8px;
+      width: 100%;
+      padding: 0 0 9px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f5f8fc;
+      color: var(--navy);
+      cursor: zoom-in;
+    }
+
+    .instruction-poster img { display: block; width: 100%; height: auto; }
+    #visualModal .modal-card { width: min(760px, calc(100vw - 24px)); }
+    #visualModal .visual-wrap { overflow: auto; }
+    #visualModal .full-visual { width: 100%; max-height: none; }
+
+    @media (max-width: 760px) {
+      .topics { gap: 6px; }
+      .topic { border-radius: 9px; }
+      .title-button {
+        min-height: 0;
+        aspect-ratio: 1;
+        padding: 6px;
+        gap: 0;
+      }
+      .title-button h2 { font-size: clamp(.625rem, 2.9vw, .95rem); }
+      .title-button .chevron { display: none; }
+      .topic-photo { object-fit: contain; }
+      .title-button::before {
+        background: linear-gradient(180deg, transparent 39%, #082d47d9 75%, #082d47);
+      }
+      .instruction-content { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 13px; }
+    }
+
     .disclaimer{display:flex;gap:9px;align-items:flex-start;margin:14px 2px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.64);color:var(--muted)}
     .disclaimer svg{width:16px;height:16px;flex:0 0 auto;margin-top:1px;stroke:var(--navy);fill:none;stroke-width:1.8}
     .disclaimer p{margin:0;font-size:.69rem;line-height:1.4}
-    dialog{position:fixed;inset:auto;display:none;flex-direction:column;width:min(440px,calc(100vw - 16px));height:min(760px,calc(100dvh - 16px));max-height:calc(100dvh - 16px);margin:0;padding:0;border:0;border-radius:18px;background:#fff;box-shadow:0 28px 80px rgba(5,25,50,.34);overflow:hidden}
-    dialog[open]{display:flex}
-    dialog::backdrop{background:rgba(8,25,47,.7);backdrop-filter:blur(2px)}
-    .modal-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:9px 10px 9px 14px;background:rgba(255,255,255,.98);border-bottom:1px solid var(--line)}
-    .modal-head strong{color:var(--navy);font-size:.87rem}
-    .close{display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:#eef2f6;color:var(--navy);font-size:1.25rem;line-height:1;cursor:pointer}
-    .modal-scroll{display:grid;grid-template-rows:minmax(0,1fr) auto;flex:1;min-height:0;overflow:hidden;background:#f8fafc}
-    .full-visual{display:block;width:100%;height:100%;min-height:0;object-fit:contain;background:#fff}
-    .note{margin:0;padding:11px 14px 13px;border-top:1px solid var(--line);background:#fff;color:var(--muted);font-size:.71rem;line-height:1.4}
-    @keyframes softPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 5%,transparent),0 3px 9px rgba(15,47,87,.06)}50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 11%,transparent),0 5px 14px color-mix(in srgb,var(--accent) 16%,transparent)}}
-    @media (prefers-reduced-motion:no-preference){.thumb-frame{animation:softPulse 3.4s ease-in-out infinite}dialog[open]{animation:modalIn .18s ease-out}@keyframes modalIn{from{opacity:0;transform:translateY(7px) scale(.99)}}}
-    @media (max-width:760px){.module-head{align-items:flex-start}.topics{grid-template-columns:1fr}.topic{grid-column:auto;grid-template-columns:4px minmax(0,1fr);height:56px}.topic.is-open{grid-template-columns:4px minmax(0,1fr) 88px;height:auto;min-height:150px}.topic.is-open .thumb-frame{min-height:136px}}
-    @media (max-width:420px){.topbar-inner{min-height:58px;padding:7px 9px}.brand{gap:8px}.brand-logo{width:38px;height:38px}.brand-kicker{font-size:.51rem}.brand-title{font-size:1rem}.top-actions{gap:6px}.version{font-size:.52rem}.home-button{width:35px;height:35px;border-radius:9px}.page{padding:13px 9px 32px}.module-head{gap:8px}.intro{margin-top:0;font-size:.74rem}.toggle-all{padding:6px 8px;font-size:.64rem}.topics{gap:8px}.topic,.topic.is-open{grid-template-columns:4px minmax(0,1fr) 80px;border-radius:13px}.copy{padding:10px 8px}.title-row{gap:7px}.topic-icon{width:25px;height:25px}.lead{font-size:.67rem}.essentials li{font-size:.65rem}.warning{font-size:.62rem}.thumb-button{padding:5px}.thumb-frame{min-height:78px;border-radius:8px}.topic.is-open .thumb-frame{min-height:132px}}
-    @media (max-width:420px){.topic:not(.is-open){grid-template-columns:4px minmax(0,1fr)}}
   </style>
 </head>
 <body>
@@ -92,39 +160,140 @@
         <img class="brand-logo" src="./assets/icon-192.png" alt="">
         <div class="brand-copy"><span class="brand-kicker">SCaD Entrenamiento</span><h1 class="brand-title">Buenas prácticas</h1></div>
       </div>
-      <div class="top-actions"><span class="version">v0.1.19</span><a class="home-button" id="homeButton" href="https://gym.scad.mx" target="_top" aria-label="Volver a la app" title="Inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></a></div>
+      <div class="top-actions"><span class="version">v0.1.20</span><a class="home-button" id="homeButton" href="https://gym.scad.mx" target="_top" aria-label="Volver a la app" title="Inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg></a></div>
     </div>
   </header>
   <main class="page">
     <header class="module-head"><div class="head-copy"><p class="intro">Recomendaciones esenciales para entrenar con mayor control, seguridad y constancia.</p></div></header>
-    <section class="topics" aria-label="Temas de buenas prácticas">
-      <article class="topic" data-tone="blue"><span class="accent" aria-hidden="true"></span><section class="copy"><div class="title-row"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg></span><h2>Evaluación previa</h2></div><p class="lead">Tu punto de partida define un entrenamiento adecuado.</p><ul class="essentials"><li><span class="ok">✓</span><span>Comunica antecedentes, molestias y limitaciones.</span></li><li><span class="ok">✓</span><span>Define objetivos y nivel actual con tu entrenador.</span></li><li><span class="ok">✓</span><span>Respeta las cargas e intensidades indicadas.</span></li></ul><p class="warning"><span>⚠</span><span>No ocultes dolor o condiciones relevantes.</span></p></section><button class="thumb-button" type="button" data-title="Evaluación previa" data-note="Comunica información relevante y acuerda con tu entrenador un punto de partida compatible con tu condición actual." aria-label="Ampliar ficha visual de evaluación previa"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_31a6b9d431fa4a7ab18481e30dda924e~mv2.png" alt="Miniatura de evaluación previa" loading="lazy"></span></button></article>
+    <section class="topics" id="topics" aria-label="Temas de buenas prácticas">
+      <article class="topic">
+        <section class="copy">
+          <button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail">
+            <img class="topic-photo" src="./assets/practicas-evaluacion.webp" alt="">
+            <h2>Evaluación previa</h2>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="details"><p class="lead">Tu punto de partida define un entrenamiento adecuado.</p><ul class="essentials"><li><span class="ok">✓</span><span>Comunica antecedentes, molestias y limitaciones.</span></li><li><span class="ok">✓</span><span>Define objetivos y nivel actual con tu entrenador.</span></li><li><span class="ok">✓</span><span>Respeta las cargas e intensidades indicadas.</span></li></ul><p class="warning"><span>⚠</span><span>No ocultes dolor o condiciones relevantes.</span></p></div>
+        </section>
+        <button class="thumb-button" type="button" data-title="Evaluación previa" data-note="Comunica información relevante y acuerda con tu entrenador un punto de partida compatible con tu condición actual." aria-label="Ampliar ficha visual de evaluación previa"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_31a6b9d431fa4a7ab18481e30dda924e~mv2.png" alt="Miniatura de evaluación previa" loading="lazy"></span></button>
+      </article>
 
-      <article class="topic" data-tone="teal"><span class="accent" aria-hidden="true"></span><section class="copy"><div class="title-row"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span><h2>Calentamiento</h2></div><p class="lead">Prepara el cuerpo antes de elevar la exigencia.</p><ul class="essentials"><li><span class="ok">✓</span><span>Moviliza las articulaciones que utilizarás.</span></li><li><span class="ok">✓</span><span>Activa con movimientos controlados y carga ligera.</span></li><li><span class="ok">✓</span><span>Aumenta la intensidad de manera gradual.</span></li></ul><p class="warning"><span>⚠</span><span>Evita comenzar directamente con cargas altas.</span></p></section><button class="thumb-button" type="button" data-title="Calentamiento" data-note="Adapta los ejercicios y la duración al entrenamiento previsto y a las indicaciones de tu entrenador." aria-label="Ampliar ficha visual de calentamiento"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_264bbe5dd89a4335a7b68072239add0b~mv2.png" alt="Miniatura de calentamiento" loading="lazy"></span></button></article>
+      <article class="topic">
+        <section class="copy">
+          <button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail">
+            <img class="topic-photo" src="./assets/practicas-calentamiento.webp" alt="">
+            <h2>Calentamiento</h2>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="details"><p class="lead">Prepara el cuerpo antes de elevar la exigencia.</p><ul class="essentials"><li><span class="ok">✓</span><span>Moviliza las articulaciones que utilizarás.</span></li><li><span class="ok">✓</span><span>Activa con movimientos controlados y carga ligera.</span></li><li><span class="ok">✓</span><span>Aumenta la intensidad de manera gradual.</span></li></ul><p class="warning"><span>⚠</span><span>Evita comenzar directamente con cargas altas.</span></p></div>
+        </section>
+        <button class="thumb-button" type="button" data-title="Calentamiento" data-note="Adapta los ejercicios y la duración al entrenamiento previsto y a las indicaciones de tu entrenador." aria-label="Ampliar ficha visual de calentamiento"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_264bbe5dd89a4335a7b68072239add0b~mv2.png" alt="Miniatura de calentamiento" loading="lazy"></span></button>
+      </article>
 
-      <article class="topic" data-tone="orange"><span class="accent" aria-hidden="true"></span><section class="copy"><div class="title-row"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 5h12v14H6zM9 8h6M9 12h6M9 16h3"/><path d="M3 9v6M21 9v6"/></svg></span><h2>Máquinas de peso</h2></div><p class="lead">Ajusta el equipo a tu cuerpo antes de cargarlo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Alinea asiento, respaldo y agarres.</span></li><li><span class="ok">✓</span><span>Controla todo el recorrido sin usar impulso.</span></li><li><span class="ok">✓</span><span>Aumenta el peso sólo al dominar la técnica.</span></li></ul><p class="warning"><span>⚠</span><span>No golpees los topes ni fuerces la postura.</span></p></section><button class="thumb-button" type="button" data-title="Máquinas de peso" data-note="Cada máquina requiere un ajuste propio. Si la alineación no es clara, solicita apoyo antes de iniciar." aria-label="Ampliar ficha visual de máquinas de peso"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_d4300f7346f74186aa40848f75b51d73~mv2.png" alt="Miniatura de máquinas de peso" loading="lazy"></span></button></article>
+      <article class="topic">
+        <section class="copy">
+          <button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail">
+            <img class="topic-photo" src="./assets/practicas-maquinas.webp" alt="">
+            <h2>Máquinas de peso</h2>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="details"><p class="lead">Ajusta el equipo a tu cuerpo antes de cargarlo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Alinea asiento, respaldo y agarres.</span></li><li><span class="ok">✓</span><span>Controla todo el recorrido sin usar impulso.</span></li><li><span class="ok">✓</span><span>Aumenta el peso sólo al dominar la técnica.</span></li></ul><p class="warning"><span>⚠</span><span>No golpees los topes ni fuerces la postura.</span></p></div>
+        </section>
+        <button class="thumb-button" type="button" data-title="Máquinas de peso" data-note="Cada máquina requiere un ajuste propio. Si la alineación no es clara, solicita apoyo antes de iniciar." aria-label="Ampliar ficha visual de máquinas de peso"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_d4300f7346f74186aa40848f75b51d73~mv2.png" alt="Miniatura de máquinas de peso" loading="lazy"></span></button>
+      </article>
 
-      <article class="topic" data-tone="purple"><span class="accent" aria-hidden="true"></span><section class="copy"><div class="title-row"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></svg></span><h2>Peso libre</h2></div><p class="lead">La estabilidad y el control van antes que la carga.</p><ul class="essentials"><li><span class="ok">✓</span><span>Mantén pies firmes, núcleo activo y espalda neutra.</span></li><li><span class="ok">✓</span><span>Usa un peso que puedas mover con simetría.</span></li><li><span class="ok">✓</span><span>Utiliza seguros o asistencia cuando corresponda.</span></li></ul><p class="warning"><span>⚠</span><span>Detente si pierdes la postura o el control.</span></p></section><button class="thumb-button" type="button" data-title="Peso libre" data-note="En ejercicios de mayor riesgo, usa los seguros del equipo y solicita supervisión del entrenador." aria-label="Ampliar ficha visual de peso libre"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_aaae98d1bb824ae1b6ddf599751011a3~mv2.png" alt="Miniatura de peso libre" loading="lazy"></span></button></article>
+      <article class="topic">
+        <section class="copy">
+          <button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail">
+            <img class="topic-photo" src="./assets/practicas-peso-libre.webp" alt="">
+            <h2>Peso libre</h2>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="details"><p class="lead">La estabilidad y el control van antes que la carga.</p><ul class="essentials"><li><span class="ok">✓</span><span>Mantén pies firmes, núcleo activo y espalda neutra.</span></li><li><span class="ok">✓</span><span>Usa un peso que puedas mover con simetría.</span></li><li><span class="ok">✓</span><span>Utiliza seguros o asistencia cuando corresponda.</span></li></ul><p class="warning"><span>⚠</span><span>Detente si pierdes la postura o el control.</span></p></div>
+        </section>
+        <button class="thumb-button" type="button" data-title="Peso libre" data-note="En ejercicios de mayor riesgo, usa los seguros del equipo y solicita supervisión del entrenador." aria-label="Ampliar ficha visual de peso libre"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_aaae98d1bb824ae1b6ddf599751011a3~mv2.png" alt="Miniatura de peso libre" loading="lazy"></span></button>
+      </article>
 
-      <article class="topic" data-tone="blue"><span class="accent" aria-hidden="true"></span><section class="copy"><div class="title-row"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l2-5 4 10 2-5h6"/><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></span><h2>Cardio</h2></div><p class="lead">Regula tiempo e intensidad según tu objetivo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia con algunos minutos a ritmo suave.</span></li><li><span class="ok">✓</span><span>Mantén una intensidad acorde con tu plan.</span></li><li><span class="ok">✓</span><span>Reduce el ritmo gradualmente al terminar.</span></li></ul><p class="warning"><span>⚠</span><span>Detente ante mareo, dolor o malestar inusual.</span></p></section><button class="thumb-button" type="button" data-title="Cardio" data-note="La intensidad adecuada depende de tu condición y objetivo; no tomes los valores de la imagen como una prescripción personal." aria-label="Ampliar ficha visual de cardio"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_1bd29f9058cb4de788d90af56ad63173~mv2.png" alt="Miniatura de cardio" loading="lazy"></span></button></article>
+      <article class="topic">
+        <section class="copy">
+          <button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail">
+            <img class="topic-photo" src="./assets/practicas-cardio.webp" alt="">
+            <h2>Cardio</h2>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="details"><p class="lead">Regula tiempo e intensidad según tu objetivo.</p><ul class="essentials"><li><span class="ok">✓</span><span>Inicia con algunos minutos a ritmo suave.</span></li><li><span class="ok">✓</span><span>Mantén una intensidad acorde con tu plan.</span></li><li><span class="ok">✓</span><span>Reduce el ritmo gradualmente al terminar.</span></li></ul><p class="warning"><span>⚠</span><span>Detente ante mareo, dolor o malestar inusual.</span></p></div>
+        </section>
+        <button class="thumb-button" type="button" data-title="Cardio" data-note="La intensidad adecuada depende de tu condición y objetivo; no tomes los valores de la imagen como una prescripción personal." aria-label="Ampliar ficha visual de cardio"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_1bd29f9058cb4de788d90af56ad63173~mv2.png" alt="Miniatura de cardio" loading="lazy"></span></button>
+      </article>
 
-      <article class="topic" data-tone="green"><span class="accent" aria-hidden="true"></span><section class="copy"><div class="title-row"><span class="topic-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2v20M5 6h14M5 18h14"/><path d="M7 6c0 4 2 6 5 6s5 2 5 6"/></svg></span><h2>Recuperación y constancia</h2></div><p class="lead">Los resultados también se construyen fuera de la sesión.</p><ul class="essentials"><li><span class="ok">✓</span><span>Mantén una hidratación adecuada durante el día.</span></li><li><span class="ok">✓</span><span>Respeta el descanso y la recuperación.</span></li><li><span class="ok">✓</span><span>Sostén el plan con regularidad.</span></li></ul><p class="warning"><span>⚠</span><span>No compenses sesiones perdidas con sobreesfuerzo.</span></p></section><button class="thumb-button" type="button" data-title="Recuperación y constancia" data-note="La recuperación forma parte del plan. Ajusta descanso, hidratación y frecuencia con orientación profesional cuando sea necesario." aria-label="Ampliar ficha visual de recuperación y constancia"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_36fef0f1fbc7405b9ea7b3f5032d6c49~mv2.png" alt="Miniatura de recuperación y constancia" loading="lazy"></span></button></article>
+      <article class="topic">
+        <section class="copy">
+          <button class="title-button" type="button" aria-haspopup="dialog" aria-controls="instructionDetail">
+            <img class="topic-photo" src="./assets/practicas-recuperacion.webp" alt="">
+            <h2>Recuperación y constancia</h2>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="details"><p class="lead">Los resultados también se construyen fuera de la sesión.</p><ul class="essentials"><li><span class="ok">✓</span><span>Mantén una hidratación adecuada durante el día.</span></li><li><span class="ok">✓</span><span>Respeta el descanso y la recuperación.</span></li><li><span class="ok">✓</span><span>Sostén el plan con regularidad.</span></li></ul><p class="warning"><span>⚠</span><span>No compenses sesiones perdidas con sobreesfuerzo.</span></p></div>
+        </section>
+        <button class="thumb-button" type="button" data-title="Recuperación y constancia" data-note="La recuperación forma parte del plan. Ajusta descanso, hidratación y frecuencia con orientación profesional cuando sea necesario." aria-label="Ampliar ficha visual de recuperación y constancia"><span class="thumb-frame"><img class="thumb" src="https://static.wixstatic.com/media/0492f8_36fef0f1fbc7405b9ea7b3f5032d6c49~mv2.png" alt="Miniatura de recuperación y constancia" loading="lazy"></span></button>
+      </article>
     </section>
     <aside class="disclaimer"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><p>Contenido general de orientación. No sustituye una valoración médica ni el seguimiento profesional individual.</p></aside>
   </main>
-  <dialog id="visualModal" aria-labelledby="modalTitle"><header class="modal-head"><strong id="modalTitle"></strong><button class="close" type="button" aria-label="Cerrar">×</button></header><div class="modal-scroll"><img class="full-visual" src="" alt=""><p class="note"></p></div></dialog>
+  <dialog id="instructionDetail" aria-labelledby="instructionTitle">
+    <div class="instruction-dialog">
+      <header class="instruction-heading">
+        <h2 id="instructionTitle"></h2>
+        <form method="dialog"><button class="close" aria-label="Cerrar tema">×</button></form>
+      </header>
+      <div class="instruction-content">
+        <div id="instructionText"></div>
+        <button class="instruction-poster" type="button" aria-label="Ampliar cartel">
+          <img alt="">
+          <span>Ampliar cartel ↗</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="visualModal" aria-labelledby="modalTitle"><div class="modal-card"><div class="modal-head"><h3 id="modalTitle"></h3><button class="close" type="button" aria-label="Cerrar">×</button></div><div class="visual-wrap"><img class="full-visual" alt=""></div><p class="note"></p></div></dialog>
   <script>
-    (()=>{const modal=document.getElementById('visualModal'),title=document.getElementById('modalTitle'),image=modal.querySelector('.full-visual'),note=modal.querySelector('.note'),close=modal.querySelector('.close');let opener=null;
-      const topics=[...document.querySelectorAll('.topic')];
-      topics.forEach((topic,index)=>{const row=topic.querySelector('.title-row'),copy=topic.querySelector('.copy'),lead=copy.querySelector('.lead'),list=copy.querySelector('.essentials'),warning=copy.querySelector('.warning'),details=document.createElement('div'),inner=document.createElement('div'),chevron=document.createElementNS('http://www.w3.org/2000/svg','svg');
-        details.className='details';inner.className='details-inner';details.append(inner);inner.append(list,warning);lead.insertAdjacentElement('afterend',details);chevron.setAttribute('class','chevron');chevron.setAttribute('viewBox','0 0 24 24');chevron.setAttribute('aria-hidden','true');chevron.innerHTML='<path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';row.append(chevron);row.setAttribute('role','button');row.setAttribute('tabindex','0');row.setAttribute('aria-expanded',index===0?'true':'false');topic.classList.toggle('is-open',index===0);
-        const toggle=()=>{const opening=!topic.classList.contains('is-open');topics.forEach(item=>{item.classList.remove('is-open');item.querySelector('.title-row').setAttribute('aria-expanded','false')});if(opening){topic.classList.add('is-open');row.setAttribute('aria-expanded','true')}};topic.addEventListener('click',event=>{if(!event.target.closest('.thumb-button'))toggle()});row.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();toggle()}})});
-      const positionModal=()=>{if(!opener||!modal.open)return;const gap=8,pad=8,anchor=opener.getBoundingClientRect(),box=modal.getBoundingClientRect();let left=anchor.left+(anchor.width-box.width)/2;left=Math.max(pad,Math.min(left,window.innerWidth-box.width-pad));const below=window.innerHeight-anchor.bottom-gap,above=anchor.top-gap;let top=below>=box.height?anchor.bottom+gap:above>=box.height?anchor.top-box.height-gap:Math.max(pad,Math.min(anchor.top,window.innerHeight-box.height-pad));modal.style.left=`${Math.round(left)}px`;modal.style.top=`${Math.round(top)}px`;};
-      document.querySelectorAll('.thumb').forEach((thumb,index)=>{thumb.decoding='async';thumb.fetchPriority=index<2?'high':'low';if(index<2)thumb.loading='eager'});
-      document.querySelectorAll('.thumb-button').forEach(button=>button.addEventListener('click',()=>{opener=button;title.textContent=button.dataset.title;image.src=button.querySelector('.thumb').src;image.alt=`Ficha visual de ${button.dataset.title.toLowerCase()}`;note.textContent=button.dataset.note;modal.showModal();requestAnimationFrame(positionModal);}));
-      window.addEventListener('resize',positionModal,{passive:true});window.addEventListener('scroll',positionModal,{passive:true,capture:true});
-      close.addEventListener('click',()=>modal.close());modal.addEventListener('click',event=>{const box=modal.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)modal.close();});modal.addEventListener('close',()=>{if(opener)opener.focus();});
-    })();
+    const detail = document.getElementById('instructionDetail');
+    const detailTitle = document.getElementById('instructionTitle');
+    const detailText = document.getElementById('instructionText');
+    const poster = detail.querySelector('.instruction-poster');
+    const posterImage = poster.querySelector('img');
+    const visual = document.getElementById('visualModal');
+    let activeTopic;
+
+    document.getElementById('topics').addEventListener('click', event => {
+      const trigger = event.target.closest('.title-button');
+      if (!trigger) return;
+      const topic = trigger.closest('.topic');
+      activeTopic = topic.querySelector('.thumb-button');
+      const source = activeTopic.querySelector('img');
+      detailTitle.textContent = activeTopic.dataset.title;
+      detailText.replaceChildren(...Array.from(topic.querySelector('.details').children, child => child.cloneNode(true)));
+      posterImage.src = source.src;
+      posterImage.alt = source.alt;
+      detail.showModal();
+    });
+
+    poster.addEventListener('click', () => {
+      visual.querySelector('#modalTitle').textContent = activeTopic.dataset.title;
+      const image = visual.querySelector('.full-visual');
+      image.src = posterImage.src;
+      image.alt = posterImage.alt;
+      visual.querySelector('.note').textContent = activeTopic.dataset.note;
+      visual.showModal();
+    });
+
+    visual.querySelector('.close').addEventListener('click', () => visual.close());
+    for (const dialog of [detail, visual]) {
+      dialog.addEventListener('click', event => {
+        if (event.target === dialog) dialog.close();
+      });
+    }
+    visual.addEventListener('close', () => poster.focus());
   </script>
 </body>
 </html>
